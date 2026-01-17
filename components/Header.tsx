@@ -80,7 +80,7 @@ export default function Header() {
 
                             {/* Menu items */}
                             <div className="py-2 text-sm">
-                                <MenuItem icon={<User size={16} />} label="Profile" url={session.user.name} />
+                                <MenuItem icon={<User size={16} />} label="Profile" url={session?.user?.username} />
                                 <MenuItem icon={<BarChart2 size={16} />} label="Profile Insight" url="/insight" />
                             </div>
 
@@ -88,8 +88,8 @@ export default function Header() {
 
                             <div className="py-2 text-sm">
                                 <MenuItem icon={<FileText size={16} />} label="Create Article" badge="Beta"  url={`/post/create`}/>
-                                <MenuItem icon={<FileText size={16} />} label="Articles" badge="Beta" url={`/${session.user.name}/posts`}/>
-                                <MenuItem icon={<Cookie size={16} />}  label="Club Discuss" badge="Beta" url={`/${session.user.name}/posts`}/>
+                                <MenuItem icon={<FileText size={16} />} label="Articles" badge="Beta" url={`/${session.user.username}/posts`}/>
+                                <MenuItem icon={<Cookie size={16} />}  label="Club Discuss" badge="Beta" url={`/${session.user.username}/posts`}/>
                                 {/* <MenuItem icon={<Folder size={16} />} label="Your Storage" /> */}
                             </div>
 
