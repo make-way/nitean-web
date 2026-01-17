@@ -8,6 +8,7 @@ CREATE TYPE "PostStatus" AS ENUM ('Draft', 'Review', 'Aprove', 'Block');
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
