@@ -7,7 +7,7 @@ import { timeAgo } from "@/utils/TimeAgo";
 
 export default async function Home() {
     const posts = await prisma.post.findMany({
-    where: { status: PostStatus.Aprove },
+    where: { status: PostStatus.Draft },
     orderBy: { createdAt: "desc" },
     include: { user: true },
   });  
@@ -16,9 +16,9 @@ export default async function Home() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <Header />
 
-      <main className="mx-auto max-w-6xl px-3 sm:px-6 py-18 sm:py-24">
+      <main className="mx-auto max-w-2xl px-3 py-8">
         {/* Pinterest layout */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+        <div className="columns-1 gap-6">
           {posts.map((post) => (
             <article
             key={post.id}
@@ -38,7 +38,7 @@ export default async function Home() {
                     alt={post.title}
                     width={600}
                     height={400}
-                    className="w-full h-auto object-cover"
+                    className="w-full h-120 object-cover"
                   />
                 </div>
               )}

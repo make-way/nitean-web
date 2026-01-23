@@ -7,7 +7,7 @@ import { timeAgo } from "@/utils/TimeAgo";
 
 export default async function ArticlesPage() {
   const posts = await prisma.post.findMany({
-    where: { status: PostStatus.Aprove },
+    where: { status: PostStatus.Draft },
     orderBy: { createdAt: "desc" },
     include: { user: true },
   });

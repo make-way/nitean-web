@@ -156,7 +156,7 @@ export default function CreatePostForm() {
                         <Button
                         type="button"
                         disabled={loading || slugExists}
-                        onClick={() => submit(PostStatus.Aprove)} // aprove now for testing
+                        onClick={() => submit(PostStatus.Draft)} // aprove now for testing
                         className="rounded-full"
                         >
                         Publish

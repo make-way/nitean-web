@@ -11,7 +11,7 @@ interface MenuItemProps {
 
 const MenuItem: React.FC<MenuItemProps> = ({ icon, label, url, badge, onClick }) => {
     return (
-        <Link href={url} className="flex w-full items-center justify-between px-4 py-2 text-left text-white-700 hover:bg-zinc-800 cursor-pointer">
+        <Link href={url} className="flex w-full items-center justify-between px-4 py-2 text-left text-white-700 hover:text-white hover:bg-zinc-800 cursor-pointer">
             <div className="flex items-center gap-3">
                 <span className="text-zinc-500">{icon}</span>
                 <span>{label}</span>
