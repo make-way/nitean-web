@@ -79,7 +79,7 @@ export default function Header() {
                   <div className="h-px bg-zinc-200 dark:bg-zinc-600" />
 
                   <div className="py-2 text-sm">
-                    <MenuItem icon={<User size={16} />} label="Profile" url={session.user.name} />
+                    <MenuItem icon={<User size={16} />} label="Profile" url={session.user.username} />
                     <MenuItem icon={<BarChart2 size={16} />} label="Insights" url="/insight" />
                   </div>
 

@@ -2,12 +2,13 @@ import Header from "@/components/Header";
 import Image from "next/image";
 import { Heart, MessageCircle } from "lucide-react";
 import prisma from "@/lib/prisma";
-import { PostStatus } from "@/enum";
 import { timeAgo } from "@/utils/TimeAgo";
+export const dynamic = "force-dynamic";
+import { unstable_noStore as noStore } from "next/cache";
 
 export default async function Home() {
+    noStore();
     const posts = await prisma.post.findMany({
-    where: { status: PostStatus.Draft },
     orderBy: { createdAt: "desc" },
     include: { user: true },
   });  
