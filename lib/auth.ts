@@ -1,19 +1,40 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
+import { generateUniqueUsername } from "@/utils/enerateUsername";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
-  }),
+  }), 
+  plugins: [],  
+  user: {
+		additionalFields: {
+			username: {
+				type: "string",
+				required: true,
+				input: false,
+			},
+		},
+	},
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: (profile) => {
+				return {
+					username: profile.login,
+				};
+			},
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+					 const base = profile.given_name || profile.name || profile.email.split("@")[0];
+					 const username = await generateUniqueUsername(base);
+          return { username };
+			},
     },
-  }
+  },
 });

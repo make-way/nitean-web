@@ -37,6 +37,7 @@ enum PostStatus {
 model User {
   id            String    @id
   name          String
+  username      String   @unique @db.VarChar(20)
   email         String
   emailVerified Boolean   @default(false)
   image         String?
@@ -45,6 +46,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  posts         Post[]
 
   @@unique([email])
   @@map("user")
@@ -96,4 +98,18 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Post{
+  id Int @id @default(autoincrement())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  slug          String    @unique @default(uuid()) @db.Char(36)
+  summary       String
+  content       String    @db.Text
+  thumbnail     String?
+  status        PostStatus    @default(Draft)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

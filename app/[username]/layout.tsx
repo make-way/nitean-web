@@ -20,8 +20,8 @@ export default async function UserLayout({
         headers: await headers(),
     });
 
-    const user = await prisma.user.findFirst({
-        where: { name: username },
+    const user = await prisma.user.findUnique({
+        where: { username: username },
     });
     //   // will add username and make it unique in future
     //   // const user = await prisma.user.findUnique({
@@ -45,7 +45,7 @@ export default async function UserLayout({
                 <X className="h-5 w-5" />
             </Link>
 
-            <div className="mx-auto max-w-3xl px-6 py-10">
+            <div className="mx-auto max-w-3xl px-3 py-10">
                 {/* Header */}
                 <div className="flex items-center gap-6">
                 <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-2 border-blue-500">
