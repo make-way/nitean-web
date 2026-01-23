@@ -45,7 +45,7 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
     }
 
     return (
-        <div className="flex flex-wrap gap-2 bg-zinc-50 p-2 px-6 rounded-full">
+        <div className="flex flex-wrap gap-2 bg-zinc-50 p-2 px-6">
             <Button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
