@@ -105,7 +105,7 @@ model Post{
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
-  slug          String    @unique @default(uuid()) @db.Char(36)
+  slug          String    @unique @default(uuid()) @db.Char(100)
   summary       String
   content       String    @db.Text
   thumbnail     String?

@@ -4,20 +4,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { FileEditIcon, Heart, Trash } from "lucide-react";
 import { timeAgo } from "@/utils/TimeAgo";
+import { auth } from "@/lib/auth";
+import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
-export default async function ArticlesPage() {
-  const posts = await prisma.post.findMany({
-    where: { status: PostStatus.Draft },
-    orderBy: { createdAt: "desc" },
-    include: { user: true },
-  });
+export default async function ArticlesPage({ params}: {params: Promise<{ username: string }>;}) {
+    
+    const { username } = await params;
+    
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    
+    const user = await prisma.user.findUnique({
+        where: { username: username },
+    });
+    
+    if (!user) notFound();
+    
+    const posts = await prisma.post.findMany({
+      where: { status: PostStatus.Draft, userId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: { user: true },
+    });
 
   return (
     <div className="mt-8 space-y-6">
       {posts.map((post) => (
         <div
           key={post.id}
-          className="block rounded-xl border bg-white p-5 transition hover:shadow-sm"
+          className="block border bg-white p-5 transition"
         >
           <div className="flex items-start gap-5">
             {/* Left Content */}

@@ -1,6 +1,36 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+/* Global scrollbar styling */
+html {
+  /* For Firefox: Make scrollbar thin and set thumb/track colors */
+  scrollbar-width: thin;
+  scrollbar-color: #2196F3 #e5e7eb;  /* thumb: blue-500, track: light gray (like gray-200) */
+}
+
+/* For Chrome, Edge, Safari (WebKit/Blink browsers) */
+html::-webkit-scrollbar {
+  width: 8px;  /* Thin vertical scrollbar */
+  height: 8px; /* Thin horizontal scrollbar */
+}
+
+html::-webkit-scrollbar-track {
+  background: #e5e7eb;  /* Light gray track (adjust if needed) */
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #2196F3;  /* Tailwind blue-500 */
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #1e88e5;  /* Slightly darker blue on hover (like blue-600) */
+}
+
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

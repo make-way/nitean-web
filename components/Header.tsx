@@ -12,10 +12,15 @@ import {
   Settings,
   Cookie,
   PlusSquareIcon,
+  FileSliders,
 } from 'lucide-react';
 import MenuItem from './MenuItem';
 
-export default function Header() {
+type HeaderProps = {
+  sticky?: boolean;
+};
+
+export default function Header({ sticky = true }: HeaderProps) {
   const { data: session } = useSession();
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,7 +36,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+    <header className={`${sticky ? 'sticky top-0 z-50' : ''} border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900`}>
       <div className="mx-auto flex h-14 max-w-[1400px] items-center px-4">
         {/* LEFT */}
         <div className="flex items-center gap-3">
@@ -55,7 +60,7 @@ export default function Header() {
           {session ? (
             <>
               <Link href="/post/create" className='flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700'><PlusSquareIcon size={18}/></Link>
-              <Link href="#" className='flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700'><Bell size={18}/></Link>
+              {/* <Link href="#" className='flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700'><Bell size={18}/></Link> */}
 
               {/* Avatar */}
               <button onClick={() => setProfileOpen(!profileOpen)} className='cursor-pointer'>
@@ -86,6 +91,7 @@ export default function Header() {
                   <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
 
                   <div className="py-2 text-sm">
+                    <MenuItem icon={<FileSliders size={16} />} label="Articles" url={`/${session.user.username}/posts`} />
                     <MenuItem icon={<FileText size={16} />} label="Create Article" url="/post/create" />
                     <MenuItem icon={<Cookie size={16} />} label="Club Discuss" url="/club" />
                   </div>
@@ -112,7 +118,7 @@ export default function Header() {
               <button
                 key={provider}
                 onClick={() => signIn.social({ provider })}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 cursor-pointer"
               >
                 <Image
                   src={`/${provider}.svg`}

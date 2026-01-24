@@ -23,10 +23,6 @@ export default async function UserLayout({
     const user = await prisma.user.findUnique({
         where: { username: username },
     });
-    //   // will add username and make it unique in future
-    //   // const user = await prisma.user.findUnique({
-    //   //   where: { name: (await params).username },
-    //   // });
 
     if (!user) notFound();
 
