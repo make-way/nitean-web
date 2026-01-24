@@ -6,7 +6,7 @@ const PostComment = () => {
   const [comment, setComment] = useState('');
   const maxLength = 300;
   return (
-    <div className='border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900'>
+    <div className='border border-zinc-200 p-6 dark:border-zinc-800 dark:bg-zinc-900'>
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value.slice(0, maxLength))}
