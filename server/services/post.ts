@@ -1,4 +1,7 @@
+import { PostStatus } from "@/enum";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { unstable_cache } from "next/cache";
 
 /**
  * Service: Pure database interaction.
@@ -11,3 +14,59 @@ export async function getPostBySlug(slug: string) {
     include: { user: true },
   });
 }
+
+
+export async function createPost(data: {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  status: PostStatus;
+  userId: string;
+  thumbnail?: string;
+}) {
+  const post = await prisma.post.create({
+    data: {
+      title: data.title,
+      slug: data.slug,
+      summary: data.summary,
+      content: data.content,
+      status: data.status,
+      userId: data.userId,
+      thumbnail: data.thumbnail
+    },
+    include: {
+      user: true, // Useful if you need to return the username immediately
+    },
+  });
+
+  // CACHE INVALIDATION
+  // This clears the Next.js Data Cache for the user's post list
+  revalidatePath(`/${post.user.username}/posts`);
+  revalidatePath(`/posts`); // If you have a global feed
+  
+  return post;
+}
+
+export async function checkSlugAvailability(slug: string) {
+  const existing = await prisma.post.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+  return !existing;
+}
+
+/**
+ * Service: Get posts to home page with pagination
+ */
+export const getCachedPosts = unstable_cache(
+  async (limit: number, skip: number) => {
+    return await prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { user: true,
+        _count: { select: { likes: true } } },
+    });
+  },
+  ["main-feed-posts"], 
+  { revalidate: 3600, tags: ["posts"] }
+);
