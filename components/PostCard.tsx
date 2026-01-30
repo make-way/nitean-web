@@ -18,7 +18,7 @@ export default function PostCard({ post }: PostCardProps) {
                 rounded-2xl overflow-hidden
                 border border-zinc-200 dark:border-zinc-700
                 bg-white dark:bg-zinc-900
-                transition
+                transition mb-3
             "
         >
             {/* ================= TOP CONTENT ================= */}
