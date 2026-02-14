@@ -9,31 +9,33 @@ export default function ProfileTabs({ username }: { username: string }) {
     const isProfile = pathname === `/${username}`;
     const isArticles = pathname === `/${username}/posts`;
 
+    const tabBase = "relative pb-3 text-sm font-medium transition-colors";
+    const tabActive = "text-blue-600";
+    const tabInactive = "text-slate-500 hover:text-slate-900";
+
     return (
-        <div className="mt-10 border-b">
-            <div className="flex gap-8 text-sm font-medium">
+        <nav className="mt-8 sm:mt-10 border-b border-slate-200">
+            <div className="flex gap-6 sm:gap-10">
                 <Link
-                href={`/${username}`}
-                className={`pb-3 transition ${
-                    isProfile
-                    ? "border-b-2 border-blue-500 text-blue-500"
-                    : "text-gray-500 hover:text-black"
-                }`}
+                    href={`/${username}`}
+                    className={`${tabBase} ${isProfile ? tabActive : tabInactive}`}
                 >
-                Profile
+                    Profile
+                    {isProfile && (
+                        <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-blue-600" />
+                    )}
                 </Link>
 
                 <Link
-                href={`/${username}/posts`}
-                className={`pb-3 transition ${
-                    isArticles
-                    ? "border-b-2 border-blue-500 text-blue-500"
-                    : "text-gray-500 hover:text-black"
-                }`}
+                    href={`/${username}/posts`}
+                    className={`${tabBase} ${isArticles ? tabActive : tabInactive}`}
                 >
-                Articles
+                    Articles
+                    {isArticles && (
+                        <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-blue-600" />
+                    )}
                 </Link>
             </div>
-        </div>
+        </nav>
     );
 }
