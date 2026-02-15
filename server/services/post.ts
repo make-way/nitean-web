@@ -1,7 +1,6 @@
 import { PostStatus } from '@/enum';
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { unstable_cache } from 'next/cache';
+import { revalidatePath, unstable_cache } from 'next/cache';
 
 /**
  * Service: Pure database interaction.
@@ -43,6 +42,8 @@ export async function createPost(data: {
   // This clears the Next.js Data Cache for the user's post list
   revalidatePath(`/${post.user.username}/posts`);
   revalidatePath(`/posts`); // If you have a global feed
+  // Also revalidate the home page so cached main feed updates immediately
+  revalidatePath(`/`);
 
   return post;
 }
@@ -97,6 +98,7 @@ export async function updatePost(data: {
   // CACHE INVALIDATION
   revalidatePath(`/${post.user.username}/posts`);
   revalidatePath(`/posts`);
+  revalidatePath(`/`);
   revalidatePath(`/post/${post.slug}`);
   if (data.newSlug !== data.slug) {
     revalidatePath(`/post/${data.slug}`); // Old slug path
@@ -116,6 +118,7 @@ export async function deletePost(slug: string) {
   // CACHE INVALIDATION
   revalidatePath(`/${post.user.username}/posts`);
   revalidatePath(`/posts`);
+  revalidatePath(`/`);
 
   return post;
 }
@@ -133,7 +136,10 @@ export async function getPostById(id: number) {
 export const getCachedPosts = unstable_cache(
   async (limit: number, skip: number) => {
     return await prisma.post.findMany({
+      where: { status: PostStatus.Aprove },
       orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: skip,
       include: { user: true, _count: { select: { likes: true } } },
     });
   },

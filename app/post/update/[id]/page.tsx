@@ -253,7 +253,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                         {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
                         Save Draft
                     </Button>
-                    <Button disabled={isPending || slugExists} onClick={() => handleUpdate(PostStatus.Review)}>
+                    <Button disabled={isPending || slugExists} onClick={() => handleUpdate(PostStatus.Aprove)}>
                         {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
                         Update Post
                     </Button>

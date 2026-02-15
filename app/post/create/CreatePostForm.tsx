@@ -141,7 +141,7 @@ export default function CreatePostForm() {
           </Button>
           <Button
             disabled={isPending || slugExists}
-            onClick={() => handleSave(PostStatus.Review)}
+            onClick={() => handleSave(PostStatus.Aprove)}
           >
             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Publish Now
