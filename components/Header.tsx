@@ -37,7 +37,7 @@ export default function Header({ sticky = true }: HeaderProps) {
 
   return (
     <header className={`${sticky ? 'sticky top-0 z-50' : ''} border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900`}>
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center px-4">
+      <div className="mx-auto flex h-14 max-w-350 items-center px-4">
         {/* LEFT */}
         <div className="flex items-center gap-3">
           <Link href="/">

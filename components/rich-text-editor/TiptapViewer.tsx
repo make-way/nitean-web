@@ -29,10 +29,10 @@ const TiptapViewer = ({ content }: TiptapViewerProps) => {
   if (!editor) return null;
 
   return (
-    <div className="border">
+    <div>
       <EditorContent
         editor={editor}
-        className="p-4 prose max-w-none"
+        className="p-0 prose max-w-none"
       />
     </div>
   );

@@ -4,7 +4,7 @@ import ProfileTabs from "@/components/ProfileTabs";
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { Pen, X } from "lucide-react";
+import { Settings, X } from "lucide-react";
 import Link from "next/link";
 
 export default async function UserLayout({
@@ -59,12 +59,12 @@ export default async function UserLayout({
 
                     {isOwner && (
                         <Link
-                        href="/profile/edit"
+                        href="/profile/settings"
                         aria-label="Edit profile"
                         className="rounded-md p-1 text-gray-500
                                     hover:text-gray-900 hover:bg-gray-100 transition"
                         >
-                        <Pen className="h-4 w-4" />
+                        <Settings className="h-4 w-4" />
                         </Link>
                     )}
                     </div>

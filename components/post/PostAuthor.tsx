@@ -5,7 +5,7 @@ import { timeAgo } from "@/utils/TimeAgo";
 
 export default function PostAuthor({ user, createdAt }: any) {
   return (
-    <div className="flex items-center justify-between mb-10">
+    <div className="flex items-center justify-between mb-10 border-b-3 pb-6">
       <div className="flex items-center gap-4">
         <Link href={`/${user.username}`} className="relative w-12 h-12 rounded-full overflow-hidden">
           <Image src={user.image || ""} alt={user.name} fill className="object-cover" />
@@ -21,10 +21,10 @@ export default function PostAuthor({ user, createdAt }: any) {
         </div>
       </div>
 
-      <button className="px-5 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-full flex items-center gap-2">
+      {/* <button className="px-5 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-full flex items-center gap-2">
         <UserPlus className="w-5 h-5" />
         Follow
-      </button>
+      </button> */}
     </div>
   );
 }
