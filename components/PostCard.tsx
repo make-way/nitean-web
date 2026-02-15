@@ -12,6 +12,9 @@ export default function PostCard({ post }: PostCardProps) {
     const isLiked = post.isLiked;
     const likeCount = post._count?.likes || 0;
 
+    const commentCount = post._count?.comments || 0;
+    const slug = post.slug.trim();
+
     return (
         <article
             className="
@@ -50,7 +53,7 @@ export default function PostCard({ post }: PostCardProps) {
                 </Link>
 
                 {/* Title */}
-                <Link href={`/post/${post.slug}`}>
+                <Link href={`/post/${slug}`}>
                     <h3 className="text-base font-semibold leading-snug hover:underline">
                         {post.title}
                     </h3>
@@ -67,7 +70,7 @@ export default function PostCard({ post }: PostCardProps) {
             {/* ================= IMAGE CENTER ================= */}
             {post.thumbnail && (
                 <Link
-                    href={`/post/${post.slug}`}
+                    href={`/post/${slug}`}
                     className="relative block w-full aspect-[4/3] bg-black"
                 >
                     <Image
@@ -88,15 +91,16 @@ export default function PostCard({ post }: PostCardProps) {
                 />
 
                 <Link
-                    href={`#`}
+                    href={`/post/${slug}/#comments`}
                     className="flex items-center gap-1 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
                 >
                     <MessageCircle size={18} />
+                    <span className="font-medium">{commentCount}</span>
                 </Link>
 
-                <button className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200">
+                {/* <button className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200">
                     <Bookmark size={18} />
-                </button>
+                </button> */}
             </div>
         </article>
     );
