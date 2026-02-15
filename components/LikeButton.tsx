@@ -49,7 +49,7 @@ export default function LikeButton({
             : "stroke-zinc-500 group-hover:stroke-red-400"
         }`} 
       />
-      <span className={`text-xs font-medium ${liked ? "text-red-500" : "text-zinc-500"}`}>
+      <span className={`font-medium ${liked ? "text-red-500" : "text-zinc-500"}`}>
         {count}
       </span>
     </button>

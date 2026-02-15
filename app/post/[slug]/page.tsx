@@ -41,7 +41,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <PostHeader title={post.title} />
                 <PostAuthor user={post.user} createdAt={post.createdAt} />
                 <PostContent post={post} />
-                <PostComments />
+                <PostComments postId={post.id} postUserId={post.userId} />
             </main>
         </div>
     );

@@ -7,6 +7,7 @@ html {
   /* For Firefox: Make scrollbar thin and set thumb/track colors */
   scrollbar-width: thin;
   scrollbar-color: #2196F3 #e5e7eb;  /* thumb: blue-500, track: light gray (like gray-200) */
+  scroll-behavior: smooth;
 }
 
 /* For Chrome, Edge, Safari (WebKit/Blink browsers) */

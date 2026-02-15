@@ -48,6 +48,7 @@ model User {
   accounts      Account[]
   posts         Post[]
   likes     Like[]
+  comments  Comment[]
 
   @@unique([email])
   @@map("user")
@@ -106,7 +107,7 @@ model Post{
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
-  slug          String    @unique @default(uuid()) @db.Char(100)
+  slug          String    @unique @default(uuid()) @db.VarChar(100)
   summary       String
   content       String    @db.Text
   thumbnail     String?
@@ -115,6 +116,7 @@ model Post{
   updatedAt  DateTime @updatedAt
 
   likes     Like[]
+  comments  Comment[]
 }
 
 model Like {
@@ -130,4 +132,20 @@ model Like {
   
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  userId    String
+  postId    Int
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comment")
 }
