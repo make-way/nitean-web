@@ -47,7 +47,7 @@ export async function createComment(data: {
 
   // CACHE INVALIDATION
   revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
   revalidatePath('/');
   
   return comment;
@@ -77,7 +77,7 @@ export async function updateComment(data: {
 
   // CACHE INVALIDATION
   revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
   revalidatePath('/');
 
   return comment;
@@ -100,7 +100,7 @@ export async function deleteComment(id: number, userId: string) {
 
   // CACHE INVALIDATION
   revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
   revalidatePath('/');
 
   return comment;

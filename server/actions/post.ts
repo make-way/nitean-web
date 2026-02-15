@@ -46,7 +46,7 @@ export async function togglePostLike(postId: number) {
       });
     }
 
-    revalidateTag('posts', 'page');
+    revalidateTag('posts', 'max');
     revalidatePath('/');
   } catch (error) {
     console.error('Failed to toggle like:', error);

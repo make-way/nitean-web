@@ -44,7 +44,7 @@ export async function createPost(data: {
   revalidatePath(`/posts`); // If you have a global feed
   // Also revalidate the home page so cached main feed updates immediately
   revalidatePath(`/`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
 
 
   return post;
@@ -102,7 +102,7 @@ export async function updatePost(data: {
   revalidatePath(`/posts`);
   revalidatePath(`/`);
   revalidatePath(`/post/${post.slug.trim()}`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
 
   if (data.newSlug !== data.slug) {
     revalidatePath(`/post/${data.slug.trim()}`); // Old slug path
@@ -123,7 +123,7 @@ export async function deletePost(slug: string) {
   revalidatePath(`/${post.user.username}/posts`);
   revalidatePath(`/posts`);
   revalidatePath(`/`);
-  revalidateTag('posts', 'page');
+  revalidateTag('posts', 'max');
 
 
   return post;
