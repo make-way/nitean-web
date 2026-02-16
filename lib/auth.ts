@@ -15,6 +15,11 @@ export const auth = betterAuth({
 				required: true,
 				input: false,
 			},
+			phone_number: {
+				type: "string",
+				required: false,
+				input: true,
+			},
 		},
 	},
   socialProviders: {
