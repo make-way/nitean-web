@@ -3,7 +3,7 @@ import { slugifyUsername } from "@/utils/enerateUsername";
 
 export async function updateSingleUserField(
   userId: string,
-  field: 'name' | 'username' | 'phone_number',
+  field: 'name' | 'username' | 'phone_number' | 'image',
   value: string
 ) {
   // 1. Data refinement and validation
@@ -31,6 +31,8 @@ export async function updateSingleUserField(
     dataToUpdate.name = value.trim();
   } else if (field === 'phone_number') {
     dataToUpdate.phone_number = value.trim();
+  } else if (field === 'image') {
+    dataToUpdate.image = value;
   } else {
     throw new Error("Invalid field update request");
   }

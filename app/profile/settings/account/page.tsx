@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { updateSingleUserFieldAction, checkUsernameUniqueAction } from '@/server/actions/user';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Camera } from 'lucide-react';
+import { useUploadThing } from '@/lib/uploadthing';
 
 export default function AccountPage() {
   const { data: session, isPending, refetch } = useSession();
@@ -16,6 +17,9 @@ export default function AccountPage() {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSavingImage, setIsSavingImage] = useState(false);
 
   // Validation State for Username
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
@@ -66,6 +70,59 @@ export default function AccountPage() {
     return () => clearTimeout(timer);
   }, [editValue, editingField, session?.user.username]);
 
+  const { startUpload, isUploading: isUploadingImage } = useUploadThing('profileImage', {
+    onUploadError: (error: Error) => {
+      toast.error(`Upload failed: ${error.message}`);
+    },
+  });
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size locally before even showing preview
+    if (file.size > 4 * 1024 * 1024) {
+        toast.error('Image size must be less than 4MB');
+        return;
+    }
+
+    setSelectedFile(file);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    const localUrl = URL.createObjectURL(file);
+    setPreviewUrl(localUrl);
+  };
+
+  const handleSaveImage = async () => {
+    if (!selectedFile) return;
+    setIsSavingImage(true);
+    try {
+        const uploadRes = await startUpload([selectedFile]);
+        const url = uploadRes?.[0]?.url;
+
+        if (url) {
+            const res = await updateSingleUserFieldAction('image', url);
+            if (res.success) {
+                toast.success('Profile image updated successfully');
+                setSelectedFile(null);
+                setPreviewUrl(null);
+                await refetch();
+            } else {
+                toast.error(res.message);
+            }
+        }
+    } catch (error) {
+        toast.error('Something went wrong during upload');
+    } finally {
+        setIsSavingImage(false);
+    }
+  };
+
+  const handleCancelImage = () => {
+    setSelectedFile(null);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+  };
+
   if (isPending) return null;
   if (!session) return null;
 
@@ -84,10 +141,11 @@ export default function AccountPage() {
 
     setIsUpdating(true);
     try {
-      const fieldMap: Record<string, 'name' | 'username' | 'phone_number'> = {
+      const fieldMap: Record<string, 'name' | 'username' | 'phone_number' | 'image'> = {
         'Display Name': 'name',
         'Username': 'username',
-        'Phone Number': 'phone_number'
+        'Phone Number': 'phone_number',
+        'Profile Image': 'image'
       };
 
       const dbField = fieldMap[editingField];
@@ -117,16 +175,32 @@ export default function AccountPage() {
       </div>
 
       {/* Profile header */}
-      <div className='-mt-12 flex items-center justify-between px-6'>
+      <div className='-mt-12 flex items-end justify-between px-6'>
         <div className='flex items-center gap-4'>
-          <div className='z-10 h-24 w-24 overflow-hidden rounded-full border-4 border-gray-900 bg-gray-700 shadow-xl'>
+          <div className='relative z-10 h-24 w-24 overflow-hidden rounded-full border-4 border-gray-900 bg-gray-700 shadow-xl group/avatar'>
             <Image 
-              src={session?.user.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user.username}`} 
+              src={previewUrl || session?.user.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user.username}`} 
               alt='User avatar' 
               width={96} 
               height={96} 
               className="object-cover h-full w-full"
             />
+            {!previewUrl && (
+                <label className='absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover/avatar:opacity-100'>
+                {isUploadingImage ? (
+                    <Loader2 className='h-6 w-6 animate-spin text-white' />
+                ) : (
+                    <Camera className='h-6 w-6 text-white' />
+                )}
+                <input 
+                    type='file' 
+                    className='hidden' 
+                    accept='image/*' 
+                    onChange={handleImageUpload}
+                    disabled={isUploadingImage}
+                />
+                </label>
+            )}
           </div>
 
           <div className='py-6'>
@@ -134,6 +208,32 @@ export default function AccountPage() {
             <span className='text-gray-400'>@{session?.user.username}</span>
           </div>
         </div>
+
+        {previewUrl && (
+            <div className='flex items-center gap-3 mb-4 animate-in fade-in slide-in-from-right-4'>
+                <button 
+                    onClick={handleCancelImage}
+                    disabled={isSavingImage}
+                    className='text-xs text-gray-400 px-3 py-1.5 transition-colors disabled:opacity-50 cursor-pointer'
+                >
+                    Cancel
+                </button>
+                <button 
+                    onClick={handleSaveImage}
+                    disabled={isSavingImage}
+                    className='flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-50 transition-all shadow-lg shadow-blue-900/20 cursor-pointer'
+                >
+                    {isSavingImage ? (
+                        <>
+                            <Loader2 className='h-3 w-3 animate-spin' />
+                            Uploading...
+                        </>
+                    ) : (
+                        'Save New Image'
+                    )}
+                </button>
+            </div>
+        )}
       </div>
 
       {/* Account info card */}
