@@ -13,6 +13,7 @@ import {
   Cookie,
   PlusSquareIcon,
   FileSliders,
+  Users2,
 } from 'lucide-react';
 import MenuItem from './MenuItem';
 
@@ -93,7 +94,13 @@ export default function Header({ sticky = true }: HeaderProps) {
                   <div className="py-2 text-sm">
                     <MenuItem icon={<FileSliders size={16} />} label="Articles" url={`/${session.user.username}/posts`} />
                     <MenuItem icon={<FileText size={16} />} label="Create Article" url="/post/create" />
+                  </div>
+
+                  <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
+
+                  <div className="py-2 text-sm">
                     <MenuItem icon={<Cookie size={16} />} label="Club Discuss" url="/club" />
+                    <MenuItem icon={<Users2 size={16} />} label="Members" url="/members" />
                   </div>
 
                   <div className="h-px bg-zinc-200 dark:bg-zinc-800" />
