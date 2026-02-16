@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllMembers } from "@/server/services/member";
 
+export const dynamic = "force-dynamic";
+
 export default async function MembersPage() {
   const membersData = await getAllMembers();
 
