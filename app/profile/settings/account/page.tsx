@@ -141,10 +141,11 @@ export default function AccountPage() {
 
     setIsUpdating(true);
     try {
-      const fieldMap: Record<string, 'name' | 'username' | 'phone_number' | 'image'> = {
+      const fieldMap: Record<string, 'name' | 'username' | 'phone_number' | 'image' | 'bio'> = {
         'Display Name': 'name',
         'Username': 'username',
         'Phone Number': 'phone_number',
+        'Bio': 'bio',
         'Profile Image': 'image'
       };
 
@@ -283,6 +284,21 @@ export default function AccountPage() {
           onChange={(e) => setEditValue(e.target.value)}
           isUpdating={isUpdating}
         />
+
+        <Divider />
+
+        <AccountRow 
+          label='Bio' 
+          value={session.user.bio || 'Add a bio...'} 
+          isEditing={editingField === 'Bio'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Bio', session?.user.bio || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
       </div>
     </div>
   );
@@ -302,6 +318,7 @@ function AccountRow({
   isUpdating,
   validationStatus,
   validationMessage,
+  isMultiline,
 }: {
   label: string;
   value?: string;
@@ -314,6 +331,7 @@ function AccountRow({
   isUpdating?: boolean;
   validationStatus?: 'idle' | 'checking' | 'available' | 'taken' | 'invalid';
   validationMessage?: string;
+  isMultiline?: boolean;
 }) {
   return (
     <div className='flex items-center justify-between py-4 group'>
@@ -322,17 +340,27 @@ function AccountRow({
         {isEditing ? (
           <div className="space-y-2">
             <div className="relative">
-                <input
-                    type="text"
-                    value={editValue}
-                    onChange={onChange}
-                    className={`w-full bg-gray-800 border rounded-lg px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 transition-all ${
-                        validationStatus === 'available' ? 'border-green-500/50 focus:ring-green-500/20' : 
-                        (validationStatus === 'taken' || validationStatus === 'invalid') ? 'border-red-500/50 focus:ring-red-500/20' : 
-                        'border-blue-500/50 focus:ring-blue-500/20'
-                    }`}
-                    autoFocus
-                />
+                {isMultiline ? (
+                    <textarea
+                        value={editValue}
+                        onChange={onChange as any}
+                        rows={3}
+                        className={`w-full bg-gray-800 border rounded-lg px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 transition-all border-blue-500/50 focus:ring-blue-500/20`}
+                        autoFocus
+                    />
+                ) : (
+                    <input
+                        type="text"
+                        value={editValue}
+                        onChange={onChange}
+                        className={`w-full bg-gray-800 border rounded-lg px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 transition-all ${
+                            validationStatus === 'available' ? 'border-green-500/50 focus:ring-green-500/20' : 
+                            (validationStatus === 'taken' || validationStatus === 'invalid') ? 'border-red-500/50 focus:ring-red-500/20' : 
+                            'border-blue-500/50 focus:ring-blue-500/20'
+                        }`}
+                        autoFocus
+                    />
+                )}
                 {validationStatus === 'checking' && (
                     <div className="absolute right-3 top-2.5">
                         <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
@@ -353,7 +381,7 @@ function AccountRow({
             )}
           </div>
         ) : (
-          <p className='text-gray-500 font-medium'>
+          <p className={`text-gray-500 font-medium ${isMultiline ? 'whitespace-pre-wrap' : ''}`}>
             {value}
           </p>
         )}

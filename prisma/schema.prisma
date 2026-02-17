@@ -42,7 +42,8 @@ model User {
   emailVerified Boolean   @default(false)
   image         String?
   phone_number  String?
-  level          UserLevel @default(Basic)
+  bio           String?
+  level         UserLevel @default(Basic)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
