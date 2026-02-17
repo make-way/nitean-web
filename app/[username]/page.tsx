@@ -1,83 +1,99 @@
-import prisma from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import { format } from "date-fns";
-import { Calendar, FileText, Award } from "lucide-react";
-import Link from "next/link";
+const socials = ["Telegram", "LinkedIn", "GitHub", "YouTube", "TikTok", "Facebook", "Instagram"];
 
-export default async function ProfilePage({
-    params,
-}: {
-    params: Promise<{ username: string }>;
-}) {
-    const { username } = await params;
+const experiences = [
+  {
+    id: 1,
+    letter: "I",
+    color: "bg-blue-600",
+    title: "Founder, Host, and Content Creator",
+    company: "ITPodcast",
+    period: "2024 – Present",
+    bullets: [
+      "I am the Founder and Host of IT Podcast, where I also take on the roles of Content Strategist, Video/Audio Editor, and Social Media Manager.",
+      "IT Podcast is dedicated to sharing knowledge and inspiration with young people who are interested in the IT field or dream of becoming IT professionals.",
+    ],
+  },
+  {
+    id: 2,
+    letter: "W",
+    color: "bg-blue-500",
+    title: "Senior Software Engineer (Short Term Business Trip)",
+    company: "Webcash Inc. (Busan S.Korea)",
+    period: "2024 – Present",
+    bullets: [
+      "Delegated an outsourcing project from the Korea team to the Cambodia team.",
+      "Understood assigned responsibilities, technical requirements, and overall workflow.",
+      "Created progress reports and delivered weekly presentations.",
+    ],
+  },
+  {
+    id: 3,
+    letter: "K",
+    color: "bg-blue-700",
+    title: "Senior Software Engineer",
+    company: "KOSIGN",
+    period: "2017 – Present",
+    bullets: [
+      "Led two global projects and one outsourcing project related to web-based accounting systems.",
+      "Responsible for analyzing requirements from storyboard to deployment.",
+    ],
+  },
+];
 
-    const user = await prisma.user.findUnique({
-        where: { username },
-        include: { _count: { select: { posts: true } } },
-    });
+export default function ProfilePage() {
+  return (
+    <div className="mx-auto space-y-8">
+      {/* Bio */}
+      <p className="text-[15px] leading-relaxed text-slate-700">
+        Im a Senior Software Engineer with 6 years of experience in full-stack development, system design, and team leadership. Ive worked in both local and international environments, including South Korea. Im also a content creator and host of ITpodcasts, sharing tech and career insights on YouTube, TikTok, and Facebook. Lets connect—follow me on social media!
+      </p>
 
-    if (!user) notFound();
-
-    return (
-        <div className="space-y-6 animate-in fade-in duration-300">
-            {/* Stats cards */}
-            <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                            <Calendar className="h-5 w-5" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-slate-500">Member since</p>
-                            <p className="text-lg font-semibold text-slate-900">
-                                {format(new Date(user.createdAt), "MMMM yyyy")}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                            <FileText className="h-5 w-5" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-slate-500">Articles published</p>
-                            <p className="text-lg font-semibold text-slate-900">
-                                {user._count.posts}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Level badge (if not Basic) */}
-            {user.level !== "Basic" && (
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                            <Award className="h-5 w-5" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-slate-500">Account level</p>
-                            <p className="text-lg font-semibold text-slate-900">{user.level}</p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Quick action */}
-            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 p-8 text-center">
-                <p className="text-slate-600">
-                    View all articles by{" "}
-                    <Link
-                        href={`/${username}/posts`}
-                        className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                    >
-                        {user.name}
-                    </Link>
-                </p>
-            </div>
+      {/* Social links */}
+      <div>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">Connect with me</p>
+        <div className="flex flex-wrap gap-2">
+          {socials.map((s) => (
+            <a
+              key={s}
+              href="#"
+              className="px-4 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 hover:shadow-sm transition-all"
+            >
+              {s}
+            </a>
+          ))}
         </div>
-    );
+      </div>
+
+      {/* Experience */}
+      <div>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Experience</h2>
+        <div className="space-y-3">
+          {experiences.map((exp) => (
+            <div key={exp.id} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${exp.color} text-base font-bold text-white`}>
+                  {exp.letter}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">{exp.title}</h3>
+                  <p className="text-sm text-blue-600">
+                    {exp.company} <span className="text-slate-400">· {exp.period}</span>
+                  </p>
+                  <ul className="mt-3 space-y-1.5">
+                    {exp.bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
 }
