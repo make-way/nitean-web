@@ -51,6 +51,7 @@ model User {
   posts         Post[]
   likes     Like[]
   comments  Comment[]
+  settings  UserSettings? 
 
   @@unique([email])
   @@map("user")
@@ -102,6 +103,20 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model UserSettings {
+  id        String   @id
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme     String   @default("system")
+  showProfileInMemberList Boolean @default(true)
+  language  String   @default("en")
+  fontFamily String @default("system")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("userSetting")
 }
 
 model Post{

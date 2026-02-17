@@ -1,6 +1,6 @@
 "use client";
 
-import { X, User, Palette, Sliders } from "lucide-react";
+import { X, User, Palette, Sliders, GlobeLock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
@@ -41,6 +41,12 @@ export default function SettingsLayout({
               icon={<Palette size={18} />}
               label="Appearance"
               active={pathname.startsWith("/profile/settings/appearance")}
+            />
+            <SidebarLink
+              href="/profile/settings/privacy"
+              icon={<GlobeLock size={18} />}
+              label="Appearance"
+              active={pathname.startsWith("/profile/settings/privacy")}
             />
             <SidebarLink
               href="/profile/settings/customize"
