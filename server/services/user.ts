@@ -7,7 +7,7 @@ export async function updateSingleUserField(
   value: string
 ) {
   // 1. Data refinement and validation
-  let dataToUpdate: any = {};
+  const dataToUpdate: Partial<Record<'username' | 'name' | 'phone_number' | 'image' | 'bio', string>> = {};
 
   if (field === 'username') {
     const username = slugifyUsername(value);
