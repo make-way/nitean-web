@@ -54,3 +54,12 @@ export async function checkUsernameUnique(username: string, userId: string) {
 
   return !existingUser || existingUser.id === userId;
 }
+
+export async function getUserBio(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { bio: true },
+  });
+
+  return user?.bio ?? null;
+}

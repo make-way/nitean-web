@@ -81,7 +81,7 @@ export default async function UserLayout({
                                     className="inline-flex h-9 w-9 items-center justify-center rounded-lg
                                             text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                                 >
-                                    <Pen className="h-4 w-4" />
+                                    {/* <Pen className="h-4 w-4" /> */}
                                 </Link>
                             )}
                         </div>

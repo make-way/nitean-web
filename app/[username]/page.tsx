@@ -1,4 +1,48 @@
-const socials = ['Telegram', 'LinkedIn', 'GitHub', 'YouTube', 'TikTok', 'Facebook', 'Instagram'];
+'use client';
+
+import { Oxycons } from '@onimuxha/oxycons';
+
+type ProfilePageProps = {
+  bio: string | null;
+};
+
+const socials = [
+  {
+    icons: 'Telegram',
+    name: 'Telegram',
+    url: 'https://t.me/yourusername',
+  },
+  {
+    icons: 'LinkedIn',
+    name: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/yourusername',
+  },
+  {
+    icons: 'GitHub',
+    name: 'GitHub',
+    url: 'https://github.com/yourusername',
+  },
+  {
+    icons: 'YouTube',
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@yourusername',
+  },
+  {
+    icons: 'TikTok',
+    name: 'TikTok',
+    url: 'https://www.tiktok.com/@yourusername',
+  },
+  {
+    icons: 'Facebook',
+    name: 'Facebook',
+    url: 'https://www.facebook.com/yourusername',
+  },
+  {
+    icons: 'Instagram',
+    name: 'Instagram',
+    url: 'https://www.instagram.com/yourusername',
+  },
+];
 
 const experiences = [
   {
@@ -40,27 +84,24 @@ const experiences = [
   },
 ];
 
-export default function ProfilePage() {
+export default function ProfilePage({ bio }: ProfilePageProps) {
   return (
     <div className='mx-auto space-y-8'>
       {/* Bio */}
-      <p className='text-[15px] leading-relaxed text-slate-700'>
-        Im a Senior Software Engineer with 6 years of experience in full-stack development, system design, and team leadership. Ive worked
-        in both local and international environments, including South Korea. Im also a content creator and host of ITpodcasts, sharing tech
-        and career insights on YouTube, TikTok, and Facebook. Lets connect—follow me on social media!
-      </p>
+      <p className='text-[15px] leading-relaxed text-slate-700'>{bio || 'No bio added yet.'}</p>
 
       {/* Social links */}
       <div>
         <p className='mb-3 text-xs font-semibold tracking-widest text-slate-400 uppercase'>Connect with me</p>
         <div className='flex flex-wrap gap-2'>
-          {socials.map((s) => (
+          {socials.map((social) => (
             <a
-              key={s}
-              href='#'
-              className='rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 hover:shadow-sm'
+              target='_blank'
+              href={social.url}
+              className='flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 hover:shadow-sm'
             >
-              {s}
+              <Oxycons name={social.icons} size={24} />
+              {social.name}
             </a>
           ))}
         </div>
