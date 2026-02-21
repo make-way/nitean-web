@@ -16,8 +16,8 @@ export default function ProfileTabs({ username }: { username: string }) {
                 href={`/${username}`}
                 className={`pb-3 transition ${
                     isProfile
-                    ? "border-b-2 border-blue-500 text-blue-500"
-                    : "text-gray-500 hover:text-black"
+                    ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                    : "text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
                 }`}
                 >
                 Profile
@@ -27,8 +27,8 @@ export default function ProfileTabs({ username }: { username: string }) {
                 href={`/${username}/posts`}
                 className={`pb-3 transition ${
                     isArticles
-                    ? "border-b-2 border-blue-500 text-blue-500"
-                    : "text-gray-500 hover:text-black"
+                    ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                    : "text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
                 }`}
                 >
                 Articles

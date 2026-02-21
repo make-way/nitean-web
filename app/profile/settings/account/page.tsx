@@ -141,12 +141,18 @@ export default function AccountPage() {
 
     setIsUpdating(true);
     try {
-      const fieldMap: Record<string, 'name' | 'username' | 'phone_number' | 'image' | 'bio'> = {
+      const fieldMap: Record<string, 'name' | 'username' | 'phone_number' | 'image' | 'bio' | 'telegram_link' | 'linkedin_link' | 'github_link' | 'youtube_link' | 'tiktok_link' | 'facebook_link'> = {
         'Display Name': 'name',
         'Username': 'username',
         'Phone Number': 'phone_number',
         'Bio': 'bio',
-        'Profile Image': 'image'
+        'Profile Image': 'image',
+        'Telegram Link': 'telegram_link',
+        'LinkedIn Link': 'linkedin_link',
+        'Github Link': 'github_link',
+        'YouTube Link': 'youtube_link',
+        'Tiktok Link': 'tiktok_link',
+        'Facebook Link': 'facebook_link',
       };
 
       const dbField = fieldMap[editingField];
@@ -205,7 +211,7 @@ export default function AccountPage() {
           </div>
 
           <div className='py-6'>
-            <h2 className='text-xl font-bold'>{session?.user.name}</h2>
+            <h2 className='text-xl font-bold text-black dark:text-white'>{session?.user.name}</h2>
             <span className='text-gray-400'>@{session?.user.username}</span>
           </div>
         </div>
@@ -299,6 +305,97 @@ export default function AccountPage() {
           isUpdating={isUpdating}
           isMultiline
         />
+
+        <Divider />
+
+        <AccountRow 
+          label='Telegram Link' 
+          value={session.user.telegram_link || 'Add a telegam account ...'} 
+          isEditing={editingField === 'Telegram Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Telegram Link', session?.user.telegram_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+        
+        <Divider />
+
+        <AccountRow 
+          label='Linkedin Link' 
+          value={session.user.linkedin_link || 'Add a linkedin account ...'} 
+          isEditing={editingField === 'Linkedin Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Linkedin Link', session?.user.linkedin_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+
+        <Divider />
+
+        <AccountRow 
+          label='Github Link' 
+          value={session.user.github_link || 'Add a github account ...'} 
+          isEditing={editingField === 'Github Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Github Link', session?.user.github_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+
+        <Divider />
+
+        <AccountRow 
+          label='YouTube Link' 
+          value={session.user.youtube_link || 'Add a youtube account ...'} 
+          isEditing={editingField === 'YouTube Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('YouTube Link', session?.user.youtube_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+
+        <Divider />
+
+        <AccountRow 
+          label='Tiktok Link' 
+          value={session.user.tiktok_link || 'Add a tiktok account ...'} 
+          isEditing={editingField === 'Tiktok Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Tiktok Link', session?.user.tiktok_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+
+        <Divider />
+
+        <AccountRow 
+          label='Facebook Link' 
+          value={session.user.facebook_link || 'Add a facebook account ...'} 
+          isEditing={editingField === 'Facebook Link'}
+          editValue={editValue}
+          onEdit={() => handleEdit('Facebook Link', session?.user.facebook_link || '')}
+          onCancel={() => setEditingField(null)}
+          onSave={handleSave}
+          onChange={(e: any) => setEditValue(e.target.value)}
+          isUpdating={isUpdating}
+          isMultiline
+        />
+
       </div>
     </div>
   );

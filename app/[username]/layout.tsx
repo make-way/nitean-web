@@ -29,7 +29,7 @@ export default async function UserLayout({
     const isOwner = session?.user?.id === user.id;
 
     return (
-        <div className="relative min-h-screen bg-white">
+        <div className="relative min-h-screen bg-zinc-50 dark:bg-black">
             {/* Close button */}
             <Link
                 href="/"

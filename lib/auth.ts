@@ -25,6 +25,36 @@ export const auth = betterAuth({
 				required: false,
 				input: true,
 			},
+			telegram_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
+			linkedin_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
+			github_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
+			youtube_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
+			tiktok_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
+			facebook_link: {
+				type: "string",
+				required: false,
+				input: true,
+			},
 		},
 	},
   socialProviders: {

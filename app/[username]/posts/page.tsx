@@ -37,12 +37,13 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
     return (
         <div className='mt-8 space-y-6'>
             {posts.map((post) => (
-                <article key={post.id} className='group block border bg-white p-5 transition'>
+                <article key={post.id} className='group block border border-zinc-200 dark:border-zinc-700
+                bg-white dark:bg-zinc-900 p-5 transition'>
                     <div className='flex items-start gap-5'>
                         {/* Left Content */}
                         <div className='flex-1'>
                         <Link href={`/post/${post.slug}`}>
-                            <h2 className='text-xl font-bold text-gray-900 transition group-hover:text-blue-600'>{post.title || 'Untitled Draft'}</h2>
+                            <h2 className='text-xl font-bold text-zinc-900 dark:text-zinc-200 transition group-hover:text-blue-600 dark:group-hover:text-blue-700'>{post.title || 'Untitled Draft'}</h2>
                         </Link>
 
                         <div className='mt-2 flex items-center gap-2 text-sm text-gray-500'>
@@ -63,7 +64,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
                             {isOwner && (
                             <Link
                                 href={`/post/update/${post.slug}`}
-                                className='flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900'
+                                className='flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white'
                             >
                                 <FileEditIcon className='h-4 w-4' />
                                 Edit

@@ -44,6 +44,13 @@ model User {
   phone_number  String?
   bio           String?
   level         UserLevel @default(Basic)
+  // social
+  telegram_link String?
+  linkedin_link String?
+  github_link String?
+  youtube_link String?
+  tiktok_link String?
+  facebook_link String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]

@@ -14,7 +14,7 @@ export default function SettingsLayout({
   const pathname = usePathname();
 
   return (
-    <div className="relative min-h-screen bg-gray-50">
+    <div className="relative min-h-screen bg-zinc-50 dark:bg-black">
       {/* Close */}
       <Link
         href="/"
@@ -25,7 +25,7 @@ export default function SettingsLayout({
       </Link>
 
       <div className="mx-auto max-w-5xl px-4 py-10">
-        <h1 className="mb-8 text-2xl font-semibold text-gray-900">Settings</h1>
+        <h1 className="mb-8 text-2xl font-semibold text-black dark:text-white">Settings</h1>
 
         <div className="flex gap-8">
           {/* Sidebar */}
@@ -57,7 +57,7 @@ export default function SettingsLayout({
           </aside>
 
           {/* Page content */}
-          <main className="flex-1 bg-white p-8 shadow-sm">
+          <main className="flex-1 bg-zinc-50 dark:bg-black p-8 shadow-sm">
             {children}
           </main>
         </div>

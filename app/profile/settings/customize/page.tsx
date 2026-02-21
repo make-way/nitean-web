@@ -51,7 +51,7 @@ const Page: React.FC = () => {
     <div className="p-8 font-sans">
       {/* Language Selector */}
       <div className="mb-6">
-        <label className="block mb-2 font-semibold">Select Language:</label>
+        <label className="block mb-2 font-semibold text-gray-800 dark:text-gray-200">Select Language:</label>
         <select
           value={selectedLanguage}
           onChange={(e) => {
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
             setSelectedLanguage(lang);
             setSelectedFont(languages[lang][0]); // reset font when language changes
           }}
-          className="border px-3 py-2 rounded"
+          className="border rounded px-3 py-2 transition-colors duration-200 bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
         >
           {Object.keys(languages).map((lang) => (
             <option key={lang} value={lang}>
@@ -77,7 +77,7 @@ const Page: React.FC = () => {
             key={font}
             onClick={() => setSelectedFont(font)}
             className={`p-6 border rounded shadow text-center cursor-pointer transition
-              ${selectedFont === font ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-500"}`}
+              ${selectedFont === font ? "border-blue-500 bg-blue-50 text-black/50" : "border-gray-300 hover:border-gray-500"}`}
             style={{ fontFamily: font }}
           >
             <p>{previewText[selectedLanguage](font)}</p>

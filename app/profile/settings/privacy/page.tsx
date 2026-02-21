@@ -36,9 +36,9 @@ function ToggleItem({
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-800">{label}</span>
+      <span className="text-sm text-gray-900 dark:text-white">{label}</span>
       <div
-        className={`relative h-6 w-11 rounded-full transition ${
+        className={`relative h-6 w-11 rounded-full transition  ${
           enabled ? "bg-black" : "bg-gray-300"
         }`}
       >

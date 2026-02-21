@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { updateSingleUserField, checkUsernameUnique } from "../services/user";
 import { revalidatePath } from "next/cache";
 
-export async function updateSingleUserFieldAction(field: 'name' | 'username' | 'phone_number' | 'image' | 'bio', value: string) {
+export async function updateSingleUserFieldAction(field: 'name' | 'username' | 'phone_number' | 'image' | 'bio' | 'telegram_link' | 'linkedin_link' | 'github_link' | 'youtube_link' | 'tiktok_link' | 'facebook_link', value: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

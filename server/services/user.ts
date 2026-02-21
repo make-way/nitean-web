@@ -3,7 +3,7 @@ import { slugifyUsername } from "@/utils/enerateUsername";
 
 export async function updateSingleUserField(
   userId: string,
-  field: 'name' | 'username' | 'phone_number' | 'image' | 'bio',
+  field: 'name' | 'username' | 'phone_number' | 'image' | 'bio' | 'telegram_link' | 'linkedin_link' | 'github_link' | 'youtube_link' | 'tiktok_link' | 'facebook_link',
   value: string
 ) {
   // 1. Data refinement and validation
@@ -33,9 +33,29 @@ export async function updateSingleUserField(
     dataToUpdate.phone_number = value.trim();
   } else if (field === 'image') {
     dataToUpdate.image = value;
-  } else if (field === 'bio') {
+  } 
+  else if (field === 'bio') {
     dataToUpdate.bio = value;
-  } else {
+  } 
+  else if (field === 'telegram_link') {
+    dataToUpdate.telegram_link = value;
+  } 
+  else if (field === 'linkedin_link') {
+    dataToUpdate.linkedin_link = value;
+  } 
+  else if (field === 'github_link') {
+    dataToUpdate.github_link = value;
+  } 
+  else if (field === 'youtube_link') {
+    dataToUpdate.youtube_link = value;
+  } 
+  else if (field === 'tiktok_link') {
+    dataToUpdate.tiktok_link = value;
+  } 
+  else if (field === 'facebook_link') {
+    dataToUpdate.facebook_link = value;
+  } 
+  else {
     throw new Error("Invalid field update request");
   }
 
