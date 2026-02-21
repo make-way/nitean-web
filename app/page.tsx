@@ -25,7 +25,6 @@ import { getCachedPosts } from "@/server/services/post";
 import prisma from "@/lib/prisma";
 import PostCard from "@/components/PostCard";
 import Header from "@/components/Header";
-import HeaderV2 from "@/components/HeaderV2";
 
 export default async function Page() {
     // 1. Get the session
@@ -59,8 +58,7 @@ export default async function Page() {
 
     return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      {/* <Header /> */}
-      <HeaderV2/>
+      <Header />
       <main className="mx-auto max-w-2xl px-3 py-8">
         <div className="columns-1 gap-6 mb-6">
           {postsWithLikeStatus.map((post) => (
