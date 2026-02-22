@@ -59,7 +59,7 @@ export default async function Page() {
     return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <Header />
-      <main className="mx-auto max-w-2xl px-3 py-8">
+      <main className="mx-auto max-w-2xl px-0 sm:px-3 py-0 sm:py-8">
         <div className="columns-1 gap-6 mb-6">
           {postsWithLikeStatus.map((post) => (
             <PostCard key={post.id} post={post} />

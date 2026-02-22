@@ -18,10 +18,9 @@ export default function PostCard({ post }: PostCardProps) {
     return (
         <article
             className="
-                rounded-2xl overflow-hidden
-                border border-zinc-200 dark:border-zinc-700
-                bg-white dark:bg-zinc-900
-                transition mb-3
+                rounded-none sm:rounded-2xl overflow-hidden
+                border-b sm:border sm:border-solid sm:border-zinc-200 sm:dark:border-zinc-700
+                bg-white dark:bg-zinc-900 mb-0 sm:mb-3
             "
         >
             {/* ================= TOP CONTENT ================= */}
@@ -83,7 +82,7 @@ export default function PostCard({ post }: PostCardProps) {
             )}
 
             {/* ================= FOOTER ACTIONS ================= */}
-            <div className="px-4 py-4 flex items-center gap-6 border-t border-zinc-200 dark:border-zinc-700">
+            <div className="px-4 py-4 flex items-center gap-6 border-none sm:border-t border-zinc-200 dark:border-zinc-700">
                 <LikeButton
                     postId={post.id}
                     initialLikeCount={likeCount}

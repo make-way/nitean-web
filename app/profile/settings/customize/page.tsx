@@ -48,7 +48,7 @@ const Page: React.FC = () => {
       if (!session) return null;
 
   return (
-    <div className="p-8 font-sans">
+    <div className="space-y-6 font-sans">
       {/* Language Selector */}
       <div className="mb-6">
         <label className="block mb-2 font-semibold text-gray-800 dark:text-gray-200">Select Language:</label>
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
             setSelectedLanguage(lang);
             setSelectedFont(languages[lang][0]); // reset font when language changes
           }}
-          className="border rounded px-3 py-2 transition-colors duration-200 bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+          className="w-full border rounded px-3 py-2 transition-colors duration-200 bg-white text-gray-900 border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
         >
           {Object.keys(languages).map((lang) => (
             <option key={lang} value={lang}>
@@ -71,7 +71,7 @@ const Page: React.FC = () => {
 
       {/* Font Cards */}
         <label className="block mb-2 font-semibold">Base Reading Font:</label> 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {languages[selectedLanguage].map((font) => (
           <div
             key={font}

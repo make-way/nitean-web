@@ -169,7 +169,7 @@ export default function Header({ sticky = true }: HeaderProps) {
               </div>
               <div className='h-px bg-zinc-200 dark:bg-zinc-800' />
               <div className='py-2 text-sm'>
-                <MenuItem icon={<GlobeLock size={16} />} label='Privacy' url='/privacy' />
+                <MenuItem icon={<GlobeLock size={16} />} label='Terms & Conditions' url='/terms-conditions' />
               </div>
             </ul>
           </div>

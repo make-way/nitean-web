@@ -12,67 +12,65 @@ import {
 } from '@phosphor-icons/react';
 import { TProfileUser } from '@/types';
 
-type SocialKeys =
-  | "telegram_link"
-  | "linkedin_link"
-  | "github_link"
-  | "youtube_link"
-  | "tiktok_link"
-  | "facebook_link";
+type SocialKeys = 'telegram_link' | 'linkedin_link' | 'github_link' | 'youtube_link' | 'tiktok_link' | 'facebook_link';
 
-export default function ProfilePage({user} : {user: TProfileUser}) {
-// const socials = [
-//   { name: 'Telegram', icon: TelegramLogoIcon, key: 'telegram_link' },
-//   { name: 'LinkedIn', icon: LinkedinLogoIcon, key: 'linkedin_link' },
-//   { name: 'GitHub', icon: GithubLogoIcon, key: 'github_link' },
-//   { name: 'YouTube', icon: YoutubeLogoIcon, key: 'youtube_link' },
-//   { name: 'TikTok', icon: TiktokLogoIcon, key: 'tiktok_link' },
-//   { name: 'Facebook', icon: FacebookLogoIcon, key: 'facebook_link' },
-// ];
-const socials: {
-  name: string;
-  icon: any;
-  key: SocialKeys;
-}[] = [
-  { name: 'Telegram', icon: TelegramLogoIcon, key: 'telegram_link' },
-  { name: 'LinkedIn', icon: LinkedinLogoIcon, key: 'linkedin_link' },
-  { name: 'GitHub', icon: GithubLogoIcon, key: 'github_link' },
-  { name: 'YouTube', icon: YoutubeLogoIcon, key: 'youtube_link' },
-  { name: 'TikTok', icon: TiktokLogoIcon, key: 'tiktok_link' },
-  { name: 'Facebook', icon: FacebookLogoIcon, key: 'facebook_link' },
-];
+export default function ProfilePage({ user }: { user: TProfileUser }) {
+  const socials: {
+    name: string;
+    icon: any;
+    key: SocialKeys;
+  }[] = [
+    { name: 'Telegram', icon: TelegramLogoIcon, key: 'telegram_link' },
+    { name: 'LinkedIn', icon: LinkedinLogoIcon, key: 'linkedin_link' },
+    { name: 'GitHub', icon: GithubLogoIcon, key: 'github_link' },
+    { name: 'YouTube', icon: YoutubeLogoIcon, key: 'youtube_link' },
+    { name: 'TikTok', icon: TiktokLogoIcon, key: 'tiktok_link' },
+    { name: 'Facebook', icon: FacebookLogoIcon, key: 'facebook_link' },
+  ];
+
+  const hasSocial = socials.some((s) => user?.[s.key]);
 
   return (
     <div className='mx-auto mt-10 max-w-3xl space-y-8'>
       {/* Bio */}
-      <p className='leading-relaxed text-gray-700 dark:text-gray-300'>{user.bio ?? "No Bio of this user."}</p>
+      <p className='leading-relaxed text-gray-700 dark:text-gray-300'>{user.bio ?? ''}</p>
 
-      <h1 className='text-2xl font-bold uppercase text-gray-700 dark:text-gray-300'>social media</h1>
-      {/* Social Buttons */}
-      <div className="flex flex-wrap gap-3">
-  {socials.map((s, i) => {
-    const Icon = s.icon;
-    const link = user?.[s.key];
+      {hasSocial && (
+        <>
+          <h1 className='text-2xl font-bold text-gray-700 uppercase dark:text-gray-300'>social media</h1>
+          {/* Social Buttons */}
+          <div className='flex flex-wrap gap-3'>
+            {socials.map((s, i) => {
+              const Icon = s.icon;
+              const link = user?.[s.key];
 
-    if (!link) return null;
+              if (!link) return null;
 
-    return (
-      <a key={i} href={link} target="_blank" rel="noopener noreferrer">
-        <Button
-          variant="outline"
-          className="flex items-center gap-2 rounded-sm border-blue-500 text-blue-600 shadow hover:bg-blue-50 cursor-pointer"
-        >
-          <Icon className="h-4 w-4" />
-          {s.name}
-        </Button>
-      </a>
-    );
-  })}
-</div>
+              return (
+                <a key={i} href={link} target='_blank' rel='noopener noreferrer'>
+                  <Button
+                    variant='outline'
+                    className='flex cursor-pointer items-center gap-2 rounded-sm border-blue-500 text-blue-600 shadow hover:bg-blue-50'
+                  >
+                    <Icon className='h-4 w-4' />
+                    {s.name}
+                  </Button>
+                </a>
+              );
+            })}
+          </div>
+        </>
+      )}
 
-      <h2 className='text-2xl font-bold uppercase text-gray-700 dark:text-gray-300'>Experience</h2>
+      {(!hasSocial || user.bio === "") && (
+        <Card className='flex items-center justify-center rounded-none border-dashed'>
+          <span className='text-gray-700 dark:text-gray-300'>No bio or Social medai</span>
+        </Card>
+      )}
+
+      {/* <h2 className='text-2xl font-bold uppercase text-gray-700 dark:text-gray-300'>Experience</h2> */}
       {/* Experience Card */}
-      <Card className='rounded-sm border py-0 shadow-sm'>
+      {/* <Card className='rounded-sm border py-0 shadow-sm'>
         <CardContent className='p-6'>
           <div className='flex items-start gap-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-sm bg-blue-100'>
@@ -122,7 +120,7 @@ const socials: {
             Learning and research Flutter for mobile app
           </p>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }
