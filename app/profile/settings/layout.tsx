@@ -29,7 +29,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
             <Link
                 href="/"
                 aria-label="Close settings"
-                className="hidden sm:block fixed top-4 right-4 z-50 rounded-full p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-900"
+                className="fixed top-4 right-4 z-50 rounded-full p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-900"
             >
                 <X className="h-5 w-5" />
             </Link>
