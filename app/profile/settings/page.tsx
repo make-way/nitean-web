@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
-import { updateSingleUserFieldAction, checkUsernameUniqueAction } from '@/server/actions/user';
+import { updateSingleUserFieldAction, checkUsernameUniqueAction, deleteUploadThingFileAction } from '@/server/actions/user';
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, AlertCircle, Camera } from 'lucide-react';
 import { useUploadThing } from '@/lib/uploadthing';
@@ -96,6 +96,15 @@ export default function AccountPage() {
     if (!selectedFile) return;
     setIsSavingImage(true);
     try {
+        // Delete old image from UploadThing before uploading the new one
+        const oldImageUrl = session?.user.image;
+        const isUploadThingUrl = oldImageUrl && (
+          oldImageUrl.includes('utfs.io') || oldImageUrl.includes('ufs.sh')
+        );
+        if (isUploadThingUrl) {
+          await deleteUploadThingFileAction(oldImageUrl);
+        }
+
         const uploadRes = await startUpload([selectedFile]);
         const url = uploadRes?.[0]?.url;
 
