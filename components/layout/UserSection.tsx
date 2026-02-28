@@ -15,14 +15,7 @@ interface UserSectionProps {
 
 export function UserSection({ user }: UserSectionProps) {
   if (!user) {
-    return (
-      <Link 
-          href="/login"
-          className="flex items-center justify-center h-12 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all"
-      >
-          Sign In
-      </Link>
-    );
+    return;
   }
 
   return (

@@ -6,7 +6,9 @@ import prisma from '@/lib/prisma';
 export async function getAllMembers() {
   return await prisma.user.findMany({
     orderBy: {
-      createdAt: 'desc',
+      posts: {
+        _count: 'desc',
+      },
     },
     select: {
       id: true,

@@ -15,7 +15,7 @@ export default function PostCard({ post }: PostCardProps) {
     const slug = post.slug.trim();
 
     return (
-        <article className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-8 mb-6 border border-zinc-100 dark:border-zinc-800 shadow-sm">
+        <article className="bg-white dark:bg-zinc-900 p-3 sm:p-8 border border-zinc-100 dark:border-zinc-800 shadow-sm">
             {/* Header: User Info */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
@@ -35,7 +35,7 @@ export default function PostCard({ post }: PostCardProps) {
                             </Link>
                             <span className="text-zinc-400 text-sm font-medium">@{post.user.username}</span>
                         </div>
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Product Designer, slothUI</p>
+                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Author</p>
                     </div>
                 </div>
                 <button className="text-zinc-400 p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl transition-all">
@@ -56,7 +56,7 @@ export default function PostCard({ post }: PostCardProps) {
                 {post.media?.url && (
                     <Link
                         href={`/post/${slug}`}
-                        className="block rounded-[2rem] overflow-hidden border border-zinc-50 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 transition-transform hover:scale-[1.005]"
+                        className="block  overflow-hidden border border-zinc-50 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 transition-transform hover:scale-[1.005]"
                     >
                         <Image
                             src={post.media.url}
@@ -96,17 +96,17 @@ export default function PostCard({ post }: PostCardProps) {
                     </Link>
 
                     {/* Share */}
-                    <button className="flex items-center gap-2 group transition-colors hover:text-green-600 text-zinc-500">
+                    {/* <button className="flex items-center gap-2 group transition-colors hover:text-green-600 text-zinc-500">
                         <div className="p-2 rounded-xl group-hover:bg-green-50 dark:group-hover:bg-green-900/10 transition-all">
                             <Share className="w-5 h-5" />
                         </div>
                         <span className="text-sm font-black">187 <span className="text-zinc-400 font-bold ml-1 text-[13px]">Share</span></span>
-                    </button>
+                    </button> */}
                 </div>
 
-                <button className="text-zinc-400 p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-2xl transition-all">
+                {/* <button className="text-zinc-400 p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-2xl transition-all">
                     <Bookmark className="w-5 h-5" />
-                </button>
+                </button> */}
             </div>
         </article>
     );
