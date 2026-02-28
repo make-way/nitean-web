@@ -74,7 +74,7 @@ export default function Header({ sticky = true }: HeaderProps) {
                     alt={session.user.name}
                     width={36}
                     height={36}
-                    className='rounded-full'
+                    className='rounded-full w-10 h-10'
                   />
                 </button>
 

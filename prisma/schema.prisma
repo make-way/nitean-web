@@ -32,6 +32,13 @@ enum PostStatus {
   Block
 }
 
+enum MediaType {
+  Image
+  File
+  Video
+  Audio
+}
+
 
 
 model User {
@@ -59,6 +66,7 @@ model User {
   likes     Like[]
   comments  Comment[]
   settings  UserSettings? 
+  media     Media[]
 
   @@unique([email])
   @@map("user")
@@ -134,13 +142,16 @@ model Post{
   slug          String    @unique @default(uuid()) @db.VarChar(100)
   summary       String
   content       String    @db.Text
-  thumbnail     String?
+  mediaId       Int?                   // relation to Media table
+  media         Media?    @relation(fields: [mediaId], references: [id], onDelete: SetNull)
   status        PostStatus    @default(Draft)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   likes     Like[]
   comments  Comment[]
+
+  @@map("post")
 }
 
 model Like {
@@ -172,4 +183,21 @@ model Comment {
   updatedAt DateTime @updatedAt
 
   @@map("comment")
+}
+
+model Media {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String                    // original file name
+  url       String                    // storage URL (UploadThing, S3, etc.)
+  mediaType MediaType @default(Image) // Image | File | Video | Audio
+  extension String                    // e.g. "jpg", "pdf"
+  size      Int                       // bytes
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  posts     Post[]
+
+  @@map("media")
 }

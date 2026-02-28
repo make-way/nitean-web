@@ -52,6 +52,7 @@ export default function UpdatePostPage({ params }: PageProps) {
     const [content, setContent] = useState('');
     const [status, setStatus] = useState<PostStatus>(PostStatus.Draft);
     const [thumbnail, setThumbnail] = useState('');
+    const [mediaId, setMediaId] = useState<number | undefined>(undefined);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,12 @@ export default function UpdatePostPage({ params }: PageProps) {
         onClientUploadComplete: (res) => {
             if (res?.[0]?.url) {
                 setThumbnail(res[0].url);
+                // Capture mediaId from UploadThing server response
+                const serverData = (res[0] as any).serverData;
+                const potentialMediaId = serverData?.mediaId || (res[0] as any).mediaId;
+                if (potentialMediaId) {
+                  setMediaId(Number(potentialMediaId));
+                }
                 toast.success('Thumbnail uploaded!');
             }
             setIsUploading(false);
@@ -111,7 +118,9 @@ export default function UpdatePostPage({ params }: PageProps) {
             setSummary(post.summary);
             setContent(post.content);
             setStatus(post.status);
-            setThumbnail(post.thumbnail || '');
+            // Use URL from media relation if available, fallback to legacy thumbnail field
+            setThumbnail(post.media?.url || post.thumbnail || '');
+            setMediaId(post.mediaId || undefined);
             setSlugTouched(true); // Prevent auto-slug from overriding loaded slug
         } catch (error) {
             console.error('Failed to fetch post:', error);
@@ -185,7 +194,7 @@ export default function UpdatePostPage({ params }: PageProps) {
             summary,
             content,
             status: newStatus,
-            thumbnail: thumbnail || undefined,
+            mediaId: mediaId,
         });
 
         if (result.success) {
@@ -276,11 +285,11 @@ export default function UpdatePostPage({ params }: PageProps) {
                         </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-                    <Button variant='outline' disabled={isPending || slugExists} onClick={() => handleUpdate(PostStatus.Draft)} className='bg-white'>
+                    <Button variant='outline' disabled={isPending || slugExists || isUploading} onClick={() => handleUpdate(PostStatus.Draft)} className='bg-white'>
                         {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
                         Save Draft
                     </Button>
-                    <Button disabled={isPending || slugExists} onClick={() => handleUpdate(PostStatus.Aprove)}>
+                    <Button disabled={isPending || slugExists || isUploading} onClick={() => handleUpdate(PostStatus.Aprove)}>
                         {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
                         Update Post
                     </Button>
@@ -366,6 +375,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setThumbnail('');
+                                            setMediaId(undefined);
                                             if (fileInputRef.current) fileInputRef.current.value = '';
                                         }}
                                         className='absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-destructive text-white shadow-md hover:bg-destructive/80 transition-colors'

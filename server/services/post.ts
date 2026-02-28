@@ -1,7 +1,7 @@
 import { PostStatus } from '@/enum';
 import prisma from '@/lib/prisma';
 import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
-import { UTApi } from 'uploadthing/server';
+import { deleteMediaIfOrphaned } from './media';
 
 /**
  * Service: Pure database interaction.
@@ -11,7 +11,7 @@ import { UTApi } from 'uploadthing/server';
 export async function getPostBySlug(slug: string) {
   return prisma.post.findUnique({
     where: { slug },
-    include: { user: true },
+    include: { user: true, media: true },
   });
 }
 
@@ -22,7 +22,7 @@ export async function createPost(data: {
   content: string;
   status: PostStatus;
   userId: string;
-  thumbnail?: string;
+  mediaId?: number;
 }) {
   const post = await prisma.post.create({
     data: {
@@ -32,10 +32,11 @@ export async function createPost(data: {
       content: data.content,
       status: data.status,
       userId: data.userId,
-      thumbnail: data.thumbnail,
+      mediaId: data.mediaId,
     },
     include: {
-      user: true, // Useful if you need to return the username immediately
+      user: true, 
+      media: true,
     },
   });
 
@@ -74,7 +75,7 @@ export async function updatePost(data: {
   content: string;
   status: PostStatus;
   userId: string;
-  thumbnail?: string;
+  mediaId?: number;
 }) {
   // Only update slug if it has changed
   const updateData: any = {
@@ -82,7 +83,7 @@ export async function updatePost(data: {
     summary: data.summary,
     content: data.content,
     status: data.status,
-    thumbnail: data.thumbnail,
+    mediaId: data.mediaId ?? null,
   };
 
   // Only include slug update if it's different from current slug
@@ -90,13 +91,27 @@ export async function updatePost(data: {
     updateData.slug = data.newSlug;
   }
 
+  // CHECK FOR OLD MEDIA
+  const oldPost = await prisma.post.findUnique({
+    where: { slug: data.slug },
+    select: { mediaId: true },
+  });
+
   const post = await prisma.post.update({
     where: { slug: data.slug },
     data: updateData,
     include: {
       user: true,
+      media: true,
     },
   });
+
+  // CLEANUP OLD MEDIA IF CHANGED
+  if (oldPost?.mediaId && oldPost.mediaId !== data.mediaId) {
+    // Only cleanup if the media has actually changed
+    // This will check if any OTHER posts still use the old media before deleting
+    await deleteMediaIfOrphaned(oldPost.mediaId);
+  }
 
   // CACHE INVALIDATION
   revalidatePath(`/${post.user.username}/posts`);
@@ -113,11 +128,15 @@ export async function updatePost(data: {
 }
 
 export async function deletePost(slug: string) {
-  // 1. Fetch the post first to get the thumbnail URL before deleting
-  const existingPost = await prisma.post.findUnique({
+  // 1. Fetch the post first to get any associated media
+  const postToDelete = await prisma.post.findUnique({
     where: { slug },
-    select: { thumbnail: true },
+    select: { id: true, mediaId: true, user: { select: { username: true } } },
   });
+
+  if (!postToDelete) {
+     throw new Error("Post not found");
+  }
 
   // 2. Delete the post from the database
   const post = await prisma.post.delete({
@@ -127,23 +146,9 @@ export async function deletePost(slug: string) {
     },
   });
 
-  // 3. Delete the thumbnail from UploadThing storage (if it exists)
-  if (existingPost?.thumbnail) {
-    try {
-      const utapi = new UTApi();
-      // Extract the file key from the UploadThing URL
-      // UploadThing URLs look like: https://utfs.io/f/<fileKey> or https://<appId>.ufs.sh/f/<fileKey>
-      const url = new URL(existingPost.thumbnail);
-      const fileKey = url.pathname.split('/').pop();
-
-      if (fileKey) {
-        await utapi.deleteFiles(fileKey);
-        console.log('Thumbnail deleted from UploadThing:', fileKey);
-      }
-    } catch (error) {
-      // Log but don't throw — post is already deleted from DB
-      console.error('Failed to delete thumbnail from UploadThing:', error);
-    }
+  // 3. Cleanup associated media if it's no longer used by any other posts
+  if (postToDelete.mediaId) {
+    await deleteMediaIfOrphaned(postToDelete.mediaId);
   }
 
   // CACHE INVALIDATION
@@ -158,7 +163,7 @@ export async function deletePost(slug: string) {
 export async function getPostById(id: number) {
   return prisma.post.findUnique({
     where: { id },
-    include: { user: true },
+    include: { user: true, media: true },
   });
 }
 
@@ -173,7 +178,10 @@ export const getCachedPosts = unstable_cache(
       take: limit,
       skip: skip,
       include: { 
-        user: true, _count: { select: { likes: true, comments: true } } },
+        user: true, 
+        media: true,
+        _count: { select: { likes: true, comments: true } } 
+      },
     });
   },
   ['main-feed-posts'],

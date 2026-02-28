@@ -32,6 +32,7 @@ export default function CreatePostForm() {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [mediaId, setMediaId] = useState<number | undefined>(undefined);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -39,6 +40,12 @@ export default function CreatePostForm() {
     onClientUploadComplete: (res) => {
       if (res?.[0]?.url) {
         setThumbnail(res[0].url);
+        // Capture mediaId from UploadThing server response
+        const serverData = (res[0] as any).serverData;
+        const potentialMediaId = serverData?.mediaId || (res[0] as any).mediaId;
+        if (potentialMediaId) {
+          setMediaId(Number(potentialMediaId));
+        }
         toast.success("Thumbnail uploaded!");
       }
       setIsUploading(false);
@@ -116,7 +123,7 @@ export default function CreatePostForm() {
         summary,
         content,
         status,
-        thumbnail: thumbnail || undefined,
+        mediaId: mediaId,
       });
 
       if (result.success) {
@@ -254,6 +261,7 @@ export default function CreatePostForm() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setThumbnail("");
+                      setMediaId(undefined);
                       if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-destructive text-white shadow-md hover:bg-destructive/80 transition-colors"

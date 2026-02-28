@@ -74,10 +74,10 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
                         </div>
 
                         {/* Right Image */}
-                        {post.thumbnail && (
+                        {post.media?.url && (
                         <div className='relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border sm:h-32 sm:w-48'>
                             <Image
-                            src={post.thumbnail}
+                            src={post.media.url}
                             alt={post.title}
                             fill
                             sizes='(max-width: 768px) 100px, 200px'

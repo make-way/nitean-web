@@ -63,8 +63,8 @@ export default function ProfilePage({ user }: { user: TProfileUser }) {
       )}
 
       {(!hasSocial || user.bio === "") && (
-        <Card className='flex items-center justify-center rounded-none border-dashed'>
-          <span className='text-gray-700 dark:text-gray-300'>No bio or Social medai</span>
+        <Card className='flex items-center justify-center rounded-sm border-dashed'>
+          <span className='text-gray-700 dark:text-gray-300'>No bio or any experience here.</span>
         </Card>
       )}
 

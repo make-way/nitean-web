@@ -16,7 +16,9 @@ export async function POST(req: Request) {
             content: data.content,
             status: data.status as PostStatus,
             userId: data.userId,
-        }
+            mediaId: (data as any).mediaId,
+        },
+        include: { user: true, media: true },
         });
 
         return NextResponse.json({ message: "Post Created Successfully", post }, { status: 201 });

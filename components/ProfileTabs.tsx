@@ -8,6 +8,7 @@ export default function ProfileTabs({ username }: { username: string }) {
 
     const isProfile = pathname === `/${username}`;
     const isArticles = pathname === `/${username}/posts`;
+    const isMedia = pathname === `/${username}/media`;
 
     return (
         <div className="mt-10 border-b">
@@ -32,6 +33,17 @@ export default function ProfileTabs({ username }: { username: string }) {
                 }`}
                 >
                 Articles
+                </Link>
+
+                <Link
+                href={`/${username}/media`}
+                className={`pb-3 transition ${
+                    isMedia
+                    ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                    : "text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
+                }`}
+                >
+                Media
                 </Link>
             </div>
         </div>

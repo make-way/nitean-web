@@ -16,13 +16,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       // It's a numeric ID
       post = await prisma.post.findUnique({
         where: { id: Number(id) },
-        include: { user: true },
+        include: { user: true, media: true },
       });
     } else {
       // It's a slug
       post = await prisma.post.findUnique({
         where: { slug: id },
-        include: { user: true },
+        include: { user: true, media: true },
       });
     }
 
@@ -95,9 +95,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         slug: data.slug,
         summary: data.summary,
         content: data.content,
+
         status: data.status as PostStatus,
+        mediaId: (data as any).mediaId,
       },
-      include: { user: true },
+      include: { user: true, media: true },
     });
 
     return NextResponse.json({ message: 'Post Updated Successfully', post: updatedPost }, { status: 200 });

@@ -67,16 +67,16 @@ export default function PostCard({ post }: PostCardProps) {
             </div>
 
             {/* ================= IMAGE CENTER ================= */}
-            {post.thumbnail && (
+            {post.media?.url && (
                 <Link
                     href={`/post/${slug}`}
-                    className="relative block w-full aspect-[4/3] bg-black"
+                    className="relative block w-full h-72 bg-black"
                 >
                     <Image
-                        src={post.thumbnail}
+                        src={post.media.url}
                         alt={post.title}
                         fill
-                        className="object-contain"
+                        className="object-contain w-full h-72"
                     />
                 </Link>
             )}
