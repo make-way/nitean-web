@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { getPostsOwner } from '@/server/actions/post';
+import { getPostsOwner } from '@/server/actions/article';
 import { getUserMedia } from '@/server/actions/media';
 import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getCachedPost } from '@/server/cache/post';
+import { getCachedArticle } from '@/server/cache/article';
 
 // UI Components
 import Header from '@/components/Header';
@@ -12,25 +12,25 @@ import PostComments from '@/components/post/PostComments';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const post = await getCachedPost(slug);
+    const article = await getCachedArticle(slug);
 
-    if (!post) return { title: 'Post Not Found' };
+    if (!article) return { title: 'Article Not Found' };
 
     return {
-        title: post.title,
-        description: post.summary,
+        title: article.title,
+        description: article.summary,
         openGraph: {
-        title: post.title,
-        images: post.media ? [{ url: post.media.url }] : [],
+            title: article.title,
+            images: article.media ? [{ url: article.media.url }] : [],
         },
     };
 }
 
-export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const post = await getCachedPost(slug);
+    const article = await getCachedArticle(slug);
 
-    if (!post) notFound();
+    if (!article) notFound();
 
     return (
         <div className='min-h-screen bg-zinc-50 dark:bg-black'>
@@ -38,10 +38,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <ScrollProgress />
 
             <main className='mx-auto max-w-5xl px-4 py-8'>
-                <PostHeader title={post.title} />
-                <PostAuthor user={post.user} createdAt={post.createdAt} />
-                <PostContent post={post} />
-                <PostComments postId={post.id} postUserId={post.userId} />
+                <PostHeader title={article.title} />
+                <PostAuthor user={article.user} createdAt={article.createdAt} />
+                <PostContent post={article} />
+                <PostComments postId={article.id} postUserId={article.userId} />
             </main>
         </div>
     );

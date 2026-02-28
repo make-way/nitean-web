@@ -23,7 +23,7 @@ function extractKeyFromUrl(url: string): string | null {
 export async function deleteMediaIfOrphaned(mediaId: number) {
   try {
     // 1. Check if the media is still referenced by any posts
-    const postCount = await prisma.post.count({
+    const postCount = await prisma.article.count({
       where: { mediaId: mediaId },
     });
 

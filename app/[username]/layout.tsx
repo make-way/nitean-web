@@ -63,7 +63,7 @@ export default async function UserLayout({
         where: { username: username },
         include: {
             _count: {
-                select: { posts: true }
+                select: { articles: true }
             }
         }
     });

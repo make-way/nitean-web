@@ -23,7 +23,6 @@ export function NavLinks({ session: initialSession }: { session: any }) {
     { icon: Book, label: 'Articles', href: `/${username}/articles` , requiresAuth: true },
     { icon: Newspaper, label: 'Posts', href: `/${username}/posts` , requiresAuth: true },
     { icon: Plus, label: 'Create Article', href: `/article/create` , requiresAuth: true },
-    { icon: Plus, label: 'Create Post', href: `/post/create` , requiresAuth: true },
   ], [username]);
 
   const filteredNavItems = useMemo(() => {

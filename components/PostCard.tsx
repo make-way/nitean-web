@@ -30,7 +30,7 @@ export default function PostCard({ post }: PostCardProps) {
                     </Link>
                     <div>
                         <div className="flex items-center gap-2">
-                             <Link href={`/${post.user.username}`} className="font-black text-zinc-900 dark:text-white hover:underline leading-none">
+                            <Link href={`/${post.user.username}`} className="font-black text-zinc-900 dark:text-white hover:underline leading-none">
                                 {post.user.name}
                             </Link>
                             <span className="text-zinc-400 text-sm font-medium">@{post.user.username}</span>
@@ -46,7 +46,7 @@ export default function PostCard({ post }: PostCardProps) {
             {/* Content Styling */}
             <div className="space-y-4">
                 <Link href={`/article/${slug}`} className="block">
-                     <p className="text-[17px] text-zinc-800 dark:text-zinc-200 leading-[1.6] whitespace-pre-wrap font-medium">
+                    <p className="text-[17px] text-zinc-800 dark:text-zinc-200 leading-[1.6] whitespace-pre-wrap font-medium">
                         {post.summary || post.title}
                     </p>
                 </Link>
@@ -75,17 +75,17 @@ export default function PostCard({ post }: PostCardProps) {
                     <div className="flex items-center gap-2 group cursor-pointer transition-colors hover:text-red-500">
                         <div className="p-2 rounded-xl group-hover:bg-red-50 dark:group-hover:bg-red-900/10">
                             <LikeButton
-                                postId={post.id}
+                                articleId={post.id}
                                 initialLikeCount={likeCount}
                                 isLiked={isLiked}
                                 hideLabel={false}
                             />
                         </div>
                     </div>
-                    
+
                     {/* Comments */}
                     <Link
-                        href={`/post/${slug}/#comments`}
+                        href={`/article/${slug}/#comments`}
                         className="flex items-center gap-2 group transition-colors hover:text-indigo-600 text-zinc-500"
                     >
                         <div className="p-2 rounded-xl group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/10 transition-all">

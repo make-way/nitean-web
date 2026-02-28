@@ -8,7 +8,7 @@ import prisma from '@/lib/prisma';
 /**
  * Action: Create a new comment
  */
-export async function createCommentAction(postId: number, content: string) {
+export async function createCommentAction(articleId: number, content: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -25,7 +25,7 @@ export async function createCommentAction(postId: number, content: string) {
     await createComment({
       content,
       userId: session.user.id,
-      postId,
+      articleId: articleId,
     });
 
     return { success: true, message: 'Comment added successfully.' };
@@ -91,7 +91,7 @@ export async function deleteCommentAction(commentId: number) {
     const existing = await prisma.comment.findUnique({
       where: { id: commentId },
       include: {
-        post: {
+        article: {
           select: { userId: true }
         }
       }
@@ -103,7 +103,7 @@ export async function deleteCommentAction(commentId: number) {
 
     // Allow comment owner OR post owner to delete
     const isCommentOwner = existing.userId === session.user.id;
-    const isPostOwner = existing.post.userId === session.user.id;
+    const isPostOwner = existing.article.userId === session.user.id;
 
     if (!isCommentOwner && !isPostOwner) {
       return { success: false, message: 'You do not have permission to delete this comment.' };

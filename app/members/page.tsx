@@ -15,7 +15,7 @@ export default async function MembersPage() {
         name: member.name,
         username: member.username,
         avatar: member.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${member.username}`,
-        postsCount: member._count.posts,
+        postsCount: member._count.articles,
         followersCount: 0, // Placeholder
     }));
 

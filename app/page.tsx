@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getCachedPosts } from "@/server/services/post";
+import { getCachedPosts } from "@/server/services/article";
 import prisma from "@/lib/prisma";
 import PostCard from "@/components/PostCard";
 import LeftSidebar from "@/components/layout/LeftSidebar";
@@ -21,13 +21,13 @@ export default async function Page() {
     // 3. Map through posts to see if the current user liked them
     const postsWithLikeStatus = await Promise.all(posts.map(async (post) => {
         let isLiked = false;
-        
+
         if (currentUserId) {
             const like = await prisma.like.findUnique({
                 where: {
-                    userId_postId: {
+                    userId_articleId: {
                         userId: currentUserId,
-                        postId: post.id
+                        articleId: post.id
                     }
                 }
             });

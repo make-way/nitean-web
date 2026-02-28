@@ -42,8 +42,8 @@ export default async function RightSidebar() {
     </aside>
   );
 
-  // Fetch post count directly from DB
-  const postCount = await prisma.post.count({
+  // Fetch article count directly from DB
+  const articleCount = await prisma.article.count({
     where: { userId: session.user.id }
   });
 
@@ -73,8 +73,8 @@ export default async function RightSidebar() {
         {/* Stats */}
         <div className="flex items-center justify-between px-8 py-6 border-y border-zinc-50 dark:border-zinc-800">
             <div className="text-center flex-1">
-                <p className="text-lg font-black text-zinc-900 dark:text-white">{postCount}</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Posts</p>
+                <p className="text-lg font-black text-zinc-900 dark:text-white">{articleCount}</p>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Articles</p>
             </div>
             <div className="w-px h-10 bg-zinc-100 dark:bg-zinc-800 mx-1" />
             <div className="text-center flex-1">

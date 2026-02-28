@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { PostStatus } from "@/enum";
 import { useSession } from "@/lib/auth-client";
-import { createPostAction } from "@/server/actions/post";
+import { createPostAction } from "@/server/actions/article";
 import RichTextEditor from "@/components/rich-text-editor";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/Spinner";
@@ -151,15 +151,15 @@ export default function CreatePostForm() {
     return (
         <main className="mx-auto max-w-5xl px-3 pb-12">
             {/* Header Section */}
-                <div className="mb-8 flex items-start gap-6 border-b border-zinc-200 dark:border-zinc-800 py-3">
-                    <Link
-                        href="/"
-                        className="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                    >
-                        <ArrowLeft className="w-6 h-6" />
-                    </Link>
-                    <h1 className="text-xl md:text-2xl font-semibold">Create Article</h1>
-                </div>
+            <div className="mb-8 flex items-start gap-6 border-b border-zinc-200 dark:border-zinc-800 py-3">
+                <Link
+                    href="/"
+                    className="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                    <ArrowLeft className="w-6 h-6" />
+                </Link>
+                <h1 className="text-xl md:text-2xl font-semibold">Create Article</h1>
+            </div>
             <div className="flex flex-col gap-4 sm:flex-row items-center justify-end border-b border-zinc-200 dark:border-zinc-800 pb-4">
                 <div className="flex items-center gap-3">
                     <Button
@@ -219,7 +219,7 @@ export default function CreatePostForm() {
                             {slugExists ? (
                                 <span className="text-destructive">This slug is already taken.</span>
                             ) : (
-                                <span>Preview: yourdomain.com/posts/{slug || "..."}</span>
+                                <span>Preview: yourdomain.com/article/{slug || "..."}</span>
                             )}
                         </p>
                     </div>

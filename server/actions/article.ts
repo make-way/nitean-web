@@ -3,7 +3,7 @@
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { PostStatus } from '@/enum';
-import { createPost, getCachedPosts, updatePost, deletePost } from '@/server/services/post';
+import { createArticle, getCachedPosts, updatePost, deletePost } from '@/server/services/article';
 import { headers } from 'next/headers';
 import { unstable_cache, revalidateTag, revalidatePath } from 'next/cache';
 
@@ -11,7 +11,7 @@ import { unstable_cache, revalidateTag, revalidatePath } from 'next/cache';
  * Action: Handles user-driven side effects.
  * Always use these for forms or button clicks that change data.
  */
-export async function togglePostLike(postId: number) {
+export async function toggleArticleLike(articleId: number) {
   // 1. Get the session securely on the server
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -26,9 +26,9 @@ export async function togglePostLike(postId: number) {
   try {
     const existingLike = await prisma.like.findUnique({
       where: {
-        userId_postId: {
+        userId_articleId: {
           userId: userId,
-          postId: postId,
+          articleId: articleId,
         },
       },
     });
@@ -41,12 +41,12 @@ export async function togglePostLike(postId: number) {
       await prisma.like.create({
         data: {
           userId: userId,
-          postId: postId,
+          articleId: articleId,
         },
       });
     }
 
-    revalidateTag('posts', 'max');
+    revalidateTag('articles', 'max');
     revalidatePath('/');
   } catch (error) {
     console.error('Failed to toggle like:', error);
@@ -69,7 +69,7 @@ export async function createPostAction(values: { title: string; slug: string; su
 
   try {
     // 2. Call the service
-    const post = await createPost({
+    const post = await createArticle({
       ...values,
       userId: session.user.id,
     });
@@ -94,7 +94,7 @@ export async function createPostAction(values: { title: string; slug: string; su
  */
 export const getPostsOwner = unstable_cache(
   async (userId: string) => {
-    return await prisma.post.findMany({
+    return await prisma.article.findMany({
       where: {
         userId: userId,
         // status: PostStatus.Aprove,
@@ -138,7 +138,7 @@ export async function updatePostAction(values: {
 
   try {
     // 2. Check if post exists and user owns it
-    const existingPost = await prisma.post.findUnique({
+    const existingPost = await prisma.article.findUnique({
       where: { slug: values.slug },
       select: { userId: true },
     });
@@ -192,7 +192,7 @@ export async function deletePostAction(slug: string) {
 
   try {
     // 2. Check if post exists and user owns it
-    const existingPost = await prisma.post.findUnique({
+    const existingPost = await prisma.article.findUnique({
       where: { slug },
       select: { userId: true },
     });

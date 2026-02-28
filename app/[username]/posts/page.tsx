@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FileEditIcon, Trash } from 'lucide-react';
 import { timeAgo } from '@/utils/TimeAgo';
 import { notFound } from 'next/navigation';
-import { getPostsOwner } from '@/server/actions/post';
+import { getPostsOwner } from '@/server/actions/article';
 import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 
@@ -28,17 +28,17 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
 
     if (posts.length === 0) {
         return (
-        <div className='mt-20 text-center text-gray-500'>
-            <p>No posts found. Time to write something new!</p>
-        </div>
+            <div className='mt-20 text-center text-gray-500'>
+                <p>No posts found. Time to write something new!</p>
+            </div>
         );
     }
 
     return (
         <div className='mt-4 space-y-6'>
-           <div className="flex items-center justify-center rounded-sm border-dashed">
-              <h1>Coming Soon</h1>
-           </div>
+            <div className="flex items-center justify-center rounded-sm border-dashed">
+                <h1>Coming Soon</h1>
+            </div>
         </div>
     );
 }

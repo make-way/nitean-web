@@ -8,14 +8,14 @@ import { deleteMediaIfOrphaned } from './media';
  * Use this when you need raw data without Next.js caching overhead
  * (e.g., inside a Cron job or a background worker).
  */
-export async function getPostBySlug(slug: string) {
-  return prisma.post.findUnique({
+export async function getArticleBySlug(slug: string) {
+  return prisma.article.findUnique({
     where: { slug },
     include: { user: true, media: true },
   });
 }
 
-export async function createPost(data: {
+export async function createArticle(data: {
   title: string;
   slug: string;
   summary: string;
@@ -24,7 +24,7 @@ export async function createPost(data: {
   userId: string;
   mediaId?: number;
 }) {
-  const post = await prisma.post.create({
+  const post = await prisma.article.create({
     data: {
       title: data.title,
       slug: data.slug,
@@ -53,7 +53,7 @@ export async function createPost(data: {
 }
 
 export async function checkSlugAvailability(slug: string, excludePostId?: number) {
-  const existing = await prisma.post.findUnique({
+  const existing = await prisma.article.findUnique({
     where: { slug },
     select: { id: true },
   });
@@ -92,12 +92,12 @@ export async function updatePost(data: {
   }
 
   // CHECK FOR OLD MEDIA
-  const oldPost = await prisma.post.findUnique({
+  const oldPost = await prisma.article.findUnique({
     where: { slug: data.slug },
     select: { mediaId: true },
   });
 
-  const post = await prisma.post.update({
+  const post = await prisma.article.update({
     where: { slug: data.slug },
     data: updateData,
     include: {
@@ -129,7 +129,7 @@ export async function updatePost(data: {
 
 export async function deletePost(slug: string) {
   // 1. Fetch the post first to get any associated media
-  const postToDelete = await prisma.post.findUnique({
+  const postToDelete = await prisma.article.findUnique({
     where: { slug },
     select: { id: true, mediaId: true, user: { select: { username: true } } },
   });
@@ -139,7 +139,7 @@ export async function deletePost(slug: string) {
   }
 
   // 2. Delete the post from the database
-  const post = await prisma.post.delete({
+  const post = await prisma.article.delete({
     where: { slug },
     include: {
       user: true,
@@ -161,7 +161,7 @@ export async function deletePost(slug: string) {
 }
 
 export async function getPostById(id: number) {
-  return prisma.post.findUnique({
+  return prisma.article.findUnique({
     where: { id },
     include: { user: true, media: true },
   });
@@ -172,7 +172,7 @@ export async function getPostById(id: number) {
  */
 export const getCachedPosts = unstable_cache(
   async (limit: number, skip: number) => {
-    return await prisma.post.findMany({
+    return await prisma.article.findMany({
       where: { status: PostStatus.Aprove },
       orderBy: { createdAt: 'desc' },
       take: limit,

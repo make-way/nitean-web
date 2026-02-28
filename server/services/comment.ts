@@ -7,7 +7,7 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function getCommentsByPostId(postId: number) {
   return prisma.comment.findMany({
-    where: { postId },
+    where: { articleId: postId },
     include: {
       user: {
         select: {
@@ -27,17 +27,17 @@ export async function getCommentsByPostId(postId: number) {
 export async function createComment(data: {
   content: string;
   userId: string;
-  postId: number;
+  articleId: number;
 }) {
   const comment = await prisma.comment.create({
     data: {
       content: data.content,
       userId: data.userId,
-      postId: data.postId,
+      articleId: data.articleId,
     },
     include: {
       user: true,
-      post: {
+      article: {
         select: {
           slug: true,
         },
@@ -46,8 +46,8 @@ export async function createComment(data: {
   });
 
   // CACHE INVALIDATION
-  revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'max');
+  revalidatePath(`/article/${comment.article.slug.trim()}`);
+  revalidateTag('articles', 'max');
   revalidatePath('/');
   
   return comment;
@@ -67,7 +67,7 @@ export async function updateComment(data: {
       content: data.content,
     },
     include: {
-      post: {
+      article: {
         select: {
           slug: true,
         },
@@ -76,8 +76,8 @@ export async function updateComment(data: {
   });
 
   // CACHE INVALIDATION
-  revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'max');
+  revalidatePath(`/article/${comment.article.slug.trim()}`);
+  revalidateTag('articles', 'max');
   revalidatePath('/');
 
   return comment;
@@ -90,7 +90,7 @@ export async function deleteComment(id: number, userId: string) {
       userId // Ensure ownership
     },
     include: {
-      post: {
+      article: {
         select: {
           slug: true,
         },
@@ -99,8 +99,8 @@ export async function deleteComment(id: number, userId: string) {
   });
 
   // CACHE INVALIDATION
-  revalidatePath(`/post/${comment.post.slug.trim()}`);
-  revalidateTag('posts', 'max');
+  revalidatePath(`/article/${comment.article.slug.trim()}`);
+  revalidateTag('articles', 'max');
   revalidatePath('/');
 
   return comment;

@@ -2,16 +2,16 @@
 
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { togglePostLike } from "@/server/actions/post";
+import { toggleArticleLike } from "@/server/actions/article";
 
-export default function LikeButton({ 
-  postId, 
-  initialLikeCount, 
+export default function LikeButton({
+  articleId,
+  initialLikeCount,
   isLiked,
   hideLabel = false
-}: { 
-  postId: number; 
-  initialLikeCount: number; 
+}: {
+  articleId: number;
+  initialLikeCount: number;
   isLiked: boolean;
   hideLabel?: boolean;
 }) {
@@ -30,25 +30,24 @@ export default function LikeButton({
     setCount(liked ? count - 1 : count + 1);
 
     try {
-      await togglePostLike(postId);
+      await toggleArticleLike(articleId);
     } catch (error) {
       // Rollback if the server fails
-       setLiked(liked);  
-       setCount(count); 
+      setLiked(liked);
+      setCount(count);
     }
   };
 
   return (
-    <button 
+    <button
       onClick={handleLike}
       className="flex items-center gap-2 group transition-colors text-zinc-500"
     >
-      <Heart 
-        className={`w-5 h-5 transition-all ${
-          liked 
-            ? "fill-red-500 stroke-red-500 scale-110" 
+      <Heart
+        className={`w-5 h-5 transition-all ${liked
+            ? "fill-red-500 stroke-red-500 scale-110"
             : "stroke-current group-hover:text-red-500"
-        }`} 
+          }`}
       />
       <span className={`text-sm font-black ${liked ? "text-red-500" : "text-zinc-500"}`}>
         {count} {!hideLabel && <span className="text-zinc-400 font-bold ml-1">Likes</span>}

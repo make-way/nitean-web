@@ -14,25 +14,25 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     if (!isNaN(Number(id))) {
       // It's a numeric ID
-      post = await prisma.post.findUnique({
+      post = await prisma.article.findUnique({
         where: { id: Number(id) },
         include: { user: true, media: true },
       });
     } else {
       // It's a slug
-      post = await prisma.post.findUnique({
+      post = await prisma.article.findUnique({
         where: { slug: id },
         include: { user: true, media: true },
       });
     }
 
     if (!post) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     return NextResponse.json({ post }, { status: 200 });
   } catch (error) {
-    console.error('GET /api/posts/[id] error:', error);
+    console.error('GET /api/article/[id] error:', error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -61,19 +61,19 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     // Find post by slug or ID
     let existingPost;
     if (!isNaN(Number(id))) {
-      existingPost = await prisma.post.findUnique({
+      existingPost = await prisma.article.findUnique({
         where: { id: Number(id) },
         select: { userId: true },
       });
     } else {
-      existingPost = await prisma.post.findUnique({
+      existingPost = await prisma.article.findUnique({
         where: { slug: id },
         select: { userId: true },
       });
     }
 
     if (!existingPost) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     if (existingPost.userId !== session.user.id) {
@@ -88,7 +88,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       updateWhere = { slug: id };
     }
 
-    const updatedPost = await prisma.post.update({
+    const updatedPost = await prisma.article.update({
       where: updateWhere,
       data: {
         title: data.title,
@@ -102,9 +102,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       include: { user: true, media: true },
     });
 
-    return NextResponse.json({ message: 'Post Updated Successfully', post: updatedPost }, { status: 200 });
+    return NextResponse.json({ message: 'Article Updated Successfully', post: updatedPost }, { status: 200 });
   } catch (error) {
-    console.error('PUT /api/posts/[id] error:', error);
+    console.error('PUT /api/article/[id] error:', error);
     if (error instanceof Error && error.message.includes('validation')) {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
@@ -128,19 +128,19 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     // Find post by slug or ID
     let existingPost;
     if (!isNaN(Number(id))) {
-      existingPost = await prisma.post.findUnique({
+      existingPost = await prisma.article.findUnique({
         where: { id: Number(id) },
         select: { userId: true },
       });
     } else {
-      existingPost = await prisma.post.findUnique({
+      existingPost = await prisma.article.findUnique({
         where: { slug: id },
         select: { userId: true },
       });
     }
 
     if (!existingPost) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     if (existingPost.userId !== session.user.id) {
@@ -155,14 +155,14 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       deleteWhere = { slug: id };
     }
 
-    const deletedPost = await prisma.post.delete({
+    const deletedPost = await prisma.article.delete({
       where: deleteWhere,
       include: { user: true },
     });
 
-    return NextResponse.json({ message: 'Post Deleted Successfully', post: deletedPost }, { status: 200 });
+    return NextResponse.json({ message: 'Article Deleted Successfully', post: deletedPost }, { status: 200 });
   } catch (error) {
-    console.error('DELETE /api/posts/[id] error:', error);
+    console.error('DELETE /api/article/[id] error:', error);
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }

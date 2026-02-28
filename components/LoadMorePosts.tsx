@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import PostCard from "./PostCard";
-import { fetchMorePosts } from "@/server/actions/post";
+import { fetchMorePosts } from "@/server/actions/article";
 
 export default function LoadMorePosts({ initialOffset }: { initialOffset: number }) {
   const [posts, setPosts] = useState<any[]>([]);
@@ -14,9 +14,9 @@ export default function LoadMorePosts({ initialOffset }: { initialOffset: number
   const loadMore = async () => {
     setLoading(true);
     const newPosts = await fetchMorePosts(10, offset);
-    
+
     if (newPosts.length < 10) setHasMore(false);
-    
+
     setPosts([...posts, ...newPosts]);
     setOffset(offset + 10);
     setLoading(false);
@@ -29,9 +29,9 @@ export default function LoadMorePosts({ initialOffset }: { initialOffset: number
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      
+
       {hasMore && (
-        <button 
+        <button
           onClick={loadMore}
           disabled={loading}
           className="mt-8 w-full py-3 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 disabled:opacity-50"

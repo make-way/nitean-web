@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { PostStatus } from '@/enum';
 import { useSession } from '@/lib/auth-client';
-import { updatePostAction, deletePostAction } from '@/server/actions/post';
+import { updatePostAction, deletePostAction } from '@/server/actions/article';
 import RichTextEditor from '@/components/rich-text-editor';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/Spinner';
@@ -57,7 +57,7 @@ export default function UpdatePostPage({ params }: PageProps) {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [postNotFound, setPostNotFound] = useState(false);
+    const [articleNotFound, setArticleNotFound] = useState(false);
 
     // Validation State
     const [checkingSlug, setCheckingSlug] = useState(false);
@@ -95,12 +95,12 @@ export default function UpdatePostPage({ params }: PageProps) {
 
     // Fetch post data on mount
     useEffect(() => {
-        const fetchPost = async () => {
+        const fetchArticle = async () => {
             try {
-                const res = await fetch(`/api/posts/${originalSlug}`);
+                const res = await fetch(`/api/article/${originalSlug}`);
 
                 if (res.status === 404) {
-                    setPostNotFound(true);
+                    setArticleNotFound(true);
                     setIsLoading(false);
                     return;
                 }
@@ -108,7 +108,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                 if (!res.ok) {
                     const errorData = await res.json().catch(() => ({}));
                     console.error('API Error:', res.status, errorData);
-                    throw new Error(errorData.error || `HTTP ${res.status}: Failed to fetch post`);
+                    throw new Error(errorData.error || `HTTP ${res.status}: Failed to fetch article`);
                 }
 
                 const data = await res.json();
@@ -124,14 +124,14 @@ export default function UpdatePostPage({ params }: PageProps) {
                 setMediaId(post.mediaId || undefined);
                 setSlugTouched(true); // Prevent auto-slug from overriding loaded slug
             } catch (error) {
-                console.error('Failed to fetch post:', error);
-                toast.error(error instanceof Error ? error.message : 'Failed to load post');
+                console.error('Failed to fetch article:', error);
+                toast.error(error instanceof Error ? error.message : 'Failed to load article');
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchPost();
+        fetchArticle();
     }, [originalSlug]);
 
     // Auto-slug title (only if slug was not manually edited)
@@ -158,7 +158,7 @@ export default function UpdatePostPage({ params }: PageProps) {
         const checkSlug = async () => {
             setCheckingSlug(true);
             try {
-                const res = await fetch(`/api/posts/check-slug?slug=${encodeURIComponent(slug)}&excludeSlug=${encodeURIComponent(originalSlug)}`, {
+                const res = await fetch(`/api/article/check-slug?slug=${encodeURIComponent(slug)}&excludeSlug=${encodeURIComponent(originalSlug)}`, {
                     signal: controller.signal,
                 });
                 const data = await res.json();
@@ -200,7 +200,7 @@ export default function UpdatePostPage({ params }: PageProps) {
 
             if (result.success) {
                 toast.success(newStatus === PostStatus.Draft ? 'Draft updated' : 'Post updated!');
-                router.push(`/${session?.user.username}/posts`);
+                router.push(`/${session?.user.username}/articles`);
             } else {
                 toast.error(result.message || 'Something went wrong');
             }
@@ -212,10 +212,10 @@ export default function UpdatePostPage({ params }: PageProps) {
             const result = await deletePostAction(originalSlug);
 
             if (result.success) {
-                toast.success('Post deleted successfully');
-                router.push(`/${session?.user.username}/posts`);
+                toast.success('Article deleted successfully');
+                router.push(`/${session?.user.username}/articles`);
             } else {
-                toast.error(result.message || 'Failed to delete post');
+                toast.error(result.message || 'Failed to delete article');
             }
         });
         setIsDeleteDialogOpen(false);
@@ -233,12 +233,12 @@ export default function UpdatePostPage({ params }: PageProps) {
 
     if (!session) return null;
 
-    if (postNotFound) {
+    if (articleNotFound) {
         return (
             <main className='mx-auto max-w-5xl px-4 py-12 sm:px-6'>
                 <div className='text-center'>
-                    <h1 className='mb-4 text-3xl font-extrabold tracking-tight'>Post Not Found</h1>
-                    <p className='text-muted-foreground mb-6'>The post you're looking for doesn't exist or has been deleted.</p>
+                    <h1 className='mb-4 text-3xl font-extrabold tracking-tight'>Article Not Found</h1>
+                    <p className='text-muted-foreground mb-6'>The article you're looking for doesn't exist or has been deleted.</p>
                     <Button onClick={() => router.back()}>Go Back</Button>
                 </div>
             </main>
@@ -269,9 +269,9 @@ export default function UpdatePostPage({ params }: PageProps) {
                         </AlertDialogTrigger>
                         <AlertDialogContent className='bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Post</AlertDialogTitle>
+                                <AlertDialogTitle>Delete Article</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Are you sure you want to delete this post? This action cannot be undone.
+                                    Are you sure you want to delete this article? This action cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -303,7 +303,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                         className="cursor-pointer"
                     >
                         {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
-                        Update Post
+                        Update Article
                     </Button>
                 </div>
             </div>
@@ -313,7 +313,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                 <section className='space-y-6 rounded-xl py-6'>
                     {/* Title Field */}
                     <div className='space-y-2'>
-                        <label className='text-sm leading-none font-semibold'>Post Title</label>
+                        <label className='text-sm leading-none font-semibold'>Article Title</label>
                         <input
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -345,7 +345,7 @@ export default function UpdatePostPage({ params }: PageProps) {
                             {slugExists ? (
                                 <span className='text-destructive'>This slug is already taken.</span>
                             ) : (
-                                <span>Preview: yourdomain.com/posts/{slug || '...'}</span>
+                                <span>Preview: yourdomain.com/article/{slug || '...'}</span>
                             )}
                         </p>
                     </div>

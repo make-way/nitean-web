@@ -16,7 +16,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ exists: false });
     }
 
-    const post = await prisma.post.findUnique({
+    const post = await prisma.article.findUnique({
       where: { slug },
       select: { id: true },
     });

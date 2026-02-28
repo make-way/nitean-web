@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 export async function getAllMembers() {
   return await prisma.user.findMany({
     orderBy: {
-      posts: {
+      articles: {
         _count: 'desc',
       },
     },
@@ -18,7 +18,7 @@ export async function getAllMembers() {
       createdAt: true,
       _count: {
         select: {
-          posts: true,
+          articles: true,
         },
       },
     },
@@ -31,7 +31,7 @@ export async function getMemberByUsername(username: string) {
     include: {
       _count: {
         select: {
-          posts: true,
+          articles: true,
         },
       },
     },

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const data = postSchema.parse(body);
 
-        const post = await prisma.post.create({
+        const post = await prisma.article.create({
         data: {
             title: data.title,
             slug: data?.slug || "",
