@@ -7,11 +7,13 @@ import { togglePostLike } from "@/server/actions/post";
 export default function LikeButton({ 
   postId, 
   initialLikeCount, 
-  isLiked 
+  isLiked,
+  hideLabel = false
 }: { 
   postId: number; 
   initialLikeCount: number; 
-  isLiked: boolean 
+  isLiked: boolean;
+  hideLabel?: boolean;
 }) {
   const [liked, setLiked] = useState(isLiked);
   const [count, setCount] = useState(initialLikeCount);
@@ -39,18 +41,17 @@ export default function LikeButton({
   return (
     <button 
       onClick={handleLike}
-      className="flex items-center gap-1.5 group transition-colors"
+      className="flex items-center gap-2 group transition-colors text-zinc-500"
     >
       <Heart 
-        size={18} 
-        className={`transition-all cursor-pointer ${
+        className={`w-5 h-5 transition-all ${
           liked 
             ? "fill-red-500 stroke-red-500 scale-110" 
-            : "stroke-zinc-500 group-hover:stroke-red-400"
+            : "stroke-current group-hover:text-red-500"
         }`} 
       />
-      <span className={`font-medium ${liked ? "text-red-500" : "text-zinc-500"}`}>
-        {count}
+      <span className={`text-sm font-black ${liked ? "text-red-500" : "text-zinc-500"}`}>
+        {count} {!hideLabel && <span className="text-zinc-400 font-bold ml-1">Likes</span>}
       </span>
     </button>
   );

@@ -24,15 +24,7 @@ export default async function MediaPage({ params }: { params: Promise<{ username
     const media = await getUserMedia(user.id);
 
     return (
-        <div className='mt-8 space-y-6'>
-            <div className='flex flex-col gap-1'>
-                <h1 className='text-2xl font-bold tracking-tight'>Media Library</h1>
-                <p className='text-muted-foreground'>
-                    {isOwner 
-                        ? "Manage all your uploaded images and files." 
-                        : `Browse media shared by ${user.name}.`}
-                </p>
-            </div>
+        <div className='mt-4 space-y-6'>
             
             <MediaGallery media={media} isOwner={isOwner} />
         </div>
