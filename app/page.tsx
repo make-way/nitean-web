@@ -54,7 +54,7 @@ export default async function Page() {
                     </div>
 
                     {/* Composer */}
-                    {/* <FeedComposer /> */}
+                    <FeedComposer />
 
                     {/* Posts Feed */}
                     <div className="">
