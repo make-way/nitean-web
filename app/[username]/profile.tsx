@@ -31,10 +31,7 @@ export default function ProfilePage({ user }: { user: TProfileUser }) {
   const hasSocial = socials.some((s) => user?.[s.key]);
 
   return (
-    <div className='mx-auto mt-10 max-w-3xl space-y-8'>
-      {/* Bio */}
-      <p className='leading-relaxed text-gray-700 dark:text-gray-300'>{user.bio ?? ''}</p>
-
+    <div className='mx-auto mt-10 max-w-3xl space-y-8 px-3'>
       {hasSocial && (
         <>
           <h1 className='text-2xl font-bold text-gray-700 uppercase dark:text-gray-300'>social media</h1>
@@ -50,7 +47,7 @@ export default function ProfilePage({ user }: { user: TProfileUser }) {
                 <a key={i} href={link} target='_blank' rel='noopener noreferrer'>
                   <Button
                     variant='outline'
-                    className='flex cursor-pointer items-center gap-2 rounded-sm border-blue-500 text-blue-600 shadow hover:bg-blue-50'
+                    className='flex cursor-pointer items-center gap-2 rounded-none border-blue-500 text-blue-600 shadow hover:bg-blue-50'
                   >
                     <Icon className='h-4 w-4' />
                     {s.name}
@@ -62,7 +59,7 @@ export default function ProfilePage({ user }: { user: TProfileUser }) {
         </>
       )}
 
-      {(!hasSocial || user.bio === "") && (
+      {!hasSocial && (
         <Card className='flex items-center justify-center rounded-sm border-dashed'>
           <span className='text-gray-700 dark:text-gray-300'>No bio or any experience here.</span>
         </Card>

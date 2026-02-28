@@ -24,8 +24,7 @@ export default async function MediaPage({ params }: { params: Promise<{ username
     const media = await getUserMedia(user.id);
 
     return (
-        <div className='mt-4 space-y-6'>
-            
+        <div className='mt-4 space-y-6 px-3'>
             <MediaGallery media={media} isOwner={isOwner} />
         </div>
     );

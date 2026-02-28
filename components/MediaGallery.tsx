@@ -62,7 +62,7 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
         {media.map((item, index) => (
           <div
             key={item.id}
-            className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-secondary/50 transition-all hover:ring-2 hover:ring-primary/50"
+            className="group relative aspect-square cursor-pointer overflow-hidden bg-secondary/50 transition-all hover:ring-2 hover:ring-primary/50"
             onClick={() => openLightbox(index)}
           >
             {item.mediaType === 'Image' ? (

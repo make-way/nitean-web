@@ -35,10 +35,9 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
     }
 
     return (
-        <div className='mt-4 space-y-6'>
+        <div className='mt-4 px-3 space-y-3'>
             {posts.map((post) => (
-                <article key={post.id} className='group block border border-zinc-200 dark:border-zinc-700
-                bg-white dark:bg-zinc-900 p-5 transition'>
+                <article key={post.id} className='group block border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 transition'>
                     <div className='flex items-start gap-5'>
                         {/* Left Content */}
                         <div className='flex-1'>

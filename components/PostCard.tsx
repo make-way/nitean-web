@@ -48,7 +48,6 @@ export default function PostCard({ post }: PostCardProps) {
                 <Link href={`/post/${slug}`} className="block">
                      <p className="text-[17px] text-zinc-800 dark:text-zinc-200 leading-[1.6] whitespace-pre-wrap font-medium">
                         {post.summary || post.title}
-                        <span className="text-indigo-600 dark:text-indigo-400 ml-2">#amazing #great #lifetime #uiux #machinelearning</span>
                     </p>
                 </Link>
 
