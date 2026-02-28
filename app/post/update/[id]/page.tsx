@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition, use } from 'react';
+import { useEffect, useRef, useState, useTransition, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { PostStatus } from '@/enum';
 import { useSession } from '@/lib/auth-client';
@@ -8,6 +8,7 @@ import { updatePostAction, deletePostAction } from '@/server/actions/post';
 import RichTextEditor from '@/components/rich-text-editor';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/Spinner';
+import { useUploadThing } from '@/lib/uploadthing';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -20,7 +21,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, AlertCircle, ArrowLeft, Trash2 } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, ArrowLeft, Trash2, ImagePlus, X } from 'lucide-react';
 
 /* ---------------- helpers ---------------- */
 const slugify = (text: string) =>
@@ -50,6 +51,9 @@ export default function UpdatePostPage({ params }: PageProps) {
     const [summary, setSummary] = useState('');
     const [content, setContent] = useState('');
     const [status, setStatus] = useState<PostStatus>(PostStatus.Draft);
+    const [thumbnail, setThumbnail] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [postNotFound, setPostNotFound] = useState(false);
 
@@ -57,6 +61,27 @@ export default function UpdatePostPage({ params }: PageProps) {
     const [checkingSlug, setCheckingSlug] = useState(false);
     const [slugExists, setSlugExists] = useState(false);
     const [slugTouched, setSlugTouched] = useState(false);
+
+    const { startUpload } = useUploadThing('postThumbnail', {
+        onClientUploadComplete: (res) => {
+            if (res?.[0]?.url) {
+                setThumbnail(res[0].url);
+                toast.success('Thumbnail uploaded!');
+            }
+            setIsUploading(false);
+        },
+        onUploadError: () => {
+            toast.error('Thumbnail upload failed. Please try again.');
+            setIsUploading(false);
+        },
+    });
+
+    const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setIsUploading(true);
+        await startUpload([file]);
+    };
 
     /* ---------------- effects ---------------- */
 
@@ -86,6 +111,7 @@ export default function UpdatePostPage({ params }: PageProps) {
             setSummary(post.summary);
             setContent(post.content);
             setStatus(post.status);
+            setThumbnail(post.thumbnail || '');
             setSlugTouched(true); // Prevent auto-slug from overriding loaded slug
         } catch (error) {
             console.error('Failed to fetch post:', error);
@@ -159,6 +185,7 @@ export default function UpdatePostPage({ params }: PageProps) {
             summary,
             content,
             status: newStatus,
+            thumbnail: thumbnail || undefined,
         });
 
         if (result.success) {
@@ -315,6 +342,57 @@ export default function UpdatePostPage({ params }: PageProps) {
                         rows={3}
                         placeholder='A brief description for SEO and cards...'
                         className='border-input bg-background ring-offset-background placeholder:text-muted-foreground flex w-full rounded-md border px-4 py-2 text-sm'
+                        />
+                    </div>
+
+                    {/* Thumbnail Field */}
+                    <div className='space-y-2'>
+                        <label className='text-sm font-semibold leading-none'>Thumbnail</label>
+                        <div
+                            className='relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-input bg-muted/30 transition-colors hover:border-primary/50 cursor-pointer'
+                            style={{ minHeight: '200px' }}
+                            onClick={() => !isUploading && fileInputRef.current?.click()}
+                        >
+                            {thumbnail ? (
+                                <>
+                                    <img
+                                        src={thumbnail}
+                                        alt='Thumbnail preview'
+                                        className='w-full rounded-lg object-cover'
+                                        style={{ maxHeight: '300px' }}
+                                    />
+                                    <button
+                                        type='button'
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setThumbnail('');
+                                            if (fileInputRef.current) fileInputRef.current.value = '';
+                                        }}
+                                        className='absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-destructive text-white shadow-md hover:bg-destructive/80 transition-colors'
+                                    >
+                                        <X className='h-4 w-4' />
+                                    </button>
+                                </>
+                            ) : isUploading ? (
+                                <div className='flex flex-col items-center gap-2 py-10 text-muted-foreground'>
+                                    <Loader2 className='h-8 w-8 animate-spin text-primary' />
+                                    <span className='text-sm'>Uploading…</span>
+                                </div>
+                            ) : (
+                                <div className='flex flex-col items-center gap-2 py-10 text-muted-foreground select-none'>
+                                    <ImagePlus className='h-10 w-10' />
+                                    <p className='text-sm font-medium'>Click to change thumbnail</p>
+                                    <p className='text-xs'>PNG, JPG, WEBP — up to 8 MB</p>
+                                </div>
+                            )}
+                        </div>
+                        <input
+                            ref={fileInputRef}
+                            type='file'
+                            accept='image/*'
+                            className='hidden'
+                            onChange={handleThumbnailChange}
+                            disabled={isUploading}
                         />
                     </div>
 

@@ -1,6 +1,7 @@
 import { PostStatus } from '@/enum';
 import prisma from '@/lib/prisma';
 import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { UTApi } from 'uploadthing/server';
 
 /**
  * Service: Pure database interaction.
@@ -112,6 +113,13 @@ export async function updatePost(data: {
 }
 
 export async function deletePost(slug: string) {
+  // 1. Fetch the post first to get the thumbnail URL before deleting
+  const existingPost = await prisma.post.findUnique({
+    where: { slug },
+    select: { thumbnail: true },
+  });
+
+  // 2. Delete the post from the database
   const post = await prisma.post.delete({
     where: { slug },
     include: {
@@ -119,12 +127,30 @@ export async function deletePost(slug: string) {
     },
   });
 
+  // 3. Delete the thumbnail from UploadThing storage (if it exists)
+  if (existingPost?.thumbnail) {
+    try {
+      const utapi = new UTApi();
+      // Extract the file key from the UploadThing URL
+      // UploadThing URLs look like: https://utfs.io/f/<fileKey> or https://<appId>.ufs.sh/f/<fileKey>
+      const url = new URL(existingPost.thumbnail);
+      const fileKey = url.pathname.split('/').pop();
+
+      if (fileKey) {
+        await utapi.deleteFiles(fileKey);
+        console.log('Thumbnail deleted from UploadThing:', fileKey);
+      }
+    } catch (error) {
+      // Log but don't throw — post is already deleted from DB
+      console.error('Failed to delete thumbnail from UploadThing:', error);
+    }
+  }
+
   // CACHE INVALIDATION
   revalidatePath(`/${post.user.username}/posts`);
   revalidatePath(`/posts`);
   revalidatePath(`/`);
   revalidateTag('posts', 'max');
-
 
   return post;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { PostStatus } from "@/enum";
 import { useSession } from "@/lib/auth-client";
@@ -9,7 +9,8 @@ import RichTextEditor from "@/components/rich-text-editor";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/Spinner";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
+import { Loader2, CheckCircle2, AlertCircle, ArrowLeft, ImagePlus, X } from "lucide-react";
+import { useUploadThing } from "@/lib/uploadthing";
 
 /* ---------------- helpers ---------------- */
 const slugify = (text: string) =>
@@ -30,6 +31,30 @@ export default function CreatePostForm() {
   const [slug, setSlug] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { startUpload } = useUploadThing("postThumbnail", {
+    onClientUploadComplete: (res) => {
+      if (res?.[0]?.url) {
+        setThumbnail(res[0].url);
+        toast.success("Thumbnail uploaded!");
+      }
+      setIsUploading(false);
+    },
+    onUploadError: () => {
+      toast.error("Thumbnail upload failed. Please try again.");
+      setIsUploading(false);
+    },
+  });
+
+  const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    await startUpload([file]);
+  };
 
   // Validation State
   const [checkingSlug, setCheckingSlug] = useState(false);
@@ -91,6 +116,7 @@ export default function CreatePostForm() {
         summary,
         content,
         status,
+        thumbnail: thumbnail || undefined,
       });
 
       if (result.success) {
@@ -204,6 +230,57 @@ export default function CreatePostForm() {
               rows={3}
               placeholder="A brief description for SEO and cards..."
               className="flex w-full rounded-md border border-input bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* Thumbnail Field */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold leading-none">Thumbnail</label>
+            <div
+              className="relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-input bg-muted/30 transition-colors hover:border-primary/50 cursor-pointer"
+              style={{ minHeight: "200px" }}
+              onClick={() => !isUploading && fileInputRef.current?.click()}
+            >
+              {thumbnail ? (
+                <>
+                  <img
+                    src={thumbnail}
+                    alt="Thumbnail preview"
+                    className="w-full rounded-lg object-cover"
+                    style={{ maxHeight: "300px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setThumbnail("");
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                    className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-destructive text-white shadow-md hover:bg-destructive/80 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </>
+              ) : isUploading ? (
+                <div className="flex flex-col items-center gap-2 py-10 text-muted-foreground">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <span className="text-sm">Uploading…</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 py-10 text-muted-foreground select-none">
+                  <ImagePlus className="h-10 w-10" />
+                  <p className="text-sm font-medium">Click to add a thumbnail</p>
+                  <p className="text-xs">PNG, JPG, WEBP — up to 8 MB</p>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleThumbnailChange}
+              disabled={isUploading}
             />
           </div>
 

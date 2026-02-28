@@ -57,7 +57,7 @@ export async function togglePostLike(postId: number) {
 /**
  * Action: create
  */
-export async function createPostAction(values: { title: string; slug: string; summary: string; content: string; status: PostStatus }) {
+export async function createPostAction(values: { title: string; slug: string; summary: string; content: string; status: PostStatus; thumbnail?: string }) {
   // 1. Authenticate the session on the server
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -125,6 +125,7 @@ export async function updatePostAction(values: {
   summary: string;
   content: string;
   status: PostStatus;
+  thumbnail?: string;
 }) {
   // 1. Authenticate the session on the server
   const session = await auth.api.getSession({
@@ -160,6 +161,7 @@ export async function updatePostAction(values: {
       content: values.content,
       status: values.status,
       userId: session.user.id,
+      thumbnail: values.thumbnail,
     });
 
     return {

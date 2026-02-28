@@ -20,6 +20,22 @@ export const ourFileRouter = {
       console.log("File URL:", file.url);
       return { uploadedBy: metadata.userId, url: file.url };
     }),
+
+  postThumbnail: f({ image: { maxFileSize: "8MB", maxFileCount: 1 } })
+    .middleware(async () => {
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+
+      if (!session) throw new Error("Unauthorized");
+
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Thumbnail upload complete for userId:", metadata.userId);
+      console.log("Thumbnail URL:", file.url);
+      return { uploadedBy: metadata.userId, url: file.url };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
