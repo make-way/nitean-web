@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { User, BarChart2, FileText, Settings, Cookie, PlusSquareIcon, FileSliders, Users2, Menu, X, Globe, GlobeLock } from 'lucide-react';
+import { User, BarChart2, FileText, Settings, Cookie, PlusSquareIcon, FileSliders, Users2, Menu, X, Globe, GlobeLock, ImageIcon } from 'lucide-react';
 import { signIn, signOut, useSession } from '@/lib/auth-client';
 import MenuItem from './MenuItem';
 
@@ -97,6 +97,7 @@ export default function Header({ sticky = true }: HeaderProps) {
 
                     <div className='py-2 text-sm'>
                       <MenuItem icon={<FileSliders size={16} />} label='Articles' url={`/${session.user.username}/posts`} />
+                      <MenuItem icon={<ImageIcon size={16} />} label='Media' url={`/${session.user.username}/media`} />
                       <MenuItem icon={<FileText size={16} />} label='Create Article' url='/post/create' />
                     </div>
 
