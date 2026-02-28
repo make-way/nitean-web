@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, HelpCircle, Settings, Book, Newspaper, Plus } from 'lucide-react';
+import { Home, Users, HelpCircle, Settings, Book, Newspaper, Plus, Box } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 
 export function NavLinks({ session: initialSession }: { session: any }) {
@@ -22,7 +22,7 @@ export function NavLinks({ session: initialSession }: { session: any }) {
     { icon: Settings, label: 'Settings', href: '/settings', requiresAuth: true },
     { icon: Book, label: 'Articles', href: `/${username}/articles` , requiresAuth: true },
     { icon: Newspaper, label: 'Posts', href: `/${username}/posts` , requiresAuth: true },
-    { icon: Plus, label: 'Create Article', href: `/articles/create` , requiresAuth: true },
+    { icon: Plus, label: 'Create Article', href: `/article/create` , requiresAuth: true },
     { icon: Plus, label: 'Create Post', href: `/post/create` , requiresAuth: true },
   ], [username]);
 

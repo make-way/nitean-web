@@ -45,7 +45,7 @@ export default function PostCard({ post }: PostCardProps) {
 
             {/* Content Styling */}
             <div className="space-y-4">
-                <Link href={`/post/${slug}`} className="block">
+                <Link href={`/article/${slug}`} className="block">
                      <p className="text-[17px] text-zinc-800 dark:text-zinc-200 leading-[1.6] whitespace-pre-wrap font-medium">
                         {post.summary || post.title}
                     </p>
@@ -54,7 +54,7 @@ export default function PostCard({ post }: PostCardProps) {
                 {/* Media */}
                 {post.media?.url && (
                     <Link
-                        href={`/post/${slug}`}
+                        href={`/article/${slug}`}
                         className="block  overflow-hidden border border-zinc-50 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 transition-transform hover:scale-[1.005]"
                     >
                         <Image

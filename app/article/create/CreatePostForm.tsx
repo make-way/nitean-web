@@ -158,7 +158,7 @@ export default function CreatePostForm() {
                     >
                         <ArrowLeft className="w-6 h-6" />
                     </Link>
-                    <h1 className="text-xl md:text-2xl font-semibold">Create Post</h1>
+                    <h1 className="text-xl md:text-2xl font-semibold">Create Article</h1>
                 </div>
             <div className="flex flex-col gap-4 sm:flex-row items-center justify-end border-b border-zinc-200 dark:border-zinc-800 pb-4">
                 <div className="flex items-center gap-3">

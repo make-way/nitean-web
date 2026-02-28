@@ -41,7 +41,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
                     <div className='flex items-start gap-5'>
                         {/* Left Content */}
                         <div className='flex-1'>
-                        <Link href={`/post/${post.slug}`}>
+                        <Link href={`/article/${post.slug}`}>
                             <h2 className='text-xl font-bold text-zinc-900 dark:text-zinc-200 transition group-hover:text-blue-600 dark:group-hover:text-blue-700'>{post.title || 'Untitled Draft'}</h2>
                         </Link>
 
@@ -62,7 +62,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
                         <div className='mt-4 flex items-center gap-3'>
                             {isOwner && (
                             <Link
-                                href={`/post/update/${post.slug}`}
+                                href={`/article/update/${post.slug}`}
                                 className='flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white'
                             >
                                 <FileEditIcon className='h-4 w-4' />
