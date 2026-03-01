@@ -20,7 +20,7 @@ export default async function MembersPage() {
     }));
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
+        <div className="mobile-nav-padding min-h-screen bg-gray-50 dark:bg-black font-sans text-gray-900 selection:bg-indigo-100 selection:text-indigo-900">
             <div className="max-w-[1600px] mx-auto flex justify-center">
                 {/* Left Sidebar */}
                 <div className="hidden md:block">
@@ -34,7 +34,7 @@ export default async function MembersPage() {
                         <div className="min-h-screen">
                             <div className="max-w-4xl mx-auto bg-white dark:bg-black">
 
-                                <div className="sticky top-0 z-10 flex items-center gap-6 px-6 border-b border-gray-200 bg-white dark:bg-black py-6">
+                                <div className="sticky md:top-0 top-[60px] z-10 flex items-center gap-6 px-6 border-b border-gray-200 bg-white dark:bg-black py-6">
                                     <div className="w-8 shrink-0 text-sm font-bold text-gray-400 uppercase tracking-widest">
                                         #
                                     </div>

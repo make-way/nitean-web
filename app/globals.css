@@ -1,4 +1,19 @@
 @import "tailwindcss";
+
+@layer base {
+  /* Add responsive padding to main container for mobile navigation bars */
+  .mobile-nav-padding main {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-nav-padding main {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
 @import "tw-animate-css";
 
 

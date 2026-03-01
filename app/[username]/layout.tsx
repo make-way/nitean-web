@@ -81,8 +81,8 @@ export default async function UserLayout({
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl py-8">
-                    <div className="flex items-center gap-6 px-3">
+                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                    <div className="flex items-center gap-6 px-3 pt-8">
                         <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-blue-500">
                             <Image
                                 src={user.image || ""}

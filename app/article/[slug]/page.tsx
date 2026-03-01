@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { getCachedArticle } from '@/server/cache/article';
 
 // UI Components
-import Header from '@/components/Header';
 import ScrollProgress from '@/components/ScrollProgress';
 import PostHeader from '@/components/post/PostHeader';
 import PostAuthor from '@/components/post/PostAuthor';
@@ -36,20 +35,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
     return (
          <div className="min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
-                    <div className="max-w-[1600px] mx-auto flex justify-center">
+                    <div className="max-w-400 mx-auto flex justify-center">
                         {/* Left Sidebar */}
                         <div className="hidden md:block">
                             <LeftSidebar />
                         </div>
         
                         {/* Main Feed */}
-                        <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">        
+                        <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">        
                             {/* Articles Content */}
-                            <div className="space-y-4 p-4">
-                                <div className='min-h-screen bg-zinc-50 dark:bg-black'>
+                            <div className="space-y-4 my-12 sm:my-0">
+                                <div className='min-h-screen bg-zinc-50 dark:bg-black px-3'>
                                     <ScrollProgress />
 
-                                    <main className='mx-auto max-w-5xl px-4 py-8'>
+                                    <main className='mx-auto max-w-5xl py-8'>
                                         <PostHeader title={article.title} />
                                         <PostAuthor user={article.user} createdAt={article.createdAt} />
                                         <PostContent post={article} />

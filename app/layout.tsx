@@ -6,13 +6,13 @@ import { Toaster } from "@/components/ui/sonner"
 import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Nitean — Sharing Daily Articles",
         description:
-        "Explore daily articles about technology, development, design, and digital innovation on Nitean.",
+            "Explore daily articles about technology, development, design, and digital innovation on Nitean.",
         siteName: "Nitean",
         locale: "en_US",
         type: "website",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Nitean — Sharing Daily Articles",
         description:
-        "Explore daily articles about technology, development, design, and digital innovation on Nitean.",
+            "Explore daily articles about technology, development, design, and digital innovation on Nitean.",
     },
 
     robots: {
@@ -58,11 +58,13 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { MobileNavWrapper } from "@/components/layout/MobileNavWrapper";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ComponentProps<"html">["children"];
+    children: React.ComponentProps<"html">["children"];
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
@@ -75,10 +77,12 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <MobileNavWrapper />
                     {children}
+                    <MobileBottomNav />
                     <Toaster />
                     {/* <ScrollToTopButton /> */}
-                    <Analytics/>
+                    <Analytics />
                 </ThemeProvider>
             </body>
         </html>

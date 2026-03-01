@@ -38,9 +38,9 @@ export default function PostCard({ post }: PostCardProps) {
                         <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Author</p>
                     </div>
                 </div>
-                <button className="text-zinc-400 p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl transition-all">
+                {/* <button className="text-zinc-400 p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-xl transition-all">
                     <MoreHorizontal className="w-5 h-5" />
-                </button>
+                </button> */}
             </div>
 
             {/* Content Styling */}
