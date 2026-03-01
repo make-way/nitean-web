@@ -91,6 +91,23 @@ export const ourFileRouter = {
       console.log("File uploaded – mediaId:", media.id);
       return { uploadedBy: metadata.userId, url: file.url, mediaId: media.id };
     }),
+  /** ---- Feed Media (Multiple images/videos) ---- */
+  feedMedia: f({
+    image: { maxFileSize: "4MB", maxFileCount: 4 },
+    video: { maxFileSize: "16MB", maxFileCount: 1 }
+  })
+    .middleware(async () => {
+      const session = await auth.api.getSession({ headers: await headers() });
+      if (!session) throw new Error("Unauthorized");
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // We don't necessarily need to persist to the 'Media' table here 
+      // if we're going to use 'PostMedia' in the post creation,
+      // but it's good for tracking orphaned files.
+      return { uploadedBy: metadata.userId, url: file.url, size: file.size, type: file.type };
+    }),
 } satisfies FileRouter;
+
 
 export type OurFileRouter = typeof ourFileRouter;

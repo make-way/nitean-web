@@ -8,6 +8,7 @@ import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { NavLinks } from './NavLinks';
 import { UserSection } from './UserSection';
+import Image from 'next/image';
 
 export default async function LeftSidebar() {
   const session = await auth.api.getSession({
@@ -30,9 +31,7 @@ export default async function LeftSidebar() {
     <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 bg-white dark:bg-zinc-900 border-r border-zinc-100 dark:border-zinc-800">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 px-2">
-        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-indigo-200 dark:shadow-none">
-          N
-        </div>
+              <Image src='/favicon.ico' alt='Logo' width={36} height={36} />
         <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">nitean</span>
       </Link>
 

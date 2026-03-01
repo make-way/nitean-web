@@ -138,6 +138,11 @@ export async function deletePost(slug: string) {
      throw new Error("Post not found");
   }
 
+  // EXPLICITLY delete comments to ensure they are removed (backup for cascade)
+  await prisma.comment.deleteMany({
+    where: { articleId: postToDelete.id },
+  });
+
   // 2. Delete the post from the database
   const post = await prisma.article.delete({
     where: { slug },

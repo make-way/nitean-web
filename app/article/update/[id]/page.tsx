@@ -11,7 +11,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                <main className="flex-1 max-w-[1100px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
                     <UpdatePostPage params={params} />
                 </main>
             </div>

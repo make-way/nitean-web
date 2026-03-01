@@ -1,0 +1,280 @@
+'use client';
+
+import Image from "next/image";
+import Link from "next/link";
+import { MessageCircle, Heart, Share2, MoreHorizontal, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { togglePostLikeAction, deletePostAction } from "@/server/actions/post";
+import { useSession } from "@/lib/auth-client";
+import { formatDistanceToNow } from "date-fns";
+import FeedComposer from "./FeedComposer";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
+type FeedPostCardProps = {
+    post: any;
+    currentUserId?: string;
+    isThreadParent?: boolean;
+    isThreadChild?: boolean;
+    isDetailsView?: boolean;
+};
+
+export default function FeedPostCard({
+    post,
+    currentUserId,
+    isThreadParent = false,
+    isThreadChild = false,
+    isDetailsView = false
+}: FeedPostCardProps) {
+    const { data: session } = useSession();
+    const [isLiked, setIsLiked] = useState(post.isLiked);
+    const [likesCount, setLikesCount] = useState(post._count?.likes || 0);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [showOptions, setShowOptions] = useState(false);
+    const [isReplying, setIsReplying] = useState(false);
+
+    const handleLike = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const newIsLiked = !isLiked;
+        setIsLiked(newIsLiked);
+        setLikesCount((prev: number) => newIsLiked ? prev + 1 : prev - 1);
+
+        const result = await togglePostLikeAction(post.id);
+        if (!result.success) {
+            setIsLiked(!newIsLiked);
+            setLikesCount((prev: number) => !newIsLiked ? prev + 1 : prev - 1);
+        }
+    };
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        const result = await deletePostAction(post.id);
+        if (!result.success) {
+            alert(result.error || 'Failed to delete post');
+            setIsDeleting(false);
+        }
+    };
+
+    if (isDeleting) return null;
+
+    const isOwner = session?.user?.id === post.userId;
+
+    if (isDetailsView) {
+        return (
+            <article className="flex flex-col p-4 border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-black">
+                {/* Header Profile */}
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex gap-3">
+                        <div className="flex flex-col items-center relative">
+                            {isThreadChild && <div className="absolute -top-4 w-0.5 h-4 bg-zinc-200 dark:bg-zinc-700" />}
+                            <Link href={`/${post.user.username}`} className="flex-shrink-0 relative z-10">
+                                <Image
+                                    src={post.user.image || "/placeholder-user.jpg"}
+                                    alt={post.user.username}
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full object-cover"
+                                />
+                            </Link>
+                        </div>
+                        <div className="flex flex-col text-[15px] pt-0.5">
+                            <Link href={`/${post.user.username}`} className="font-bold hover:underline dark:text-zinc-100">
+                                {post.user.name}
+                            </Link>
+                            <span className="text-zinc-500">@{post.user.username}</span>
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
+                            <MoreHorizontal className="w-5 h-5" />
+                        </button>
+                        {showOptions && isOwner && (
+                            <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
+                                            <Trash2 className="w-4 h-4" /> Delete
+                                        </button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="z-[100]">
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete your post.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">Delete</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="text-[20px] leading-normal dark:text-zinc-100 whitespace-pre-wrap mb-4">
+                    {post.content}
+                </div>
+
+                {/* Media */}
+                {post.media && post.media.length > 0 && (
+                    <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                        {post.media.map((m: any) => (
+                            <div key={m.id} className="relative aspect-video">
+                                <Image src={m.url} alt="Post media" fill className="object-cover" />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Time & Stats */}
+                <div className="flex items-center gap-2 py-4 border-b border-zinc-100 dark:border-zinc-800 text-zinc-500 text-[15px]">
+                    <span>{new Date(post.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span>·</span>
+                    <span>{new Date(post.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                </div>
+
+                <div className="flex items-center gap-6 py-4 border-b border-zinc-100 dark:border-zinc-800 font-bold text-[14px]">
+                    <span className="dark:text-zinc-100">{post._count?.replies || 0} <span className="text-zinc-500 font-normal">Replies</span></span>
+                    <span className="dark:text-zinc-100">{likesCount} <span className="text-zinc-500 font-normal">Likes</span></span>
+                </div>
+
+                {/* Main Actions */}
+                <div className="flex items-center justify-around py-2 border-b border-zinc-100 dark:border-zinc-800">
+                    <button onClick={() => setIsReplying(!isReplying)} className="p-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 hover:text-sky-500 transition-colors">
+                        <MessageCircle className="w-[22px] h-[22px]" />
+                    </button>
+                    <button onClick={handleLike} className={`p-2 rounded-full transition-colors ${isLiked ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/20' : 'text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20'}`}>
+                        <Heart className={`w-[22px] h-[22px] ${isLiked ? 'fill-current' : ''}`} />
+                    </button>
+                    <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors">
+                        <Share2 className="w-[22px] h-[22px]" />
+                    </button>
+                </div>
+            </article>
+        );
+    }
+
+    return (
+        <article className={`flex flex-col hover:bg-zinc-50/20 dark:hover:bg-zinc-900/20 transition-colors ${!isThreadParent ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}`}>
+            <div className="flex gap-3 px-4 pt-4 pb-2">
+                {/* Left side with Avatar and Lines */}
+                <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center relative">
+                        {isThreadChild && <div className="absolute -top-4 w-0.5 h-4 bg-zinc-200 dark:bg-zinc-700" />}
+                        <Link href={`/${post.user.username}`} className="flex-shrink-0 relative z-10">
+                            <Image
+                                src={post.user.image || "/placeholder-user.jpg"}
+                                alt={post.user.username}
+                                width={48}
+                                height={48}
+                                className="rounded-full object-cover"
+                            />
+                        </Link>
+                        {isThreadParent && <div className="flex-1 w-0.5 h-full min-h-[1.5rem] bg-zinc-200 dark:bg-zinc-700 mt-2" />}
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 space-y-1 pb-2">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-[15px]">
+                            <Link href={`/${post.user.username}`} className="font-bold hover:underline dark:text-zinc-100">
+                                {post.user.name}
+                            </Link>
+                            <span className="text-zinc-500">@{post.user.username}</span>
+                            <span className="text-zinc-500">·</span>
+                            <span className="text-zinc-500">{formatDistanceToNow(new Date(post.createdAt))}</span>
+                        </div>
+                        <div className="relative">
+                            <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
+                                <MoreHorizontal className="w-5 h-5" />
+                            </button>
+                            {showOptions && isOwner && (
+                                <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
+                                                <Trash2 className="w-4 h-4" /> Delete
+                                            </button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent className="z-[100]" onClick={(e) => e.stopPropagation()}>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. This will permanently delete your post.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">Delete</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <Link href={`/post/${post.id}`} className="block">
+                        <div className="text-[15px] leading-normal dark:text-zinc-200 whitespace-pre-wrap">
+                            {post.content}
+                        </div>
+                    </Link>
+
+                    {post.media && post.media.length > 0 && (
+                        <Link href={`/post/${post.id}`} className="block">
+                            <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                                {post.media.map((m: any) => (
+                                    <div key={m.id} className="relative aspect-video">
+                                        <Image src={m.url} alt="Post media" fill className="object-cover" />
+                                    </div>
+                                ))}
+                            </div>
+                        </Link>
+                    )}
+
+                    <div className="flex items-center justify-between max-w-md pt-2">
+                        <button onClick={() => setIsReplying(!isReplying)} className="flex items-center gap-2 group text-zinc-500 hover:text-sky-500 transition-colors text-[13px]">
+                            <div className="p-2 rounded-full group-hover:bg-sky-50 dark:group-hover:bg-sky-950/20 transition-colors">
+                                <MessageCircle className="w-[18px] h-[18px]" />
+                            </div>
+                            <span>{post._count?.replies || 0}</span>
+                        </button>
+                        <button onClick={handleLike} className={`flex items-center gap-2 group transition-colors text-[13px] ${isLiked ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}>
+                            <div className={`p-2 rounded-full transition-colors ${isLiked ? 'bg-rose-50 dark:bg-rose-950/20' : 'group-hover:bg-rose-50 dark:group-hover:bg-rose-950/20'}`}>
+                                <Heart className={`w-[18px] h-[18px] ${isLiked ? 'fill-current' : ''}`} />
+                            </div>
+                            <span className={isLiked ? 'font-bold' : ''}>{likesCount}</span>
+                        </button>
+                        <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px]">
+                            <div className="p-2 rounded-full group-hover:bg-green-50 dark:group-hover:bg-green-950/20 transition-colors">
+                                <Share2 className="w-[18px] h-[18px]" />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {isReplying && (
+                <div className="px-4 pb-4 border-t border-zinc-50 dark:border-zinc-900 pt-4 bg-white dark:bg-black">
+                    <FeedComposer replyToPostId={post.id} placeholder="Post your reply" onSuccess={() => setIsReplying(false)} />
+                </div>
+            )}
+        </article>
+    );
+}

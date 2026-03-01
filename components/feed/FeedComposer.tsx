@@ -9,9 +9,6 @@ import {
     X,
     UserPlus,
     List,
-} from 'lucide-react';
-import { useSession } from '@/lib/auth-client';
-import {
     Search,
     History,
     Dog,
@@ -23,7 +20,10 @@ import {
     Flag,
     Check,
 } from 'lucide-react';
+import { useSession } from '@/lib/auth-client';
 import CATEGORIZED_EMOJIS from '@/lib/data/emojis.json';
+import { createPostAction } from '@/server/actions/post';
+import { useUploadThing } from '@/lib/uploadthing';
 
 type EmojiData = Record<string, string[]>;
 const emojis: EmojiData = CATEGORIZED_EMOJIS as EmojiData;
@@ -40,10 +40,18 @@ const CATEGORY_ICONS: Record<string, any> = {
     "Flags": Flag,
 };
 
-export default function FeedComposer() {
+interface FeedComposerProps {
+    replyToPostId?: number;
+    placeholder?: string;
+    onSuccess?: () => void;
+}
+
+export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: FeedComposerProps) {
     const { data: session } = useSession();
     const [text, setText] = useState('');
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [isPosting, setIsPosting] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState("Smileys & People");
@@ -56,7 +64,9 @@ export default function FeedComposer() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const MAX_CHARS = 300;
-    const MAX_IMAGES = 3;
+    const MAX_IMAGES = 4;
+
+    const { startUpload } = useUploadThing("feedMedia");
 
     // Auto-height logic
     useEffect(() => {
@@ -97,6 +107,8 @@ export default function FeedComposer() {
         const remainingSlots = MAX_IMAGES - selectedImages.length;
         const filesToProcess = files.slice(0, remainingSlots);
 
+        setSelectedFiles(prev => [...prev, ...filesToProcess].slice(0, MAX_IMAGES));
+
         filesToProcess.forEach(file => {
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -111,6 +123,7 @@ export default function FeedComposer() {
 
     const removeImage = (index: number) => {
         setSelectedImages(prev => prev.filter((_, i) => i !== index));
+        setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
     const onEmojiSelect = (emoji: string) => {
@@ -123,18 +136,56 @@ export default function FeedComposer() {
 
         if (newText.length <= MAX_CHARS) {
             setText(newText);
-
-            // Add to recent
             setRecentEmojis(prev => {
                 const filtered = prev.filter(e => e !== emoji);
                 return [emoji, ...filtered].slice(0, 30);
             });
 
-            // Re-focus and set cursor position after render
             setTimeout(() => {
                 textarea.focus();
                 textarea.setSelectionRange(start + emoji.length, start + emoji.length);
             }, 0);
+        }
+    };
+
+    const handlePost = async () => {
+        if (!text.trim() && selectedFiles.length === 0) return;
+        setIsPosting(true);
+
+        try {
+            let mediaData: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[] = [];
+
+            if (selectedFiles.length > 0) {
+                const uploadRes = await startUpload(selectedFiles);
+                if (uploadRes) {
+                    mediaData = uploadRes.map(file => ({
+                        url: file.url,
+                        type: file.type.startsWith('image') ? 'Image' : 'Video' as any,
+                        size: file.size
+                    }));
+                }
+            }
+
+            const result = await createPostAction({
+                content: text,
+                replyToPostId,
+                media: mediaData,
+                visibility: 'PUBLIC'
+            });
+
+            if (result.success) {
+                setText('');
+                setSelectedImages([]);
+                setSelectedFiles([]);
+                onSuccess?.();
+            } else {
+                alert(result.error || 'Failed to post');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Something went wrong');
+        } finally {
+            setIsPosting(false);
         }
     };
 
@@ -143,7 +194,6 @@ export default function FeedComposer() {
     return (
         <div className="bg-white dark:bg-black p-4 border-b border-zinc-100 dark:border-zinc-800">
             <div className="flex gap-3">
-                {/* Avatar */}
                 <div className="flex-shrink-0">
                     <Image
                         src={session.user.image || "/placeholder-user.jpg"}
@@ -154,35 +204,27 @@ export default function FeedComposer() {
                     />
                 </div>
 
-                {/* Composer Content */}
                 <div className="flex-1 space-y-3">
-                    {/* Audience Selector */}
                     <button className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-700 text-sky-500 font-bold text-[14px] hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors">
                         Everyone
                         <ChevronDown className="w-4 h-4" />
                     </button>
 
-                    {/* Text Input */}
                     <textarea
                         ref={textareaRef}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         maxLength={MAX_CHARS}
-                        placeholder="What's on your mind right now?"
+                        placeholder={placeholder || "What's on your mind right now?"}
                         className="w-full bg-transparent border-none resize-none text-[20px] font-medium placeholder:text-zinc-500 focus:ring-0 outline-none min-h-[50px] leading-tight overflow-hidden"
                         rows={1}
+                        disabled={isPosting}
                     />
 
-                    {/* Image Preview Area */}
                     {selectedImages.length > 0 && (
-                        <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 ${selectedImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-                            }`}>
+                        <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 ${selectedImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                             {selectedImages.map((img, index) => (
-                                <div
-                                    key={index}
-                                    className={`relative group ${selectedImages.length === 3 && index === 0 ? 'row-span-2' : ''
-                                        }`}
-                                >
+                                <div key={index} className={`relative group ${selectedImages.length === 3 && index === 0 ? 'row-span-2' : ''}`}>
                                     <Image
                                         src={img}
                                         alt={`Selected ${index + 1}`}
@@ -190,11 +232,6 @@ export default function FeedComposer() {
                                         height={selectedImages.length === 1 ? 400 : 800}
                                         className="w-full h-full object-cover max-h-[500px]"
                                     />
-                                    <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button className="bg-zinc-900/70 hover:bg-zinc-900/80 text-white px-3 py-1.5 rounded-full text-xs font-bold transition-colors">
-                                            Edit
-                                        </button>
-                                    </div>
                                     <div className="absolute top-2 right-2">
                                         <button
                                             onClick={() => removeImage(index)}
@@ -208,102 +245,60 @@ export default function FeedComposer() {
                         </div>
                     )}
 
-                    {/* Tagging Row */}
-                    {selectedImages.length > 0 && (
-                        <div className="flex items-center gap-4 text-zinc-500 text-sm font-medium">
-                            <button className="flex items-center gap-2 hover:text-sky-500 transition-colors">
-                                <UserPlus className="w-4 h-4" />
-                                Tag people
-                            </button>
-                            <button className="flex items-center gap-2 hover:text-sky-500 transition-colors">
-                                <List className="w-4 h-4" />
-                                Add description
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Toolbar */}
                     <div className="flex items-center justify-between pt-1">
                         <div className="flex items-center gap-1 relative">
                             <button
                                 onClick={handleImageClick}
-                                disabled={selectedImages.length >= MAX_IMAGES}
-                                className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="Media"
+                                disabled={selectedImages.length >= MAX_IMAGES || isPosting}
+                                className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer disabled:opacity-50"
                             >
                                 <ImageIcon className="w-[20px] h-[20px]" />
                             </button>
-
-                            <div className="relative">
-                                <button
-                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                    className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer"
-                                    title="Emoji"
-                                >
-                                    <Smile className="w-[20px] h-[20px]" />
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                disabled={isPosting}
+                                className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer"
+                            >
+                                <Smile className="w-[20px] h-[20px]" />
+                            </button>
                         </div>
 
                         <div className="flex items-center gap-2">
-                            {/* Progress Circle Container */}
                             <div className="relative w-9 h-9 flex items-center justify-center">
                                 {text.length > 0 && (
                                     <span className={`absolute text-[10px] font-bold ${remainingChars <= 20 ? 'text-amber-500' : 'text-sky-500'}`}>
                                         {remainingChars}
                                     </span>
                                 )}
-
                                 <svg className="w-8 h-8 transform -rotate-90">
+                                    <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-zinc-200 dark:text-zinc-800" />
                                     <circle
-                                        cx="16"
-                                        cy="16"
-                                        r="14"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        fill="transparent"
-                                        className="text-zinc-200 dark:text-zinc-800"
-                                    />
-                                    <circle
-                                        cx="16"
-                                        cy="16"
-                                        r="14"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        fill="transparent"
+                                        cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2" fill="transparent"
                                         strokeDasharray={87.96}
                                         strokeDashoffset={87.96 - (87.96 * Math.min(text.length, MAX_CHARS)) / MAX_CHARS}
                                         className={`${remainingChars <= 20 ? 'text-amber-500' : 'text-sky-500'} transition-all duration-300`}
                                     />
                                 </svg>
                             </div>
-
                             <div className="w-[1px] h-8 bg-zinc-200 dark:bg-zinc-800 mx-1" />
-
                             <button
-                                onClick={() => {
-                                    setText('');
-                                    setSelectedImages([]);
-                                }}
-                                className="px-5 py-1.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full text-sm transition-all ml-1 cursor-pointer"
+                                onClick={() => { setText(''); setSelectedImages([]); setSelectedFiles([]); }}
+                                className="px-5 py-1.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full text-sm transition-all"
                             >
                                 Cancel
                             </button>
                             <button
-                                disabled={!text.trim() && selectedImages.length === 0}
-                                className="px-5 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-full text-sm disabled:opacity-50 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all ml-1 cursor-pointer"
+                                disabled={isPosting || (!text.trim() && selectedImages.length === 0)}
+                                onClick={handlePost}
+                                className="px-5 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-full text-sm disabled:opacity-50 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all"
                             >
-                                Post
+                                {isPosting ? 'Posting...' : replyToPostId ? 'Reply' : 'Post'}
                             </button>
                         </div>
                     </div>
 
-                    {/* Inline Emoji Picker */}
                     {showEmojiPicker && (
-                        <div
-                            ref={emojiPickerRef}
-                            className="mt-3 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300 w-full"
-                        >
+                        <div ref={emojiPickerRef} className="mt-3 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300 w-full">
                             <div className="p-3 border-b border-zinc-100 dark:border-zinc-800">
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -316,7 +311,6 @@ export default function FeedComposer() {
                                     />
                                 </div>
                             </div>
-
                             <div className="flex items-center justify-between px-2 py-1 border-b border-zinc-50 dark:border-zinc-900 overflow-x-auto no-scrollbar">
                                 {Object.keys(CATEGORY_ICONS).map((cat) => {
                                     const Icon = CATEGORY_ICONS[cat];
@@ -328,11 +322,7 @@ export default function FeedComposer() {
                                                 setActiveCategory(cat);
                                                 const element = document.getElementById(`emoji-cat-${cat}`);
                                                 if (element && scrollContainerRef.current) {
-                                                    const top = element.offsetTop;
-                                                    scrollContainerRef.current.scrollTo({
-                                                        top: top - 10,
-                                                        behavior: 'smooth'
-                                                    });
+                                                    scrollContainerRef.current.scrollTo({ top: element.offsetTop - 10, behavior: 'smooth' });
                                                 }
                                             }}
                                             className={`p-2 rounded-md transition-all flex-shrink-0 ${activeCategory === cat ? 'text-sky-500 border-b-2 border-sky-500 rounded-none' : 'text-zinc-400 hover:text-zinc-600'}`}
@@ -342,59 +332,31 @@ export default function FeedComposer() {
                                     );
                                 })}
                             </div>
-
-                            <div
-                                ref={scrollContainerRef}
-                                className="h-[250px] overflow-y-auto p-3 scroll-smooth relative"
-                            >
+                            <div ref={scrollContainerRef} className="h-[250px] overflow-y-auto p-3 scroll-smooth">
                                 {searchQuery ? (
                                     <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
                                         {filteredEmojis?.map((emoji, i) => (
-                                            <button
-                                                key={i}
-                                                onMouseEnter={() => setHoveredEmoji({ char: emoji, category: "Search" })}
-                                                onMouseLeave={() => setHoveredEmoji(null)}
-                                                onClick={() => onEmojiSelect(emoji)}
-                                                className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                                            >
-                                                {emoji}
-                                            </button>
+                                            <button key={i} onClick={() => onEmojiSelect(emoji)} className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg">{emoji}</button>
                                         ))}
                                     </div>
                                 ) : (
                                     <>
                                         {recentEmojis.length > 0 && (
                                             <div id="emoji-cat-Recent" className="mb-4">
-                                                <h3 className="text-xs font-bold text-zinc-500 mb-2 uppercase tracking-tight">Recently Used</h3>
+                                                <h3 className="text-xs font-bold text-zinc-500 mb-2 uppercase">Recently Used</h3>
                                                 <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
                                                     {recentEmojis.map((emoji, i) => (
-                                                        <button
-                                                            key={i}
-                                                            onMouseEnter={() => setHoveredEmoji({ char: emoji, category: "Recent" })}
-                                                            onMouseLeave={() => setHoveredEmoji(null)}
-                                                            onClick={() => onEmojiSelect(emoji)}
-                                                            className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                                                        >
-                                                            {emoji}
-                                                        </button>
+                                                        <button key={i} onClick={() => onEmojiSelect(emoji)} className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg">{emoji}</button>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
                                         {Object.entries(emojis).map(([category, list]) => (
                                             <div key={category} id={`emoji-cat-${category}`} className="mb-4">
-                                                <h3 className="text-xs font-bold text-zinc-500 mb-2 uppercase tracking-tight">{category}</h3>
+                                                <h3 className="text-xs font-bold text-zinc-500 mb-2 uppercase">{category}</h3>
                                                 <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
                                                     {list.map((emoji, i) => (
-                                                        <button
-                                                            key={i}
-                                                            onMouseEnter={() => setHoveredEmoji({ char: emoji, category })}
-                                                            onMouseLeave={() => setHoveredEmoji(null)}
-                                                            onClick={() => onEmojiSelect(emoji)}
-                                                            className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                                                        >
-                                                            {emoji}
-                                                        </button>
+                                                        <button key={i} onClick={() => onEmojiSelect(emoji)} className="w-8 h-8 flex items-center justify-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg">{emoji}</button>
                                                     ))}
                                                 </div>
                                             </div>
@@ -402,41 +364,23 @@ export default function FeedComposer() {
                                     </>
                                 )}
                             </div>
-
                             <div className="p-4 bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900 rounded-full border border-zinc-100 dark:border-zinc-800 shadow-sm text-3xl transition-all">
+                                    <div className="w-12 h-12 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900 rounded-full border border-zinc-100 dark:border-zinc-800 text-3xl">
                                         {hoveredEmoji?.char || "👋"}
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-[15px] text-zinc-900 dark:text-zinc-100 font-bold">
-                                            {hoveredEmoji ? "Emoji" : "Welcome"}
-                                        </span>
-                                        <span className="text-[13px] text-zinc-500 font-medium">
-                                            {hoveredEmoji ? hoveredEmoji.category : "Choose an emoji"}
-                                        </span>
+                                        <span className="text-[15px] text-zinc-900 dark:text-zinc-100 font-bold">{hoveredEmoji ? "Emoji" : "Welcome"}</span>
+                                        <span className="text-[13px] text-zinc-500 font-medium">{hoveredEmoji ? hoveredEmoji.category : "Choose an emoji"}</span>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => setShowEmojiPicker(false)}
-                                    className="w-11 h-11 flex items-center justify-center bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-all hover:scale-105 active:scale-95"
-                                >
-                                    <Check className="w-6 h-6" strokeWidth={3} />
-                                </button>
+                                <button onClick={() => setShowEmojiPicker(false)} className="w-11 h-11 flex items-center justify-center bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600"><Check className="w-6 h-6" strokeWidth={3} /></button>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-
-            <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="image/*"
-                multiple
-                className="hidden"
-            />
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" multiple className="hidden" />
         </div>
     );
 }

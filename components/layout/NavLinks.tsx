@@ -17,10 +17,10 @@ export function NavLinks({ session: initialSession }: { session: any }) {
 
   const navItems = useMemo(() => [
     { icon: Home, label: 'Home', href: '/' },
+    { icon: Book, label: 'Articles Sharing', href: `/articles` },
     { icon: Users, label: 'Members', href: '/members'},
     { icon: HelpCircle, label: 'Help & Support', href: '/help-and-support' },
     { icon: Settings, label: 'Settings', href: '/settings', requiresAuth: true },
-    { icon: Book, label: 'Articles', href: `/${username}/articles` , requiresAuth: true },
     { icon: Newspaper, label: 'Posts', href: `/${username}/posts` , requiresAuth: true },
     { icon: Plus, label: 'Create Article', href: `/article/create` , requiresAuth: true },
   ], [username]);

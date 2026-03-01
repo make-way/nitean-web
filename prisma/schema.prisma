@@ -39,6 +39,11 @@ enum MediaType {
   Audio
 }
 
+enum Visibility {
+  PUBLIC
+  FOLLOWERS
+  PRIVATE
+}
 
 
 model User {
@@ -67,6 +72,9 @@ model User {
   comments  Comment[]
   settings  UserSettings? 
   media     Media[]
+  posts      Post[]
+  postLikes  PostLike[]
+  postMedia  PostMedia[]
 
   @@unique([email])
   @@map("user")
@@ -200,4 +208,70 @@ model Media {
   articles     Article[]
 
   @@map("media")
+}
+
+model Post {
+  id              Int      @id
+  userId          String
+  content         String   @db.Text
+  visibility      Visibility @default(PUBLIC)
+
+  replyToPostId   Int?
+  repostOfId      Int?
+  quotePostId     Int?
+
+  likesCount      Int @default(0)
+  repliesCount    Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  replyToPost Post? @relation("ReplyRelation", fields: [replyToPostId], references: [id])
+  replies     Post[] @relation("ReplyRelation")
+
+  repostOf Post? @relation("RepostRelation", fields: [repostOfId], references: [id])
+  reposts  Post[] @relation("RepostRelation")
+
+  quotePost Post? @relation("QuoteRelation", fields: [quotePostId], references: [id])
+  quotes    Post[] @relation("QuoteRelation")
+
+  media      PostMedia[]
+  likes      PostLike[]
+
+  @@index([userId, createdAt])
+  @@index([replyToPostId])
+  @@index([repostOfId])
+  @@index([quotePostId])
+}
+
+model PostMedia {
+  id        Int    @id @default(autoincrement())
+  userId    String
+  postId    Int?
+  url       String
+  type      MediaType
+  size      Int
+  width     Int?
+  height    Int?
+  duration  Int?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+}
+
+model PostLike {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
 }

@@ -7,7 +7,7 @@ const utapi = new UTApi();
  * Extracts the file key from an UploadThing URL.
  * URL format: https://utfs.io/f/<key>
  */
-function extractKeyFromUrl(url: string): string | null {
+export function extractKeyFromUrl(url: string): string | null {
   try {
     const parts = url.split("/");
     return parts[parts.length - 1] || null;

@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getCachedPosts } from "@/server/services/article";
+import { getPosts } from "@/server/services/post";
+import FeedPostCard from "@/components/feed/FeedPostCard";
 import prisma from "@/lib/prisma";
-import PostCard from "@/components/PostCard";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 import RightSidebar from "@/components/layout/RightSidebar";
 import FeedComposer from "@/components/feed/FeedComposer";
@@ -15,19 +15,19 @@ export default async function Page() {
 
     const currentUserId = session?.user?.id;
 
-    // 2. Get the cached posts
-    const posts = await getCachedPosts(20, 0);
+    // 2. Get the posts
+    const posts = await getPosts(20, 0);
 
     // 3. Map through posts to see if the current user liked them
     const postsWithLikeStatus = await Promise.all(posts.map(async (post) => {
         let isLiked = false;
 
         if (currentUserId) {
-            const like = await prisma.like.findUnique({
+            const like = await prisma.postLike.findUnique({
                 where: {
-                    userId_articleId: {
+                    postId_userId: {
                         userId: currentUserId,
-                        articleId: post.id
+                        postId: post.id
                     }
                 }
             });
@@ -48,18 +48,17 @@ export default async function Page() {
                 {/* Main Feed */}
                 <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
                     {/* Tabs */}
-                    <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800 pb-4 sticky top-0 z-10">
+                    <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800 pb-4 sticky top-0 z-60">
                         <button className="text-[17px] font-black text-zinc-900 dark:text-white border-b-4 border-indigo-600 pb-4 -mb-5">For You</button>
-                        {/* <button className="text-[17px] font-bold text-zinc-400 hover:text-zinc-600 transition-colors">Following</button> */}
                     </div>
 
                     {/* Composer */}
                     <FeedComposer />
 
                     {/* Posts Feed */}
-                    <div className="">
+                    <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                         {postsWithLikeStatus.map((post) => (
-                            <PostCard key={post.id} post={post} />
+                            <FeedPostCard key={post.id} post={post} />
                         ))}
                     </div>
                     <div className="border-t border-zinc-100 dark:border-zinc-800 py-12 flex items-center justify-center">

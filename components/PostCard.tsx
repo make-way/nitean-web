@@ -15,9 +15,9 @@ export default function PostCard({ post }: PostCardProps) {
     const slug = post.slug.trim();
 
     return (
-        <article className="bg-white dark:bg-zinc-900 p-3 sm:p-8 border border-zinc-100 dark:border-zinc-800 shadow-sm">
+        <article className="bg-white dark:bg-zinc-900 p-4 sm:p-6 border border-zinc-100 dark:border-zinc-800 shadow-sm">
             {/* Header: User Info */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                     <Link href={`/${post.user.username}`} className="relative">
                         <Image
@@ -25,7 +25,7 @@ export default function PostCard({ post }: PostCardProps) {
                             alt={post.user.name}
                             width={52}
                             height={52}
-                            className="rounded-full object-cover w-14 h-14 border-2 border-white dark:border-zinc-800 shadow-sm"
+                            className="rounded-full object-cover w-14 h-14"
                         />
                     </Link>
                     <div>
@@ -55,7 +55,7 @@ export default function PostCard({ post }: PostCardProps) {
                 {post.media?.url && (
                     <Link
                         href={`/article/${slug}`}
-                        className="block  overflow-hidden border border-zinc-50 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 transition-transform hover:scale-[1.005]"
+                        className="block overflow-hidden bg-zinc-50 dark:bg-zinc-800"
                     >
                         <Image
                             src={post.media.url}
@@ -69,43 +69,25 @@ export default function PostCard({ post }: PostCardProps) {
             </div>
 
             {/* Footer Actions */}
-            <div className="mt-8 flex items-center justify-between">
+            <div className="mt-6 flex items-center justify-between">
                 <div className="flex items-center gap-8">
                     {/* Like */}
-                    <div className="flex items-center gap-2 group cursor-pointer transition-colors hover:text-red-500">
-                        <div className="p-2 rounded-xl group-hover:bg-red-50 dark:group-hover:bg-red-900/10">
-                            <LikeButton
-                                articleId={post.id}
-                                initialLikeCount={likeCount}
-                                isLiked={isLiked}
-                                hideLabel={false}
-                            />
-                        </div>
-                    </div>
+                    <LikeButton
+                        articleId={post.id}
+                        initialLikeCount={likeCount}
+                        isLiked={isLiked}
+                        hideLabel={false}
+                    />
 
                     {/* Comments */}
                     <Link
                         href={`/article/${slug}/#comments`}
                         className="flex items-center gap-2 group transition-colors hover:text-indigo-600 text-zinc-500"
                     >
-                        <div className="p-2 rounded-xl group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/10 transition-all">
-                            <MessageCircle className="w-5 h-5" />
-                        </div>
-                        <span className="text-sm font-black">{commentCount} <span className="text-zinc-400 font-bold ml-1">Comments</span></span>
+                        <MessageCircle className="w-5 h-5 group-hover:text-indigo-600 transition-colors" />
+                        <span className="text-sm font-black text-zinc-500">{commentCount} <span className="text-zinc-400 font-bold ml-1">Comments</span></span>
                     </Link>
-
-                    {/* Share */}
-                    {/* <button className="flex items-center gap-2 group transition-colors hover:text-green-600 text-zinc-500">
-                        <div className="p-2 rounded-xl group-hover:bg-green-50 dark:group-hover:bg-green-900/10 transition-all">
-                            <Share className="w-5 h-5" />
-                        </div>
-                        <span className="text-sm font-black">187 <span className="text-zinc-400 font-bold ml-1 text-[13px]">Share</span></span>
-                    </button> */}
                 </div>
-
-                {/* <button className="text-zinc-400 p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-2xl transition-all">
-                    <Bookmark className="w-5 h-5" />
-                </button> */}
             </div>
         </article>
     );
