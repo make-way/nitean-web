@@ -1,14 +1,4 @@
-/*
-  Warnings:
 
-  - You are about to drop the column `postId` on the `Like` table. All the data in the column will be lost.
-  - You are about to drop the column `postId` on the `comment` table. All the data in the column will be lost.
-  - You are about to drop the `post` table. If the table is not empty, all the data it contains will be lost.
-  - A unique constraint covering the columns `[userId,articleId]` on the table `Like` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `articleId` to the `Like` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `articleId` to the `comment` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "Visibility" AS ENUM ('PUBLIC', 'FOLLOWERS', 'PRIVATE');
 
@@ -56,13 +46,13 @@ CREATE TABLE "article" (
 
 -- CreateTable
 CREATE TABLE "Post" (
-    "id" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "visibility" "Visibility" NOT NULL DEFAULT 'PUBLIC',
-    "replyToPostId" INTEGER,
-    "repostOfId" INTEGER,
-    "quotePostId" INTEGER,
+    "replyToPostId" TEXT,
+    "repostOfId" TEXT,
+    "quotePostId" TEXT,
     "likesCount" INTEGER NOT NULL DEFAULT 0,
     "repliesCount" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -75,7 +65,7 @@ CREATE TABLE "Post" (
 CREATE TABLE "PostMedia" (
     "id" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
-    "postId" INTEGER,
+    "postId" TEXT,
     "url" TEXT NOT NULL,
     "type" "MediaType" NOT NULL,
     "size" INTEGER NOT NULL,
@@ -90,7 +80,7 @@ CREATE TABLE "PostMedia" (
 -- CreateTable
 CREATE TABLE "PostLike" (
     "id" SERIAL NOT NULL,
-    "postId" INTEGER NOT NULL,
+    "postId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

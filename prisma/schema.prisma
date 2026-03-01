@@ -211,14 +211,14 @@ model Media {
 }
 
 model Post {
-  id              Int      @id
+  id              String   @id @default(uuid())
   userId          String
   content         String   @db.Text
   visibility      Visibility @default(PUBLIC)
 
-  replyToPostId   Int?
-  repostOfId      Int?
-  quotePostId     Int?
+  replyToPostId   String?
+  repostOfId      String?
+  quotePostId     String?
 
   likesCount      Int @default(0)
   repliesCount    Int @default(0)
@@ -249,7 +249,7 @@ model Post {
 model PostMedia {
   id        Int    @id @default(autoincrement())
   userId    String
-  postId    Int?
+  postId    String?
   url       String
   type      MediaType
   size      Int
@@ -266,7 +266,7 @@ model PostMedia {
 
 model PostLike {
   id        Int      @id @default(autoincrement())
-  postId    Int
+  postId    String
   userId    String
   createdAt DateTime @default(now())
 

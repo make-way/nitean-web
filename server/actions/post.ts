@@ -9,9 +9,9 @@ import { Visibility } from '@/lib/generated/prisma/client';
 export async function createPostAction(data: {
     content: string;
     visibility?: Visibility;
-    replyToPostId?: number;
-    repostOfId?: number;
-    quotePostId?: number;
+    replyToPostId?: string;
+    repostOfId?: string;
+    quotePostId?: string;
     media?: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[];
 }) {
     const session = await auth.api.getSession({
@@ -36,7 +36,7 @@ export async function createPostAction(data: {
     }
 }
 
-export async function deletePostAction(postId: number) {
+export async function deletePostAction(postId: string) {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
@@ -55,7 +55,7 @@ export async function deletePostAction(postId: number) {
     }
 }
 
-export async function togglePostLikeAction(postId: number) {
+export async function togglePostLikeAction(postId: string) {
     const session = await auth.api.getSession({
         headers: await headers(),
     });

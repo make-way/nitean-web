@@ -13,7 +13,7 @@ import { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const post = await getPostById(parseInt(id));
+    const post = await getPostById(id);
 
     if (!post) return { title: 'Post Not Found' };
 
@@ -40,11 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const postId = parseInt(id);
-
-    if (isNaN(postId)) {
-        notFound();
-    }
+    const postId = id;
 
     const session = await auth.api.getSession({
         headers: await headers()
@@ -57,13 +53,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         getPostById(postId),
         getReplies(postId)
     ]);
+    console.log(post);
 
     if (!post) {
         notFound();
     }
 
     // 2. Determine like status for parent, post, and replies
-    const checkLiked = async (pId: number) => {
+    const checkLiked = async (pId: string) => {
         if (!currentUserId) return false;
         const like = await prisma.postLike.findUnique({
             where: { postId_userId: { userId: currentUserId, postId: pId } }

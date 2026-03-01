@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Visibility } from '@/lib/generated/prisma/client';
+import { Visibility, Prisma } from '@/lib/generated/prisma/client';
 import { UTApi } from "uploadthing/server";
 import { extractKeyFromUrl } from './media';
 
@@ -9,9 +9,9 @@ export async function createPost(data: {
     userId: string;
     content: string;
     visibility?: Visibility;
-    replyToPostId?: number;
-    repostOfId?: number;
-    quotePostId?: number;
+    replyToPostId?: string;
+    repostOfId?: string;
+    quotePostId?: string;
     media?: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[];
 }) {
     return await prisma.post.create({
@@ -38,13 +38,13 @@ export async function createPost(data: {
     });
 }
 
-async function getAllDescendantPosts(postId: number): Promise<{ id: number; media: any[] }[]> {
+async function getAllDescendantPosts(postId: string): Promise<{ id: string; media: any[] }[]> {
     const replies = await prisma.post.findMany({
         where: { replyToPostId: postId },
         select: { id: true, media: true }
     });
     
-    let descendants: { id: number; media: any[] }[] = [];
+    let descendants: { id: string; media: any[] }[] = [];
     for (const reply of replies) {
         const childDescendants = await getAllDescendantPosts(reply.id);
         descendants = descendants.concat(childDescendants);
@@ -53,7 +53,7 @@ async function getAllDescendantPosts(postId: number): Promise<{ id: number; medi
     return descendants.concat(replies);
 }
 
-export async function deletePost(postId: number, userId: string) {
+export async function deletePost(postId: string, userId: string) {
     const post = await prisma.post.findUnique({
         where: { id: postId },
         select: { userId: true, media: true }
@@ -110,7 +110,7 @@ export async function deletePost(postId: number, userId: string) {
     return deletedPost;
 }
 
-export async function togglePostLike(postId: number, userId: string) {
+export async function togglePostLike(postId: string, userId: string) {
     const existingLike = await prisma.postLike.findUnique({
         where: {
             postId_userId: {
@@ -173,7 +173,46 @@ export async function getPosts(limit: number = 20, offset: number = 0) {
     });
 }
 
-export async function getPostById(postId: number) {
+export type PostWithDetails = Prisma.PostGetPayload<{
+    include: {
+        user: {
+            select: {
+                id: true;
+                name: true;
+                username: true;
+                image: true;
+            }
+        };
+        media: true;
+        replyToPost: {
+            include: {
+                user: {
+                    select: {
+                        id: true;
+                        name: true;
+                        username: true;
+                        image: true;
+                    }
+                };
+                media: true;
+                _count: {
+                    select: {
+                        likes: true;
+                        replies: true;
+                    }
+                };
+            }
+        };
+        _count: {
+            select: {
+                likes: true;
+                replies: true;
+            }
+        };
+    };
+}>;
+
+export async function getPostById(postId: string): Promise<PostWithDetails | null> {
     return await prisma.post.findUnique({
         where: { id: postId },
         include: {
@@ -215,7 +254,7 @@ export async function getPostById(postId: number) {
     });
 }
 
-export async function getReplies(postId: number) {
+export async function getReplies(postId: string) {
     return await prisma.post.findMany({
         where: {
             replyToPostId: postId

@@ -41,7 +41,7 @@ const CATEGORY_ICONS: Record<string, any> = {
 };
 
 interface FeedComposerProps {
-    replyToPostId?: number;
+    replyToPostId?: string;
     placeholder?: string;
     onSuccess?: () => void;
 }
