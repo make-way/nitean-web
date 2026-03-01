@@ -78,13 +78,13 @@ export default function FeedPostCard({
                     <div className="flex gap-3">
                         <div className="flex flex-col items-center relative">
                             {isThreadChild && <div className="absolute -top-4 w-0.5 h-4 bg-zinc-200 dark:bg-zinc-700" />}
-                            <Link href={`/${post.user.username}`} className="flex-shrink-0 relative z-10">
+                            <Link href={`/${post.user.username}`} className="shrink-0 relative z-10">
                                 <Image
                                     src={post.user.image || "/placeholder-user.jpg"}
                                     alt={post.user.username}
                                     width={48}
                                     height={48}
-                                    className="rounded-full object-cover"
+                                    className="rounded-full object-cover w-10 h-10"
                                 />
                             </Link>
                         </div>
@@ -182,7 +182,7 @@ export default function FeedPostCard({
                                 alt={post.user.username}
                                 width={48}
                                 height={48}
-                                className="rounded-full object-cover"
+                                className="rounded-full object-cover w-10 h-10"
                             />
                         </Link>
                         {isThreadParent && <div className="flex-1 w-0.5 h-full min-h-[1.5rem] bg-zinc-200 dark:bg-zinc-700 mt-2" />}

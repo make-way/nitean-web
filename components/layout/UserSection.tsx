@@ -25,7 +25,7 @@ export function UserSection({ user }: UserSectionProps) {
           alt={user.name} 
           width={40} 
           height={40} 
-          className="rounded-full bg-zinc-100"
+          className="rounded-full bg-zinc-100 w-10 h-10"
       />
       <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">{user.name}</p>

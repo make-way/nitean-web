@@ -192,15 +192,15 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
     const remainingChars = MAX_CHARS - text.length;
 
     return (
-        <div className="bg-white dark:bg-black p-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="bg-white dark:bg-black px-0 border-b border-zinc-100 dark:border-zinc-800">
             <div className="flex gap-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     <Image
                         src={session.user.image || "/placeholder-user.jpg"}
                         alt={session.user.name || "User"}
                         width={48}
                         height={48}
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover w-10 h-10"
                     />
                 </div>
 
@@ -216,7 +216,7 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                         onChange={(e) => setText(e.target.value)}
                         maxLength={MAX_CHARS}
                         placeholder={placeholder || "What's on your mind right now?"}
-                        className="w-full bg-transparent border-none resize-none text-[20px] font-medium placeholder:text-zinc-500 focus:ring-0 outline-none min-h-[50px] leading-tight overflow-hidden"
+                        className="w-full bg-transparent border-none resize-none text-[20px] font-medium placeholder:text-zinc-500 focus:ring-0 outline-none min-h-12.5 leading-tight overflow-hidden"
                         rows={1}
                         disabled={isPosting}
                     />
@@ -230,7 +230,7 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                                         alt={`Selected ${index + 1}`}
                                         width={600}
                                         height={selectedImages.length === 1 ? 400 : 800}
-                                        className="w-full h-full object-cover max-h-[500px]"
+                                        className="w-full h-full object-cover max-h-125"
                                     />
                                     <div className="absolute top-2 right-2">
                                         <button
@@ -252,14 +252,14 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                                 disabled={selectedImages.length >= MAX_IMAGES || isPosting}
                                 className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer disabled:opacity-50"
                             >
-                                <ImageIcon className="w-[20px] h-[20px]" />
+                                <ImageIcon className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                                 disabled={isPosting}
                                 className="p-2 rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors cursor-pointer"
                             >
-                                <Smile className="w-[20px] h-[20px]" />
+                                <Smile className="w-5 h-5" />
                             </button>
                         </div>
 
@@ -280,7 +280,7 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                                     />
                                 </svg>
                             </div>
-                            <div className="w-[1px] h-8 bg-zinc-200 dark:bg-zinc-800 mx-1" />
+                            <div className="w-px h-8 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                             <button
                                 onClick={() => { setText(''); setSelectedImages([]); setSelectedFiles([]); }}
                                 className="px-5 py-1.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full text-sm transition-all"
@@ -325,14 +325,14 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                                                     scrollContainerRef.current.scrollTo({ top: element.offsetTop - 10, behavior: 'smooth' });
                                                 }
                                             }}
-                                            className={`p-2 rounded-md transition-all flex-shrink-0 ${activeCategory === cat ? 'text-sky-500 border-b-2 border-sky-500 rounded-none' : 'text-zinc-400 hover:text-zinc-600'}`}
+                                            className={`p-2 rounded-md transition-all shrink-0 ${activeCategory === cat ? 'text-sky-500 border-b-2 border-sky-500 rounded-none' : 'text-zinc-400 hover:text-zinc-600'}`}
                                         >
                                             <Icon className="w-5 h-5" />
                                         </button>
                                     );
                                 })}
                             </div>
-                            <div ref={scrollContainerRef} className="h-[250px] overflow-y-auto p-3 scroll-smooth">
+                            <div ref={scrollContainerRef} className="h-62.5 overflow-y-auto p-3 scroll-smooth">
                                 {searchQuery ? (
                                     <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
                                         {filteredEmojis?.map((emoji, i) => (

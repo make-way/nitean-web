@@ -82,17 +82,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     }));
 
     return (
-        <div className="mobile-nav-padding min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
-            <div className="max-w-[1600px] mx-auto flex justify-center">
+        <div className="mobile-nav-padding bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
+            <div className="max-w-400 mx-auto flex justify-center">
                 {/* Left Sidebar */}
                 <div className="hidden md:block">
                     <LeftSidebar />
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                <main className="flex-1 max-w-175 py-0 border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
                     {/* Header */}
-                    <div className="flex items-center bg-white dark:bg-black backdrop-blur-xl gap-6 px-3 sm:px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 sticky md:top-0 top-[60px] z-10">
+                    <div className="flex items-center bg-white dark:bg-black backdrop-blur-xl gap-6 px-3 sm:px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 sticky md:top-0 top-0 z-60">
                         <Link
                             href="/"
                             className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"

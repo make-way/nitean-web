@@ -39,21 +39,23 @@ export default async function Page() {
 
     return (
         <div className="mobile-nav-padding min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
-            <div className="max-w-[1600px] mx-auto flex justify-center">
+            <div className="max-w-400 mx-auto flex justify-center">
                 {/* Left Sidebar */}
                 <div className="hidden md:block">
                     <LeftSidebar />
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
                     {/* Tabs */}
-                    <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800 pb-4 sticky md:top-0 top-[60px] z-60 sm:block hidden">
+                    <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800 pb-4 sticky md:top-0 top-15 z-60 sm:block hidden">
                         <button className="text-[17px] font-black text-zinc-900 dark:text-white border-b-4 border-indigo-600 pb-4 -mb-5">For You</button>
                     </div>
 
                     {/* Composer */}
-                    <FeedComposer />
+                    <div className="p-4">
+                        <FeedComposer />
+                    </div>
 
                     {/* Posts Feed */}
                     <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
