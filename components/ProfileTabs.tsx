@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Newspaper, MessageSquare, Image as ImageIcon, Video, Heart, List, Hash, UserCircle, Book } from "lucide-react";
+import { Newspaper, Image as ImageIcon, UserCircle, Book } from "lucide-react";
 
 export default function ProfileTabs({ username }: { username: string }) {
     const pathname = usePathname();

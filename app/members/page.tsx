@@ -21,20 +21,20 @@ export default async function MembersPage() {
 
     return (
         <div className="mobile-nav-padding min-h-screen bg-gray-50 dark:bg-black font-sans text-gray-900 selection:bg-indigo-100 selection:text-indigo-900">
-            <div className="max-w-[1600px] mx-auto flex justify-center">
+            <div className="w-full mx-auto flex justify-center">
                 {/* Left Sidebar */}
                 <div className="hidden md:block">
                     <LeftSidebar />
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
 
                     <div>
                         <div className="min-h-screen">
                             <div className="max-w-4xl mx-auto bg-white dark:bg-black">
 
-                                <div className="sticky md:top-0 top-[60px] z-10 flex items-center gap-6 px-6 border-b border-gray-200 bg-white dark:bg-black py-6">
+                                <div className="sticky md:top-0 top-15 z-10 flex items-center gap-6 px-6 border-b border-gray-200 bg-white dark:bg-black py-6">
                                     <div className="w-8 shrink-0 text-sm font-bold text-gray-400 uppercase tracking-widest">
                                         #
                                     </div>
@@ -45,9 +45,6 @@ export default async function MembersPage() {
                                     </div>
                                     <div className="text-sm font-bold text-gray-400 uppercase tracking-widest min-w-[70px] text-center">
                                         Posts
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-400 uppercase tracking-widest min-w-[70px] text-center">
-                                        Followers
                                     </div>
                                 </div>
 
@@ -80,18 +77,11 @@ export default async function MembersPage() {
                                                 </span>
                                             </div>
 
-                                            <div className="min-w-[70px] flex items-center justify-center">
+                                            <div className="flex items-center justify-center">
                                                 <span className="text-lg font-bold text-gray-900 dark:text-zinc-100">
                                                     {member.postsCount}
                                                 </span>
                                             </div>
-
-                                            <div className="min-w-[70px] flex items-center justify-center">
-                                                <span className="text-lg font-bold text-gray-900 dark:text-zinc-100">
-                                                    {member.followersCount}
-                                                </span>
-                                            </div>
-
                                         </div>
                                     ))
                                 ) : (

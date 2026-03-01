@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { UserPlus } from "lucide-react";
 import { timeAgo } from "@/utils/TimeAgo";
 
 export default function PostAuthor({ user, createdAt }: any) {

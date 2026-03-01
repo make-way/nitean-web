@@ -1,14 +1,10 @@
 import { auth } from "@/lib/auth";
 import { Metadata } from "next";
-
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import ProfileTabs from "@/components/ProfileTabs";
-import { ArrowLeft, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 import RightSidebar from "@/components/layout/RightSidebar";
 
@@ -29,7 +25,7 @@ export async function generateMetadata({
         title: `${user.name} (@${username})`,
         description: `@${username}'s profile on Nitean`,
         icons: {
-            icon: user.image || "/favicon.ico",
+            icon: user.image || "/logo.svg",
         },
         openGraph: {
             title: `${user.name} (@${username})`,
@@ -74,14 +70,14 @@ export default async function UserLayout({
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-100 selection:text-indigo-900">
-            <div className="max-w-[1600px] mx-auto flex justify-center">
+            <div className="max-w-400 mx-auto flex justify-center">
                 {/* Left Sidebar */}
                 <div className="hidden md:block">
                     <LeftSidebar />
                 </div>
 
                 {/* Main Feed */}
-                <main className="flex-1 max-w-[700px] min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+                <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
                     <div className="flex items-center gap-6 px-3 pt-8">
                         <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-blue-500">
                             <Image

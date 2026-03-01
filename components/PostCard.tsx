@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { timeAgo } from "@/utils/TimeAgo";
 import LikeButton from "./LikeButton";
-import { MessageCircle, Share, MoreHorizontal, Bookmark } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 type PostCardProps = {
     post: any;

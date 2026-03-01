@@ -1,8 +1,4 @@
 import prisma from '@/lib/prisma';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FileEditIcon, Trash } from 'lucide-react';
-import { timeAgo } from '@/utils/TimeAgo';
 import { notFound } from 'next/navigation';
 import { getPostsOwner } from '@/server/actions/article';
 import { headers } from 'next/headers';

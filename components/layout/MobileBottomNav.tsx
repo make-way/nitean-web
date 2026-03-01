@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Bell, Mail, User, Plus, Box, Book, Users, LogIn } from 'lucide-react';
+import { Home, Book, Users, LogIn } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
 

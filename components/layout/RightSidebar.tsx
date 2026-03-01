@@ -1,10 +1,6 @@
 import Image from 'next/image';
 import { 
-  Plus, 
   MapPin, 
-  Phone, 
-  Mail, 
-  Globe, 
   MoreHorizontal,
   ArrowUpRight,
   Facebook,
@@ -27,9 +23,7 @@ export default async function RightSidebar() {
   if (!session) return (
     <aside className="sticky top-0 h-screen w-96 p-6 hidden lg:flex flex-col gap-6">
         <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-10 border border-zinc-100 dark:border-zinc-800 shadow-sm text-center flex flex-col items-center gap-6">
-            <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center">
-                <Plus className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
-            </div>
+              <Image src='/logo.svg' alt='Logo' width={64} height={64} />
             <div>
                 <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2">Sign in to see more</h3>
                 <p className="text-sm text-zinc-500 leading-relaxed px-4">

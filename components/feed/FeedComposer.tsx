@@ -7,8 +7,6 @@ import {
     Image as ImageIcon,
     ChevronDown,
     X,
-    UserPlus,
-    List,
     Search,
     History,
     Dog,

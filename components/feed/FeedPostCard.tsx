@@ -107,7 +107,7 @@ export default function FeedPostCard({
                                             <Trash2 className="w-4 h-4" /> Delete
                                         </button>
                                     </AlertDialogTrigger>
-                                    <AlertDialogContent className="z-[100]">
+                                    <AlertDialogContent className="z-100">
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                             <AlertDialogDescription>
@@ -132,7 +132,7 @@ export default function FeedPostCard({
 
                 {/* Media */}
                 {post.media && post.media.length > 0 && (
-                    <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                    <div className={`grid gap-2 rounded-sm overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {post.media.map((m: any) => (
                             <div key={m.id} className="relative aspect-video">
                                 <Image src={m.url} alt="Post media" fill className="object-cover" />
@@ -156,13 +156,13 @@ export default function FeedPostCard({
                 {/* Main Actions */}
                 <div className="flex items-center justify-around py-2 border-b border-zinc-100 dark:border-zinc-800">
                     <button onClick={() => setIsReplying(!isReplying)} className="p-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 hover:text-sky-500 transition-colors">
-                        <MessageCircle className="w-[22px] h-[22px]" />
+                        <MessageCircle className="w-5 h-5" />
                     </button>
                     <button onClick={handleLike} className={`p-2 rounded-full transition-colors ${isLiked ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/20' : 'text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20'}`}>
-                        <Heart className={`w-[22px] h-[22px] ${isLiked ? 'fill-current' : ''}`} />
+                        <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                     </button>
                     <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors">
-                        <Share2 className="w-[22px] h-[22px]" />
+                        <Share2 className="w-5 h-5" />
                     </button>
                 </div>
             </article>
@@ -176,7 +176,7 @@ export default function FeedPostCard({
                 <div className="flex flex-col items-center">
                     <div className="flex flex-col items-center relative">
                         {isThreadChild && <div className="absolute -top-4 w-0.5 h-4 bg-zinc-200 dark:bg-zinc-700" />}
-                        <Link href={`/${post.user.username}`} className="flex-shrink-0 relative z-10">
+                        <Link href={`/${post.user.username}`} className="shrink-0 relative z-10">
                             <Image
                                 src={post.user.image || "/placeholder-user.jpg"}
                                 alt={post.user.username}
@@ -185,7 +185,7 @@ export default function FeedPostCard({
                                 className="rounded-full object-cover w-10 h-10"
                             />
                         </Link>
-                        {isThreadParent && <div className="flex-1 w-0.5 h-full min-h-[1.5rem] bg-zinc-200 dark:bg-zinc-700 mt-2" />}
+                        {isThreadParent && <div className="flex-1 w-0.5 h-full min-h-6 bg-zinc-200 dark:bg-zinc-700 mt-2" />}
                     </div>
                 </div>
 
@@ -212,7 +212,7 @@ export default function FeedPostCard({
                                                 <Trash2 className="w-4 h-4" /> Delete
                                             </button>
                                         </AlertDialogTrigger>
-                                        <AlertDialogContent className="z-[100]" onClick={(e) => e.stopPropagation()}>
+                                        <AlertDialogContent className="z-100" onClick={(e) => e.stopPropagation()}>
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                                 <AlertDialogDescription>
@@ -238,7 +238,7 @@ export default function FeedPostCard({
 
                     {post.media && post.media.length > 0 && (
                         <Link href={`/post/${post.id}`} className="block">
-                            <div className={`grid gap-2 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                            <div className={`grid gap-2 rounded-sm overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                                 {post.media.map((m: any) => (
                                     <div key={m.id} className="relative aspect-video">
                                         <Image src={m.url} alt="Post media" fill className="object-cover" />
@@ -251,19 +251,19 @@ export default function FeedPostCard({
                     <div className="flex items-center justify-between max-w-md pt-2">
                         <button onClick={() => setIsReplying(!isReplying)} className="flex items-center gap-2 group text-zinc-500 hover:text-sky-500 transition-colors text-[13px]">
                             <div className="p-2 rounded-full group-hover:bg-sky-50 dark:group-hover:bg-sky-950/20 transition-colors">
-                                <MessageCircle className="w-[18px] h-[18px]" />
+                                <MessageCircle className="w-4 h-4" />
                             </div>
                             <span>{post._count?.replies || 0}</span>
                         </button>
                         <button onClick={handleLike} className={`flex items-center gap-2 group transition-colors text-[13px] ${isLiked ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}>
                             <div className={`p-2 rounded-full transition-colors ${isLiked ? 'bg-rose-50 dark:bg-rose-950/20' : 'group-hover:bg-rose-50 dark:group-hover:bg-rose-950/20'}`}>
-                                <Heart className={`w-[18px] h-[18px] ${isLiked ? 'fill-current' : ''}`} />
+                                <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
                             </div>
                             <span className={isLiked ? 'font-bold' : ''}>{likesCount}</span>
                         </button>
                         <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px]">
                             <div className="p-2 rounded-full group-hover:bg-green-50 dark:group-hover:bg-green-950/20 transition-colors">
-                                <Share2 className="w-[18px] h-[18px]" />
+                                <Share2 className="w-4 h-4" />
                             </div>
                         </button>
                     </div>

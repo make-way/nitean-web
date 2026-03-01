@@ -1,7 +1,7 @@
 'use client';
 
 // components/CommentCard.tsx
-import { ThumbsUp, Trash2, Edit2, X, Check } from 'lucide-react';
+import { Trash2, Edit2, X, Check } from 'lucide-react';
 import Image from 'next/image';
 import { FC, useState } from 'react';
 import { updateCommentAction, deleteCommentAction } from '@/server/actions/comment';

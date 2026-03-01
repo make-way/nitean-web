@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { updateSingleUserFieldAction, checkUsernameUniqueAction } from '@/server/actions/user';
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, AlertCircle, Camera } from 'lucide-react';

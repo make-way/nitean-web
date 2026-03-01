@@ -1,8 +1,5 @@
 import Link from 'next/link';
-import { 
-  Search, 
-  AlertCircle
-} from 'lucide-react';
+import { Search } from 'lucide-react';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
@@ -31,7 +28,7 @@ export default async function LeftSidebar() {
     <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 bg-white dark:bg-zinc-900 border-r border-zinc-100 dark:border-zinc-800">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 px-2">
-              <Image src='/favicon.ico' alt='Logo' width={36} height={36} />
+              <Image src='/logo.svg' alt='Logo' width={48} height={48} />
         <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">nitean</span>
       </Link>
 

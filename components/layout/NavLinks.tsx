@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, HelpCircle, Settings, Book, Newspaper, Plus, Box } from 'lucide-react';
+import { Home, Users, HelpCircle, Settings, Book, Newspaper, Plus } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 
 export function NavLinks({ session: initialSession }: { session: any }) {

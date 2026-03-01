@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Hash, Settings } from 'lucide-react';
+import { Menu, X, Settings } from 'lucide-react';
 import { NavLinks } from './NavLinks';
 import { UserSection } from './UserSection';
 
@@ -30,7 +30,7 @@ export function MobileNavigation({ session, userData }: { session: any, userData
                         </button>
 
                         <Link href="/" className="flex items-center gap-2">
-                            <Image src="/favicon.ico" alt="Logo" width={28} height={28} />
+                            <Image src="/logo.svg" alt="Logo" width={28} height={28} />
                         </Link>
                     </div>
 
@@ -57,7 +57,7 @@ export function MobileNavigation({ session, userData }: { session: any, userData
                     <div className="absolute top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-zinc-900 shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300 border-r border-zinc-100 dark:border-zinc-800 z-50">
                         <div className="flex justify-between items-center mb-6">
                             <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-2">
-                                <Image src='/favicon.ico' alt='Logo' width={32} height={32} />
+                                <Image src='/logo.svg' alt='Logo' width={32} height={32} />
                                 <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">nitean</span>
                             </Link>
                             <button onClick={() => setIsOpen(false)} className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
