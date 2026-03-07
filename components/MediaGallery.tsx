@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import { X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { X, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +21,29 @@ interface MediaGalleryProps {
 
 export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        setSelectedIndex((prev) => (prev !== null ? (prev + 1) % media.length : null));
+      } else if (e.key === 'ArrowLeft') {
+        setSelectedIndex((prev) => (prev !== null ? (prev - 1 + media.length) % media.length : null));
+      } else if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, media.length]);
 
   const openLightbox = (index: number) => {
     setSelectedIndex(index);
@@ -73,40 +96,39 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               />
             ) : (
-                <div className="flex h-full w-full items-center justify-center bg-secondary">
-                    <span className="text-xs font-mono uppercase opacity-50">{item.mediaType}</span>
-                </div>
+              <div className="flex h-full w-full items-center justify-center bg-secondary">
+                <span className="text-xs font-mono uppercase opacity-50">{item.mediaType}</span>
+              </div>
             )}
-            
+
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
-               <p className="truncate text-xs text-white">{item.name}</p>
+              <p className="truncate text-xs text-white">{item.name}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Lightbox */}
-      {selectedIndex !== null && (
+      {mounted && selectedIndex !== null && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 transition-all animate-in fade-in duration-200"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black transition-all animate-in fade-in duration-200"
           onClick={closeLightbox}
         >
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/10"
+            className="absolute right-4 top-4 z-50 text-white hover:bg-white/10 cursor-pointer"
             onClick={closeLightbox}
           >
             <X className="h-6 w-6" />
           </Button>
 
-          <div className="relative flex h-full w-full items-center justify-center p-4 md:p-12">
+          <div className="relative h-full w-full flex items-center justify-center">
             {media.length > 1 && (
               <>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-4 z-50 h-12 w-12 rounded-full text-white hover:bg-white/10"
+                  className="absolute left-4 z-[110] h-12 w-12 rounded-full text-white hover:bg-white/10 cursor-pointer"
                   onClick={prevImage}
                 >
                   <ChevronLeft className="h-8 w-8" />
@@ -114,7 +136,7 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-4 z-50 h-12 w-12 rounded-full text-white hover:bg-white/10"
+                  className="absolute right-4 z-[110] h-12 w-12 rounded-full text-white hover:bg-white/10 cursor-pointer"
                   onClick={nextImage}
                 >
                   <ChevronRight className="h-8 w-8" />
@@ -122,9 +144,9 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
               </>
             )}
 
-            <div 
-                className="relative h-full w-full max-w-5xl"
-                onClick={(e) => e.stopPropagation()}
+            <div
+              className="relative h-full w-full"
+              onClick={(e) => e.stopPropagation()}
             >
               {media[selectedIndex].mediaType === 'Image' ? (
                 <Image
@@ -135,33 +157,34 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
                   priority
                 />
               ) : (
-                   <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-2xl bg-secondary/10 text-white">
-                        <div className="rounded-full bg-primary/20 p-6">
-                            <Download className="h-12 w-12 text-primary" />
-                        </div>
-                        <p className="text-xl font-medium">{media[selectedIndex].name}</p>
-                        <p className="text-muted-foreground uppercase">{media[selectedIndex].mediaType} File</p>
-                        <Button 
-                            variant="outline" 
-                            className="bg-transparent text-white border-white/20 hover:bg-white/10"
-                            asChild
-                        >
-                            <a href={media[selectedIndex].url} download target="_blank" rel="noopener noreferrer">
-                                Download File
-                            </a>
-                        </Button>
-                   </div>
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-secondary/10 text-white">
+                  <div className="rounded-full bg-primary/20 p-6">
+                    <Download className="h-12 w-12 text-primary" />
+                  </div>
+                  <p className="text-xl font-medium">{media[selectedIndex].name}</p>
+                  <p className="text-muted-foreground uppercase">{media[selectedIndex].mediaType} File</p>
+                  <Button
+                    variant="outline"
+                    className="bg-transparent text-white border-white/20 hover:bg-white/10"
+                    asChild
+                  >
+                    <a href={media[selectedIndex].url} download target="_blank" rel="noopener noreferrer">
+                      Download File
+                    </a>
+                  </Button>
+                </div>
               )}
-                
-              <div className="absolute inset-x-0 -bottom-10 flex items-center justify-between text-white/70">
-                <p className="text-sm">{media[selectedIndex].name}</p>
-                <p className="text-sm">
+
+              <div className="absolute inset-x-0 bottom-6 flex items-center justify-between px-8 text-white/70 pointer-events-none">
+                <p className="text-sm font-medium">{media[selectedIndex].name}</p>
+                <p className="text-sm font-mono">
                   {selectedIndex + 1} / {media.length}
                 </p>
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
