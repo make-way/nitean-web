@@ -20,6 +20,7 @@ export default async function LeftSidebar() {
           name: true,
           image: true,
           level: true,
+          username: true,
       }
     });
   }
@@ -60,7 +61,7 @@ export default async function LeftSidebar() {
 
       {/* User Profile */}
       <div className="px-2">
-        <UserSection user={userData ? { ...userData, level: userData.level as string } : null} />
+        <UserSection user={userData ? { ...userData, level: userData.level as string, username: userData.username as string } : null} />
       </div>
     </aside>
   );

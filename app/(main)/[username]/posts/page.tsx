@@ -1,10 +1,11 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { getPostsOwner } from '@/server/actions/article';
 import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
+import { getPostsByUserId } from '@/server/services/post';
+import FeedPostCard from '@/components/feed/FeedPostCard';
 
-export default async function ArticlesPage({ params }: { params: Promise<{ username: string }> }) {
+export default async function PostsPage({ params }: { params: Promise<{ username: string }> }) {
     const { username } = await params;
 
     const user = await prisma.user.findUnique({
@@ -19,8 +20,8 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
 
     const isOwner = session?.user?.id === user.id;
 
-    // Fetch Posts using the cached function
-    const posts = await getPostsOwner(user.id);
+    // Fetch Posts
+    const posts = await getPostsByUserId(user.id, session?.user?.id);
 
     if (posts.length === 0) {
         return (
@@ -31,10 +32,14 @@ export default async function ArticlesPage({ params }: { params: Promise<{ usern
     }
 
     return (
-        <div className='mt-4 space-y-6'>
-            <div className="flex items-center justify-center rounded-sm border-dashed">
-                <h1>Coming Soon</h1>
-            </div>
+        <div className='mt-4 space-y-px'>
+            {posts.map((post) => (
+                <FeedPostCard
+                    key={post.id}
+                    post={post}
+                    currentUserId={session?.user?.id}
+                />
+            ))}
         </div>
     );
 }

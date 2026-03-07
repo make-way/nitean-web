@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, Heart, Share2, MoreHorizontal, Trash2 } from "lucide-react";
+import { MessageCircle, Heart, Share2, MoreHorizontal, Trash2, Edit2 } from "lucide-react";
 import { useState } from "react";
 import { togglePostLikeAction, deletePostAction } from "@/server/actions/post";
 import { useSession } from "@/lib/auth-client";
@@ -41,6 +41,8 @@ export default function FeedPostCard({
     const [isDeleting, setIsDeleting] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+
 
     const handleLike = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -69,6 +71,21 @@ export default function FeedPostCard({
     if (isDeleting) return null;
 
     const isOwner = session?.user?.id === post.userId;
+
+    if (isEditing) {
+        return (
+            <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
+                <FeedComposer
+                    editPostId={post.id}
+                    initialContent={post.content}
+                    initialMedia={post.media}
+                    onSuccess={() => setIsEditing(false)}
+                    onCancel={() => setIsEditing(false)}
+                />
+            </div>
+        );
+    }
+
 
     if (isDetailsView) {
         return (
@@ -101,6 +118,12 @@ export default function FeedPostCard({
                         </button>
                         {showOptions && isOwner && (
                             <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                                <button
+                                    onClick={() => { setIsEditing(true); setShowOptions(false); }}
+                                    className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
+                                >
+                                    <Edit2 className="w-4 h-4" /> Edit
+                                </button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
@@ -208,6 +231,12 @@ export default function FeedPostCard({
                             </button>
                             {showOptions && isOwner && (
                                 <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                                    <button
+                                        onClick={() => { setIsEditing(true); setShowOptions(false); }}
+                                        className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
+                                    >
+                                        <Edit2 className="w-4 h-4" /> Edit
+                                    </button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
@@ -275,7 +304,12 @@ export default function FeedPostCard({
 
             {isReplying && (
                 <div className="px-4 pb-4 border-t border-zinc-50 dark:border-zinc-900 pt-4 bg-white dark:bg-black">
-                    <FeedComposer replyToPostId={post.id} placeholder="Post your reply" onSuccess={() => setIsReplying(false)} />
+                    <FeedComposer
+                        replyToPostId={post.id}
+                        placeholder="Post your reply"
+                        onSuccess={() => setIsReplying(false)}
+                        onCancel={() => setIsReplying(false)}
+                    />
                 </div>
             )}
         </article>

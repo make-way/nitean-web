@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { createPost, deletePost, togglePostLike } from '@/server/services/post';
+import { createPost, deletePost, togglePostLike, updatePost } from '@/server/services/post';
 import { revalidatePath } from 'next/cache';
 import { Visibility } from '@/lib/generated/prisma/client';
 
@@ -71,5 +71,27 @@ export async function togglePostLikeAction(postId: string) {
     } catch (error: any) {
         console.error('Failed to toggle like:', error);
         return { success: false, error: error.message || 'Failed to toggle like' };
+    }
+}
+
+export async function updatePostAction(postId: string, data: {
+    content: string;
+    media?: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[];
+}) {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    try {
+        const post = await updatePost(postId, session.user.id, data);
+        revalidatePath('/');
+        return { success: true, post };
+    } catch (error: any) {
+        console.error('Failed to update post:', error);
+        return { success: false, error: error.message || 'Failed to update post' };
     }
 }

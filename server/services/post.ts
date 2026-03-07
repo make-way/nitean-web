@@ -279,3 +279,78 @@ export async function getReplies(postId: string) {
         }
     });
 }
+
+export async function getPostsByUserId(userId: string, currentUserId?: string, limit: number = 20, offset: number = 0) {
+    const posts = await prisma.post.findMany({
+        where: {
+            userId: userId,
+            replyToPostId: null, // Only top-level posts
+        },
+        take: limit,
+        skip: offset,
+        orderBy: { createdAt: 'desc' },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    username: true,
+                    image: true,
+                }
+            },
+            media: true,
+            likes: currentUserId ? {
+                where: {
+                    userId: currentUserId
+                }
+            } : false,
+            _count: {
+                select: {
+                    likes: true,
+                    replies: true,
+                }
+            }
+        }
+    });
+
+    return posts.map(post => ({
+        ...post,
+        isLiked: currentUserId ? post.likes.length > 0 : false
+    }));
+}
+
+export async function updatePost(postId: string, userId: string, data: {
+    content: string;
+    media?: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[];
+}) {
+    const post = await prisma.post.findUnique({
+        where: { id: postId },
+        select: { userId: true, media: true }
+    });
+
+    if (!post) throw new Error('Post not found');
+    if (post.userId !== userId) throw new Error('Unauthorized');
+
+    // Update post content
+    const updatedPost = await prisma.post.update({
+        where: { id: postId },
+        data: {
+            content: data.content,
+            media: data.media ? {
+                deleteMany: {}, // Delete existing media records
+                create: data.media.map(m => ({
+                    userId: userId,
+                    url: m.url,
+                    type: m.type,
+                    size: m.size
+                }))
+            } : undefined
+        },
+        include: {
+            user: true,
+            media: true
+        }
+    });
+
+    return updatedPost;
+}

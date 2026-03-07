@@ -10,6 +10,7 @@ interface UserSectionProps {
     name: string;
     image?: string | null;
     level: string;
+    username: string;
   } | null;
 }
 
@@ -27,10 +28,12 @@ export function UserSection({ user }: UserSectionProps) {
           height={40} 
           className="rounded-full bg-zinc-100 w-10 h-10"
       />
-      <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">{user.name}</p>
-          <p className="text-xs text-zinc-500 truncate capitalize">{user.level}</p> 
-      </div>
+      <Link href={`/${user.username}/profile`}>
+        <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">{user.name}</p>
+            <p className="text-xs text-zinc-500 truncate capitalize">{user.level}</p> 
+        </div>
+      </Link>
       <button 
           onClick={() => signOut()}
           className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all cursor-pointer"

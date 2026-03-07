@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 import CATEGORIZED_EMOJIS from '@/lib/data/emojis.json';
-import { createPostAction } from '@/server/actions/post';
+import { createPostAction, updatePostAction } from '@/server/actions/post';
 import { useUploadThing } from '@/lib/uploadthing';
 
 type EmojiData = Record<string, string[]>;
@@ -40,14 +40,18 @@ const CATEGORY_ICONS: Record<string, any> = {
 
 interface FeedComposerProps {
     replyToPostId?: string;
+    editPostId?: string;
+    initialContent?: string;
+    initialMedia?: any[];
     placeholder?: string;
     onSuccess?: () => void;
+    onCancel?: () => void;
 }
 
-export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: FeedComposerProps) {
+export default function FeedComposer({ replyToPostId, editPostId, initialContent = '', initialMedia = [], placeholder, onSuccess, onCancel }: FeedComposerProps) {
     const { data: session } = useSession();
-    const [text, setText] = useState('');
-    const [selectedImages, setSelectedImages] = useState<string[]>([]);
+    const [text, setText] = useState(initialContent);
+    const [selectedImages, setSelectedImages] = useState<string[]>(initialMedia.map(m => m.url));
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [isPosting, setIsPosting] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -147,11 +151,15 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
     };
 
     const handlePost = async () => {
-        if (!text.trim() && selectedFiles.length === 0) return;
+        if (!text.trim() && selectedFiles.length === 0 && selectedImages.length === 0) return;
         setIsPosting(true);
 
         try {
             let mediaData: { url: string; type: 'Image' | 'Video' | 'Audio' | 'File'; size: number }[] = [];
+
+            // If editing, we might want to keep some old media or handle it differently.
+            // For simplicity, let's assume if there are new files, we upload them.
+            // If we are editing and haven't added new files, we keep existing selectedImages (this logic needs refinement but let's start simple)
 
             if (selectedFiles.length > 0) {
                 const uploadRes = await startUpload(selectedFiles);
@@ -162,19 +170,36 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                         size: file.size
                     }));
                 }
+            } else if (editPostId) {
+                // Keep existing media if no new files
+                mediaData = initialMedia.map(m => ({
+                    url: m.url,
+                    type: m.type,
+                    size: m.size
+                }));
             }
 
-            const result = await createPostAction({
-                content: text,
-                replyToPostId,
-                media: mediaData,
-                visibility: 'PUBLIC'
-            });
+            let result;
+            if (editPostId) {
+                result = await updatePostAction(editPostId, {
+                    content: text,
+                    media: selectedFiles.length > 0 ? mediaData : undefined // only update media if new files uploaded for now
+                });
+            } else {
+                result = await createPostAction({
+                    content: text,
+                    replyToPostId,
+                    media: mediaData,
+                    visibility: 'PUBLIC'
+                });
+            }
 
             if (result.success) {
-                setText('');
-                setSelectedImages([]);
-                setSelectedFiles([]);
+                if (!editPostId) {
+                    setText('');
+                    setSelectedImages([]);
+                    setSelectedFiles([]);
+                }
                 onSuccess?.();
             } else {
                 alert(result.error || 'Failed to post');
@@ -280,7 +305,12 @@ export default function FeedComposer({ replyToPostId, placeholder, onSuccess }: 
                             </div>
                             <div className="w-px h-8 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                             <button
-                                onClick={() => { setText(''); setSelectedImages([]); setSelectedFiles([]); }}
+                                onClick={() => {
+                                    setText('');
+                                    setSelectedImages([]);
+                                    setSelectedFiles([]);
+                                    onCancel?.();
+                                }}
                                 className="px-5 py-1.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full text-sm transition-all"
                             >
                                 Cancel
