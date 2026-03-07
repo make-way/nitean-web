@@ -70,7 +70,11 @@
         "post": "Publication",
         "end_screen": "Écran de fin",
         "posts": "Publications",
-        "hearts": "Cœurs"
+        "hearts": "Cœurs",
+        "members": "Membres",
+        "users_online": "Utilisateurs en ligne",
+        "last_seen": "Dernière connexion",
+        "online": "En ligne"
     },
     "menu": {
         "sign_in_to_see_more": "Connectez-vous pour voir plus",

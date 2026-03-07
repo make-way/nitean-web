@@ -54,7 +54,7 @@
         "reply": "ឆ្លើយតប",
         "edit": "កែសម្រួល",
         "delete": "លុប",
-        "for_you":"សម្រាប់អ្នក",
+        "for_you": "សម្រាប់អ្នក",
         "login_with_google": "ចូលប្រើដោយ Google",
         "login_with_github": "ចូលប្រើដោយ GitHub",
         "setup_your_profile": "រៀបចំប្រវត្តិរូបរបស់អ្នក"
@@ -68,21 +68,25 @@
         "no_reply_yet": "មិនទាន់មានការឆ្លើយតប",
         "post_your_reply": "បង្ហោះការឆ្លើយតបរបស់អ្នក",
         "post": "ការបង្ហោះ",
-        "end_screen":"បញ្ចប់អេក្រង់",
+        "end_screen": "បញ្ចប់អេក្រង់",
         "posts": "ចំនួនបង្ហោះ",
-        "hearts": "ចំនួនចូលចិត្ត"
+        "hearts": "ចំនួនចូលចិត្ត",
+        "members": "សមាជិក",
+        "users_online": "អ្នកប្រើប្រាស់កំពុងអនឡាញ",
+        "last_seen": "មើលឃើញចុងក្រោយ",
+        "online": "អនឡាញ"
     },
     "menu": {
-        "sign_in_to_see_more":"ចូលដើម្បីមើលបន្ថែម",
+        "sign_in_to_see_more": "ចូលដើម្បីមើលបន្ថែម",
         "join_the_community_to_discover_amazing_content_and_connect_with_people": "ចូលរួមជាមួយសហគមន៍ ដើម្បីស្វែងរកមាតិកាអស្ចារ្យ និងភ្ជាប់ទំនាក់ទំនងជាមួយមនុស្សផ្សេងៗ។",
-        "about_me":"អំពីខ្ញុំ",
-        "my_social_media":"បណ្តាញសង្គមរបស់ខ្ញុំ",
-        "facebook":"ហ្វេសប៊ុក",
-        "github":"គីតហាប់",
-        "google":"ហ្គោហ្គល",
-        "linkedin":"លីងអ៊ិន",
-        "Youtube":"យូធូប",
-        "telegram":"តេលេក្រាម",
-        "tikTok":"តិកតុក"
+        "about_me": "អំពីខ្ញុំ",
+        "my_social_media": "បណ្តាញសង្គមរបស់ខ្ញុំ",
+        "facebook": "ហ្វេសប៊ុក",
+        "github": "គីតហាប់",
+        "google": "ហ្គោហ្គល",
+        "linkedin": "លីងអ៊ិន",
+        "Youtube": "យូធូប",
+        "telegram": "តេលេក្រាម",
+        "tikTok": "តិកតុក"
     }
 }

@@ -64,6 +64,7 @@ model User {
   tiktok_link String?
   facebook_link String?
   createdAt     DateTime  @default(now())
+  lastSeen      DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]

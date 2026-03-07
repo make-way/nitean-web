@@ -70,7 +70,11 @@
         "post": "Post",
         "end_screen": "End screen",
         "posts": "Posts",
-        "hearts": "Hearts"
+        "hearts": "Hearts",
+        "members": "Members",
+        "users_online": "Users Online",
+        "last_seen": "Last seen",
+        "online": "Online"
     },
     "menu": {
         "sign_in_to_see_more": "Sign in to see more",

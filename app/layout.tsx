@@ -61,6 +61,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { MobileNavWrapper } from "@/components/layout/MobileNavWrapper";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { I18nProvider } from "@/components/I18nProvider";
+import { RealTimeStatus } from "@/components/RealTimeStatus";
 
 export default function RootLayout({
     children,
@@ -84,6 +85,7 @@ export default function RootLayout({
                         <MobileBottomNav />
                         <Toaster />
                         {/* <ScrollToTopButton /> */}
+                        <RealTimeStatus />
                         <Analytics />
                     </I18nProvider>
                 </ThemeProvider>
