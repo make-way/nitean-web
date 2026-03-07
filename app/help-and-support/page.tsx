@@ -1,6 +1,5 @@
-import { ArrowLeft } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 import { Metadata } from 'next';
-import Link from 'next/link';
 import React from 'react';
 
 export const metadata: Metadata = {
@@ -53,12 +52,7 @@ const HelpAndSupport: React.FC = () => {
         <div className='min-h-screen'>
             <div className='mx-auto max-w-4xl px-4 py-12'>
                 <div className="mb-8 flex items-start gap-6">
-                    <Link
-                        href="/"
-                        className="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                    >
-                        <ArrowLeft className="w-6 h-6" />
-                    </Link>
+                    <BackButton/>
                     <h1 className="text-3xl md:text-4xl font-semibold">Terms of Service</h1>
                 </div>
 

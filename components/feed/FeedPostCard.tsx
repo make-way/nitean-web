@@ -155,11 +155,12 @@ export default function FeedPostCard({
 
                 {/* Media */}
                 {post.media && post.media.length > 0 && (
-                    <div className={`grid gap-2 rounded-sm overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                    <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {post.media.map((m: any) => (
-                            <div key={m.id} className="relative aspect-video">
-                                <Image src={m.url} alt="Post media" fill className="object-cover" />
-                            </div>
+                            // <div key={m.id} className="relative aspect-video bg-zinc-100 dark:bg-zinc-800">
+                            //     <img src={m.url} alt={post.content} className="w-full h-full object-cover" />
+                            // </div>
+                            <img src={m.url} key={m.id} alt={post.content} className="w-full h-full object-cover" />
                         ))}
                     </div>
                 )}
@@ -269,10 +270,10 @@ export default function FeedPostCard({
 
                     {post.media && post.media.length > 0 && (
                         <Link href={`/post/${post.id}`} className="block">
-                            <div className={`grid gap-2 rounded-sm overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                            <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                                 {post.media.map((m: any) => (
-                                    // <div key={m.id} className="relative aspect-video">
-                                    //     <Image src={m.url} alt="Post media" fill className="w-full h-full" />
+                                    // <div key={m.id} className="relative aspect-video bg-zinc-100 dark:bg-zinc-800">
+                                    //     <img src={m.url} alt={post.content} className="w-full h-full object-cover" />
                                     // </div>
                                     <img src={m.url} key={m.id} alt={post.content} className="w-full h-full object-cover" />
                                 ))}

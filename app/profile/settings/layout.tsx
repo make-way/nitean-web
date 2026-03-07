@@ -26,13 +26,13 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
     return (
         <div className="relative min-h-screen bg-zinc-50 dark:bg-black">
             {/* Close button */}
-            <Link
-                href="/"
+            <div
+                onClick={() => router.back()}
                 aria-label="Close settings"
-                className="fixed top-4 right-4 z-50 rounded-full p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-900"
+                className="fixed top-4 right-4 z-50 rounded-full p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
             >
                 <X className="h-5 w-5" />
-            </Link>
+            </div>
 
             <div className="mx-auto max-w-5xl px-4 py-10">
 
