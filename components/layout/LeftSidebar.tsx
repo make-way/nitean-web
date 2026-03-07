@@ -6,6 +6,8 @@ import prisma from '@/lib/prisma';
 import { NavLinks } from './NavLinks';
 import { UserSection } from './UserSection';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageToggle } from './LanguageToggle';
+import { SidebarSearch } from './SidebarSearch';
 import Image from 'next/image';
 
 export default async function LeftSidebar() {
@@ -37,11 +39,7 @@ export default async function LeftSidebar() {
       {/* Search */}
       <div className="relative mb-8 px-2">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full h-11 pl-11 pr-4 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
-        />
+        <SidebarSearch />
       </div>
 
       {/* Navigation */}
@@ -61,9 +59,10 @@ export default async function LeftSidebar() {
       </div> */}
 
       {/* Theme Toggle & User Profile */}
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col gap-1">
+        <LanguageToggle />
         <ThemeToggle />
-        <div className="px-2">
+        <div className="mt-4 px-2">
           <UserSection user={userData ? { ...userData, level: userData.level as string, username: userData.username as string } : null} />
         </div>
       </div>

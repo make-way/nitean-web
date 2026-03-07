@@ -7,6 +7,7 @@ import FeedPostCard from "@/components/feed/FeedPostCard";
 import { notFound } from "next/navigation";
 import { Metadata } from 'next';
 import BackButton from "@/components/BackButton";
+import TranslatedText from "@/components/i18n/TranslatedText";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
@@ -34,7 +35,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         }
     };
 }
-
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const postId = id;
@@ -90,8 +90,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <main className="flex-1 max-w-175 py-0 border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
             {/* Header */}
             <div className="flex items-center bg-white dark:bg-black backdrop-blur-xl gap-6 px-3 sm:px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 sticky md:top-0 top-0 z-60">
-                <BackButton/>
-                <h1 className="text-xl font-bold">Post</h1>
+                <BackButton />
+                <h1 className="text-xl font-bold"><TranslatedText translationKey="label.post" /></h1>
             </div>
 
             {/* Thread Context (Parent) */}
@@ -112,7 +112,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
                     <FeedComposer
                         replyToPostId={post.id}
-                        placeholder="Post your reply"
+                        placeholderKey="label.post_your_reply"
                     />
                 </div>
             </div>
@@ -125,7 +125,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     ))
                 ) : (
                     <div className="p-12 text-center text-zinc-500 font-medium bg-zinc-50/20 dark:bg-zinc-900/10">
-                        No replies yet.
+                        <TranslatedText translationKey="label.no_reply_yet" />
                     </div>
                 )}
             </div>

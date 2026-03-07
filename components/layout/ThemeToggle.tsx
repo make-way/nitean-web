@@ -4,10 +4,12 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { updateThemeAction } from "@/server/actions/settings";
+import { useTranslation } from 'react-i18next';
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         setMounted(true);
@@ -57,7 +59,7 @@ export function ThemeToggle() {
                     </div>
                 </div>
                 <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                    {isDark ? 'Switch to Light' : 'Switch to Dark'}
+                    {isDark ? t('common.light') : t('common.dark')}
                 </span>
             </button>
         </div>

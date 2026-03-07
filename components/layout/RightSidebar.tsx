@@ -15,6 +15,7 @@ import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { LoginButtons } from '@/components/auth/LoginButtons';
 import Link from 'next/link';
+import TranslatedText from "@/components/i18n/TranslatedText";
 
 export default async function RightSidebar() {
   const session = await auth.api.getSession({
@@ -26,9 +27,9 @@ export default async function RightSidebar() {
         <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-10 border border-zinc-100 dark:border-zinc-800 shadow-sm text-center flex flex-col items-center gap-6">
               <Image src='/logo.svg' alt='Logo' width={64} height={64} />
             <div>
-                <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2">Sign in to see more</h3>
+                <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2"><TranslatedText translationKey="menu.sign_in_to_see_more" /></h3>
                 <p className="text-sm text-zinc-500 leading-relaxed px-4">
-                    Join the community to discover amazing content and connect with people.
+                    <TranslatedText translationKey="menu.join_the_community_to_discover_amazing_content_and_connect_with_people"/>
                 </p>
             </div>
             
@@ -78,22 +79,22 @@ export default async function RightSidebar() {
         <div className="flex items-center justify-between px-8 py-6 border-y border-zinc-50 dark:border-zinc-800">
             <div className="text-center flex-1">
                 <p className="text-lg font-black text-zinc-900 dark:text-white">{postCount}</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Posts</p>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5"><TranslatedText translationKey="label.posts"/></p>
             </div>
             <div className="w-px h-10 bg-zinc-100 dark:bg-zinc-800 mx-1" />
             <div className="text-center flex-1">
                 <p className="text-lg font-black text-zinc-900 dark:text-white">{heartCount}</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Hearts</p>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5"><TranslatedText translationKey="label.hearts"/></p>
             </div>
         </div>
 
         {/* About Me */}
         <div className="p-8 space-y-4">
             <div className="flex items-center justify-between">
-                <h3 className="font-black text-zinc-900 dark:text-white">About Me</h3>
-                <button className="text-zinc-400 hover:text-zinc-600 transition-colors">
+                <h3 className="font-black text-zinc-900 dark:text-white"><TranslatedText translationKey="menu.about_me"/></h3>
+                {/* <button className="text-zinc-400 hover:text-zinc-600 transition-colors">
                     <MoreHorizontal className="w-5 h-5" />
-                </button>
+                </button> */}
             </div>
             {session.user.bio ? (
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -102,7 +103,7 @@ export default async function RightSidebar() {
             ) : (
                 <div className="flex">
                     <Link href="/profile/settings" className="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-full text-center text-sm font-bold hover:text-zinc-600 transition-colors w-full">
-                        Setup your profile
+                        <TranslatedText translationKey='buttons.setup_your_profile'/>
                     </Link>
                 </div>
             )}
@@ -118,7 +119,7 @@ export default async function RightSidebar() {
             { name: 'TikTok', link: session.user.tiktok_link, icon: <Music2 className="w-5 h-5" />, color: 'bg-zinc-900' },
         ].filter(s => s.link).length > 0) && (
             <div className="px-8 pb-4">
-                <h3 className="font-black text-zinc-900 dark:text-white mb-4">My Social Media</h3>
+                <h3 className="font-black text-zinc-900 dark:text-white mb-4"><TranslatedText translationKey="menu.my_social_media"/></h3>
                 <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                     {[
                         { name: 'Facebook', link: session.user.facebook_link, icon: <Facebook className="w-5 h-5" />, color: 'bg-blue-500' },

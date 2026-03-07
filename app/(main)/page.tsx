@@ -3,8 +3,7 @@ import { headers } from "next/headers";
 import { getPosts } from "@/server/services/post";
 import FeedPostCard from "@/components/feed/FeedPostCard";
 import prisma from "@/lib/prisma";
-import LeftSidebar from "@/components/layout/LeftSidebar";
-import RightSidebar from "@/components/layout/RightSidebar";
+import TranslatedText from "@/components/i18n/TranslatedText";
 import FeedComposer from "@/components/feed/FeedComposer";
 
 export default async function Page() {
@@ -40,7 +39,7 @@ export default async function Page() {
         <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
             {/* Tabs */}
             <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800 pb-4 sticky md:top-0 top-15 z-60 sm:block hidden">
-                <button className="text-[17px] font-black text-zinc-900 dark:text-white border-b-4 border-indigo-600 pb-4 -mb-5">For You</button>
+                <button className="text-[17px] font-black text-zinc-900 dark:text-white border-b-4 border-indigo-600 pb-4 -mb-5"><TranslatedText translationKey="buttons.for_you" /></button>
             </div>
 
             {/* Composer */}
@@ -55,7 +54,7 @@ export default async function Page() {
                 ))}
             </div>
             <div className="border-t border-zinc-100 dark:border-zinc-800 py-12 flex items-center justify-center">
-                End Feed
+                <TranslatedText translationKey="label.end_screen" />
             </div>
         </main>
     );

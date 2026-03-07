@@ -22,6 +22,7 @@ import { useSession } from '@/lib/auth-client';
 import CATEGORIZED_EMOJIS from '@/lib/data/emojis.json';
 import { createPostAction, updatePostAction } from '@/server/actions/post';
 import { useUploadThing } from '@/lib/uploadthing';
+import { useTranslation } from 'react-i18next';
 
 type EmojiData = Record<string, string[]>;
 const emojis: EmojiData = CATEGORIZED_EMOJIS as EmojiData;
@@ -44,11 +45,13 @@ interface FeedComposerProps {
     initialContent?: string;
     initialMedia?: any[];
     placeholder?: string;
+    placeholderKey?: string;
     onSuccess?: () => void;
     onCancel?: () => void;
 }
 
-export default function FeedComposer({ replyToPostId, editPostId, initialContent = '', initialMedia = [], placeholder, onSuccess, onCancel }: FeedComposerProps) {
+export default function FeedComposer({ replyToPostId, editPostId, initialContent = '', initialMedia = [], placeholder, placeholderKey, onSuccess, onCancel }: FeedComposerProps) {
+    const { t } = useTranslation();
     const { data: session } = useSession();
     const [text, setText] = useState(initialContent);
     const [selectedImages, setSelectedImages] = useState<string[]>(initialMedia.map(m => m.url));
@@ -228,17 +231,12 @@ export default function FeedComposer({ replyToPostId, editPostId, initialContent
                 </div>
 
                 <div className="flex-1 space-y-3">
-                    <button className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-700 text-sky-500 font-bold text-[14px] hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors">
-                        Everyone
-                        <ChevronDown className="w-4 h-4" />
-                    </button>
-
                     <textarea
                         ref={textareaRef}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         maxLength={MAX_CHARS}
-                        placeholder={placeholder || "What's on your mind right now?"}
+                        placeholder={placeholder || (placeholderKey ? t(placeholderKey) : t('label.what_is_on_your_mind'))}
                         className="w-full bg-transparent border-none resize-none text-[20px] font-medium placeholder:text-zinc-500 focus:ring-0 outline-none min-h-12.5 leading-tight overflow-hidden"
                         rows={1}
                         disabled={isPosting}
@@ -313,14 +311,14 @@ export default function FeedComposer({ replyToPostId, editPostId, initialContent
                                 }}
                                 className="px-5 py-1.5 text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-full text-sm transition-all"
                             >
-                                Cancel
+                                {t("buttons.cancel")}
                             </button>
                             <button
                                 disabled={isPosting || (!text.trim() && selectedImages.length === 0)}
                                 onClick={handlePost}
                                 className="px-5 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-full text-sm disabled:opacity-50 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all"
                             >
-                                {isPosting ? 'Posting...' : replyToPostId ? 'Reply' : 'Post'}
+                                {isPosting ? 'Posting...' : replyToPostId ? t("buttons.reply") : t("buttons.post")}
                             </button>
                         </div>
                     </div>

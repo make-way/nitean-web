@@ -19,6 +19,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { useTranslation } from 'react-i18next';
 
 type FeedPostCardProps = {
     post: any;
@@ -35,6 +36,7 @@ export default function FeedPostCard({
     isThreadChild = false,
     isDetailsView = false
 }: FeedPostCardProps) {
+    const { t } = useTranslation();
     const { data: session } = useSession();
     const [isLiked, setIsLiked] = useState(post.isLiked);
     const [likesCount, setLikesCount] = useState(post._count?.likes || 0);
@@ -112,40 +114,40 @@ export default function FeedPostCard({
                             <span className="text-zinc-500">@{post.user.username}</span>
                         </div>
                     </div>
-                    <div className="relative">
-                        <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
-                            <MoreHorizontal className="w-5 h-5" />
-                        </button>
-                        {showOptions && isOwner && (
+                    {showOptions && isOwner && (
+                        <div className="relative">
+                            <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
+                                <MoreHorizontal className="w-5 h-5" />
+                            </button>
                             <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
                                 <button
                                     onClick={() => { setIsEditing(true); setShowOptions(false); }}
                                     className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
                                 >
-                                    <Edit2 className="w-4 h-4" /> Edit
+                                    <Edit2 className="w-4 h-4" /> {t("buttons.edit")}
                                 </button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
-                                            <Trash2 className="w-4 h-4" /> Delete
+                                            <Trash2 className="w-4 h-4" /> {t("buttons.delete")}
                                         </button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent className="z-100">
                                         <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogTitle>{t("label.are_you_absolutely_sure")}</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This action cannot be undone. This will permanently delete your post.
+                                                {t("label.this_action_cannot_be_undone")}
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">Delete</AlertDialogAction>
+                                            <AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
+                                            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">{t("buttons.delete")}</AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Content */}
@@ -173,19 +175,19 @@ export default function FeedPostCard({
                 </div>
 
                 <div className="flex items-center gap-6 py-4 border-b border-zinc-100 dark:border-zinc-800 font-bold text-[14px]">
-                    <span className="dark:text-zinc-100">{post._count?.replies || 0} <span className="text-zinc-500 font-normal">Replies</span></span>
-                    <span className="dark:text-zinc-100">{likesCount} <span className="text-zinc-500 font-normal">Likes</span></span>
+                    <span className="dark:text-zinc-100">{post._count?.replies || 0} <span className="text-zinc-500 font-normal">{t("label.replies")}</span></span>
+                    <span className="dark:text-zinc-100">{likesCount} <span className="text-zinc-500 font-normal">{t("label.likes")}</span></span>
                 </div>
 
                 {/* Main Actions */}
                 <div className="flex items-center justify-around py-2 border-b border-zinc-100 dark:border-zinc-800">
-                    <button onClick={() => setIsReplying(!isReplying)} className="p-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 hover:text-sky-500 transition-colors">
+                    <button onClick={() => setIsReplying(!isReplying)} className="p-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 hover:text-sky-500 transition-colors cursor-pointer">
                         <MessageCircle className="w-5 h-5" />
                     </button>
-                    <button onClick={handleLike} className={`p-2 rounded-full transition-colors ${isLiked ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/20' : 'text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20'}`}>
+                    <button onClick={handleLike} className={`p-2 rounded-full transition-colors cursor-pointer ${isLiked ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/20' : 'text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20'}`}>
                         <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                     </button>
-                    <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors">
+                    <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors cursor-pointer">
                         <Share2 className="w-5 h-5" />
                     </button>
                 </div>
@@ -227,33 +229,36 @@ export default function FeedPostCard({
                             <span className="text-zinc-500">{formatDistanceToNow(new Date(post.createdAt))}</span>
                         </div>
                         <div className="relative">
-                            <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
-                                <MoreHorizontal className="w-5 h-5" />
-                            </button>
+                            {isOwner && (
+                                <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors cursor-pointer">
+                                    <MoreHorizontal className="w-5 h-5" />
+                                </button>
+                            )}
+
                             {showOptions && isOwner && (
                                 <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
                                     <button
                                         onClick={() => { setIsEditing(true); setShowOptions(false); }}
                                         className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
                                     >
-                                        <Edit2 className="w-4 h-4" /> Edit
+                                        <Edit2 className="w-4 h-4" /> {t("buttons.edit")}
                                     </button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
-                                                <Trash2 className="w-4 h-4" /> Delete
+                                                <Trash2 className="w-4 h-4" /> {t("buttons.delete")}
                                             </button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent className="z-100" onClick={(e) => e.stopPropagation()}>
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                <AlertDialogTitle>{t("label.are_you_absolutely_sure")}</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    This action cannot be undone. This will permanently delete your post.
+                                                    {t("label.this_action_cannot_be_undone")}
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
-                                                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">Delete</AlertDialogAction>
+                                                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("buttons.cancel")}</AlertDialogCancel>
+                                                <AlertDialogAction onClick={(e) => { e.stopPropagation(); handleDelete(); }} className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white">{t("buttons.delete")}</AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -283,18 +288,18 @@ export default function FeedPostCard({
 
                     <div className="flex items-center justify-between max-w-md pt-2">
                         <button onClick={() => setIsReplying(!isReplying)} className="flex items-center gap-2 group text-zinc-500 hover:text-sky-500 transition-colors text-[13px]">
-                            <div className="p-2 rounded-full group-hover:bg-sky-50 dark:group-hover:bg-sky-950/20 transition-colors">
+                            <div className="p-2 rounded-full group-hover:bg-sky-50 dark:group-hover:bg-sky-950/20 transition-colors cursor-pointer">
                                 <MessageCircle className="w-4 h-4" />
                             </div>
                             <span>{post._count?.replies || 0}</span>
                         </button>
-                        <button onClick={handleLike} className={`flex items-center gap-2 group transition-colors text-[13px] ${isLiked ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}>
+                        <button onClick={handleLike} className={`flex items-center gap-2 group transition-colors text-[13px] cursor-pointer ${isLiked ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}>
                             <div className={`p-2 rounded-full transition-colors ${isLiked ? 'bg-rose-50 dark:bg-rose-950/20' : 'group-hover:bg-rose-50 dark:group-hover:bg-rose-950/20'}`}>
                                 <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
                             </div>
                             <span className={isLiked ? 'font-bold' : ''}>{likesCount}</span>
                         </button>
-                        <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px]">
+                        <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px] cursor-pointer">
                             <div className="p-2 rounded-full group-hover:bg-green-50 dark:group-hover:bg-green-950/20 transition-colors">
                                 <Share2 className="w-4 h-4" />
                             </div>

@@ -60,6 +60,7 @@ export const metadata: Metadata = {
 import { ThemeProvider } from "@/components/theme-provider";
 import { MobileNavWrapper } from "@/components/layout/MobileNavWrapper";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { I18nProvider } from "@/components/I18nProvider";
 
 export default function RootLayout({
     children,
@@ -77,12 +78,14 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <MobileNavWrapper />
-                    {children}
-                    <MobileBottomNav />
-                    <Toaster />
-                    {/* <ScrollToTopButton /> */}
-                    <Analytics />
+                    <I18nProvider>
+                        <MobileNavWrapper />
+                        {children}
+                        <MobileBottomNav />
+                        <Toaster />
+                        {/* <ScrollToTopButton /> */}
+                        <Analytics />
+                    </I18nProvider>
                 </ThemeProvider>
             </body>
         </html>
