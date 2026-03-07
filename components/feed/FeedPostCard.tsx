@@ -192,11 +192,13 @@ export default function FeedPostCard({
                 {/* Content */}
                 <div className="flex-1 space-y-1 pb-2">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-[15px]">
-                            <Link href={`/${post.user.username}`} className="font-bold hover:underline dark:text-zinc-100">
-                                {post.user.name}
-                            </Link>
-                            <span className="text-zinc-500">@{post.user.username}</span>
+                        <div className="flex items-start gap-1 text-[15px]">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-0 sm:gap-1">
+                                <Link href={`/${post.user.username}`} className="font-bold hover:underline dark:text-zinc-100">
+                                    {post.user.name}
+                                </Link>
+                                <span className="text-zinc-500">@{post.user.username}</span>
+                            </div>
                             <span className="text-zinc-500">·</span>
                             <span className="text-zinc-500">{formatDistanceToNow(new Date(post.createdAt))}</span>
                         </div>

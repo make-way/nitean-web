@@ -14,7 +14,7 @@ export function MobileBottomNav() {
 
     const tabs = [
         { icon: Home, href: '/', id: 'home' },
-        { icon: Book, href: '/articles', id: 'explore' },
+        // { icon: Book, href: '/articles', id: 'explore' },
         { icon: Users, href: '/members', id: 'members' },
         { icon: LogIn, href: username ? `/${username}` : '/auth', isAvatar: true, id: 'profile' },
     ];
@@ -28,7 +28,7 @@ export function MobileBottomNav() {
                 </Link>
             </div> */}
 
-            <div className="fixed bottom-0 left-0 right-0 h-[60px] bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-800 z-50 flex items-center justify-around px-2 md:hidden">
+            <div className="fixed bottom-0 left-0 right-0 h-[60px] bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-800 z-50 flex items-center justify-between px-2 md:hidden">
                 {tabs.map((tab) => {
                     let isActive = pathname === tab.href;
                     if (tab.id === 'profile' && pathname.startsWith(`/${username}`)) {

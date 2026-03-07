@@ -14,6 +14,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { LoginButtons } from '@/components/auth/LoginButtons';
+import Link from 'next/link';
 
 export default async function RightSidebar() {
   const session = await auth.api.getSession({
@@ -37,8 +38,16 @@ export default async function RightSidebar() {
   );
 
   // Fetch article count directly from DB
-  const articleCount = await prisma.article.count({
+  const postCount = await prisma.post.count({
     where: { userId: session.user.id }
+  });
+
+  const heartCount = await prisma.postLike.count({
+    where: {
+        post: {
+            userId: session.user.id, // hearts given to posts that belong to me
+        },
+    },
   });
 
   return (
@@ -58,28 +67,25 @@ export default async function RightSidebar() {
             </div>
             <h2 className="text-xl font-black text-zinc-900 dark:text-white leading-tight">{session.user.name}</h2>
             <p className="text-zinc-400 font-medium mb-1">@{session.user.username}</p>
-            <div className="flex items-center gap-1 text-zinc-400 text-sm">
+            {/* keep location for future */}
+            {/* <div className="flex items-center gap-1 text-zinc-400 text-sm">
                 <MapPin className="w-3 h-3" />
-                <span>San Francisco, US</span>
-            </div>
+                <span>Phnom Penh, Cambodia</span>
+            </div> */}
         </div>
 
         {/* Stats */}
         <div className="flex items-center justify-between px-8 py-6 border-y border-zinc-50 dark:border-zinc-800">
             <div className="text-center flex-1">
-                <p className="text-lg font-black text-zinc-900 dark:text-white">{articleCount}</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Articles</p>
+                <p className="text-lg font-black text-zinc-900 dark:text-white">{postCount}</p>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Posts</p>
             </div>
             <div className="w-px h-10 bg-zinc-100 dark:bg-zinc-800 mx-1" />
             <div className="text-center flex-1">
-                <p className="text-lg font-black text-zinc-900 dark:text-white">0</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Followers</p>
+                <p className="text-lg font-black text-zinc-900 dark:text-white">{heartCount}</p>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Hearts</p>
             </div>
             <div className="w-px h-10 bg-zinc-100 dark:bg-zinc-800 mx-1" />
-            <div className="text-center flex-1">
-                <p className="text-lg font-black text-zinc-900 dark:text-white">0</p>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Following</p>
-            </div>
         </div>
 
         {/* About Me */}
@@ -90,9 +96,17 @@ export default async function RightSidebar() {
                     <MoreHorizontal className="w-5 h-5" />
                 </button>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                {session.user.bio || `Hi there! 👋 I'm ${session.user.name.split(' ')[0]}, an AI enthusiast and fitness aficionado. When I'm not crunching numbers or optimizing algorithms, you can find me hitting the gym.`}
-            </p>
+            {session.user.bio ? (
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    {session.user.bio }
+                </p>
+            ) : (
+                <div className="flex">
+                    <Link href="/profile/settings" className="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-full text-center text-sm font-bold hover:text-zinc-600 transition-colors w-full">
+                        Setup your profile
+                    </Link>
+                </div>
+            )}
         </div>
 
         {/* Story Highlights / Social Media */}

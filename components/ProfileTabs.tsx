@@ -9,7 +9,7 @@ export default function ProfileTabs({ username }: { username: string }) {
 
     const tabs = [
         { name: "Profile", href: `/${username}/profile`, icon: UserCircle, active: pathname === `/${username}/profile` },
-        { name: "Articles", href: `/${username}/articles`, icon: Book, active: pathname === `/${username}/articles` || pathname === `/${username}` },
+        // { name: "Articles", href: `/${username}/articles`, icon: Book, active: pathname === `/${username}/articles` || pathname === `/${username}` },
         { name: "Posts", href: `/${username}/posts`, icon: Newspaper, active: pathname === `/${username}/posts` || pathname === `/${username}` },
         // { name: "Replies", href: `/${username}/replies`, icon: MessageSquare, active: pathname === `/${username}/replies` }, //in the future
         { name: "Media", href: `/${username}/media`, icon: ImageIcon, active: pathname === `/${username}/media` },
@@ -24,7 +24,7 @@ export default function ProfileTabs({ username }: { username: string }) {
                         <Link
                             key={tab.name}
                             href={tab.href}
-                            className={`group flex items-center gap-2 pb-4 transition whitespace-nowrap text-[17px] font-black ${tab.active
+                            className={`group flex items-center gap-2 py-4 transition whitespace-nowrap text-[17px] font-black ${tab.active
                                     ? "border-b-4 border-indigo-600 text-zinc-900 dark:text-white pb-4 -mb-[2px]"
                                     : "text-zinc-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400"
                                 }`}
