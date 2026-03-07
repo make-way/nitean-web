@@ -85,7 +85,6 @@ export default async function RightSidebar() {
                 <p className="text-lg font-black text-zinc-900 dark:text-white">{heartCount}</p>
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mt-0.5">Hearts</p>
             </div>
-            <div className="w-px h-10 bg-zinc-100 dark:bg-zinc-800 mx-1" />
         </div>
 
         {/* About Me */}
