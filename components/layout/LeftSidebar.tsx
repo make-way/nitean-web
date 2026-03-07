@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { NavLinks } from './NavLinks';
 import { UserSection } from './UserSection';
+import { ThemeToggle } from './ThemeToggle';
 import Image from 'next/image';
 
 export default async function LeftSidebar() {
@@ -17,10 +18,10 @@ export default async function LeftSidebar() {
     userData = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
-          name: true,
-          image: true,
-          level: true,
-          username: true,
+        name: true,
+        image: true,
+        level: true,
+        username: true,
       }
     });
   }
@@ -29,16 +30,16 @@ export default async function LeftSidebar() {
     <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 bg-white dark:bg-zinc-900 border-r border-zinc-100 dark:border-zinc-800">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 px-2">
-              <Image src='/logo.svg' alt='Logo' width={48} height={48} />
+        <Image src='/logo.svg' alt='Logo' width={48} height={48} />
         <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">nitean</span>
       </Link>
 
       {/* Search */}
       <div className="relative mb-8 px-2">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-        <input 
-          type="text" 
-          placeholder="Search..." 
+        <input
+          type="text"
+          placeholder="Search..."
           className="w-full h-11 pl-11 pr-4 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
         />
       </div>
@@ -59,9 +60,12 @@ export default async function LeftSidebar() {
         </div>
       </div> */}
 
-      {/* User Profile */}
-      <div className="px-2">
-        <UserSection user={userData ? { ...userData, level: userData.level as string, username: userData.username as string } : null} />
+      {/* Theme Toggle & User Profile */}
+      <div className="mt-8">
+        <ThemeToggle />
+        <div className="px-2">
+          <UserSection user={userData ? { ...userData, level: userData.level as string, username: userData.username as string } : null} />
+        </div>
       </div>
     </aside>
   );
