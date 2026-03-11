@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Menu, X, Settings } from 'lucide-react';
 import { NavLinks } from './NavLinks';
 import { UserSection } from './UserSection';
+import { ThemeToggle } from './ThemeToggle';
+import { LanguageToggle } from './LanguageToggle';
 
 import { usePathname } from 'next/navigation';
 
@@ -69,8 +71,12 @@ export function MobileNavigation({ session, userData }: { session: any, userData
                             <NavLinks session={session} />
                         </div>
 
-                        <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                            <UserSection user={userData ? { ...userData, level: userData.level as string } : null} />
+                        <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-col gap-1">
+                            <LanguageToggle />
+                            <ThemeToggle />
+                            <div className="mt-4 px-2">
+                                <UserSection user={userData ? { ...userData, level: userData.level as string } : null} />
+                            </div>
                         </div>
                     </div>
                 </div>

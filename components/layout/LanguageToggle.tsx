@@ -50,7 +50,7 @@ export function LanguageToggle() {
                         </div>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 rounded-2xl p-2 bg-white dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800">
+                <DropdownMenuContent align="end" className="z-[100] w-48 rounded-2xl p-2 bg-white dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800">
                     {languages.map((lang) => (
                         <DropdownMenuItem
                             key={lang.code}
