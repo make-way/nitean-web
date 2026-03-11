@@ -7,7 +7,7 @@ export async function updateSingleUserField(
   value: string
 ) {
   // 1. Data refinement and validation
-  let dataToUpdate: any = {};
+  const dataToUpdate: any = {};
 
   if (field === 'username') {
     const username = slugifyUsername(value);

@@ -11,6 +11,7 @@ import Spinner from "@/components/ui/Spinner";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, AlertCircle, ArrowLeft, ImagePlus, X } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
+import { processImageToWebpAndResize } from "@/utils/imageProcessor";
 import Link from "next/link";
 
 /* ---------------- helpers ---------------- */
@@ -61,7 +62,8 @@ export default function CreatePostForm() {
         const file = e.target.files?.[0];
         if (!file) return;
         setIsUploading(true);
-        await startUpload([file]);
+        const processedFile = await processImageToWebpAndResize(file);
+        await startUpload([processedFile]);
     };
 
     // Validation State

@@ -23,6 +23,7 @@ import CATEGORIZED_EMOJIS from '@/lib/data/emojis.json';
 import { createPostAction, updatePostAction } from '@/server/actions/post';
 import { useUploadThing } from '@/lib/uploadthing';
 import { useTranslation } from 'react-i18next';
+import { processFilesForUpload } from '@/utils/imageProcessor';
 
 type EmojiData = Record<string, string[]>;
 const emojis: EmojiData = CATEGORIZED_EMOJIS as EmojiData;
@@ -105,12 +106,15 @@ export default function FeedComposer({ replyToPostId, editPostId, initialContent
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
         const remainingSlots = MAX_IMAGES - selectedImages.length;
-        const filesToProcess = files.slice(0, remainingSlots);
+        let filesToProcess = files.slice(0, remainingSlots);
+
+        // Process images before storing in state
+        filesToProcess = await processFilesForUpload(filesToProcess);
 
         setSelectedFiles(prev => [...prev, ...filesToProcess].slice(0, MAX_IMAGES));
 

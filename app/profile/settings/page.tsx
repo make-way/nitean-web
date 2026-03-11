@@ -8,6 +8,7 @@ import { updateSingleUserFieldAction, checkUsernameUniqueAction, deleteUploadThi
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, AlertCircle, Camera } from 'lucide-react';
 import { useUploadThing } from '@/lib/uploadthing';
+import { processImageToWebpAndResize } from '@/utils/imageProcessor';
 
 export default function AccountPage() {
   const { data: session, isPending, refetch } = useSession();
@@ -105,7 +106,8 @@ export default function AccountPage() {
           await deleteUploadThingFileAction(oldImageUrl);
         }
 
-        const uploadRes = await startUpload([selectedFile]);
+        const processedFile = await processImageToWebpAndResize(selectedFile);
+        const uploadRes = await startUpload([processedFile]);
         const url = uploadRes?.[0]?.url;
 
         if (url) {

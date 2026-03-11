@@ -8,7 +8,7 @@ export function slugifyUsername(value: string) {
 }
 
 export async function generateUniqueUsername(base: string) {
-  let username = slugifyUsername(base);
+  const username = slugifyUsername(base);
   let exists = await prisma.user.findUnique({ where: { username } });
 
   let counter = 1;

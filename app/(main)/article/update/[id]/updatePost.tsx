@@ -23,6 +23,7 @@ import {
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, AlertCircle, ArrowLeft, Trash2, ImagePlus, X } from 'lucide-react';
 import Link from 'next/link';
+import { processImageToWebpAndResize } from '@/utils/imageProcessor';
 
 /* ---------------- helpers ---------------- */
 const slugify = (text: string) =>
@@ -88,7 +89,8 @@ export default function UpdatePostPage({ params }: PageProps) {
         const file = e.target.files?.[0];
         if (!file) return;
         setIsUploading(true);
-        await startUpload([file]);
+        const processedFile = await processImageToWebpAndResize(file);
+        await startUpload([processedFile]);
     };
 
     /* ---------------- effects ---------------- */
