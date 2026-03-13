@@ -5,6 +5,8 @@ import { headers } from 'next/headers';
 import { createPost, deletePost, togglePostLike, updatePost } from '@/server/services/post';
 import { revalidatePath } from 'next/cache';
 import { Visibility } from '@/lib/generated/prisma/client';
+import prisma from '@/lib/prisma';
+import { notifyPostCreated, notifyReplyCreated } from './sendNotification';
 
 export async function createPostAction(data: {
     content: string;
@@ -27,6 +29,18 @@ export async function createPostAction(data: {
             ...data,
             userId: session.user.id,
         });
+
+        // Send notification
+        try {
+            const username = post.user.name || post.user.username || 'Anonymous';
+            if (data.replyToPostId) {
+                await notifyReplyCreated(username, post.content, post.id, data.replyToPostId);
+            } else {
+                await notifyPostCreated(username, post.content, post.id);
+            }
+        } catch (notifyError) {
+            console.error('Failed to send notification:', notifyError);
+        }
 
         revalidatePath('/');
         return { success: true, post };
@@ -66,6 +80,23 @@ export async function togglePostLikeAction(postId: string) {
 
     try {
         const result = await togglePostLike(postId, session.user.id);
+        
+        // Send notification if liked
+        if (result.liked) {
+            try {
+                const post = await prisma.post.findUnique({
+                    where: { id: postId },
+                    select: { content: true }
+                });
+                if (post) {
+                    const { notifyPostLiked } = await import('./sendNotification');
+                    await notifyPostLiked(session.user.name || session.user.username || 'Anonymous', post.content, postId);
+                }
+            } catch (notifyError) {
+                console.error('Failed to send post like notification:', notifyError);
+            }
+        }
+
         revalidatePath('/');
         return { success: true, ...result };
     } catch (error: any) {

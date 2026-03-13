@@ -44,6 +44,20 @@ export async function toggleArticleLike(articleId: number) {
           articleId: articleId,
         },
       });
+
+      // Send notification
+      try {
+        const article = await prisma.article.findUnique({
+          where: { id: articleId },
+          select: { title: true, slug: true }
+        });
+        if (article) {
+          const { notifyArticleLiked } = await import('./sendNotification');
+          await notifyArticleLiked(session.user.name || session.user.username || 'Anonymous', article.title, article.slug);
+        }
+      } catch (notifyError) {
+        console.error('Failed to send like notification:', notifyError);
+      }
     }
 
     revalidateTag('articles', 'max');

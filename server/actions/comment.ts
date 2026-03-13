@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { createComment, updateComment, deleteComment } from '@/server/services/comment';
 import prisma from '@/lib/prisma';
+import { notifyCommentCreated } from './sendNotification';
 
 /**
  * Action: Create a new comment
@@ -22,11 +23,22 @@ export async function createCommentAction(articleId: number, content: string) {
   }
 
   try {
-    await createComment({
+    const comment = await createComment({
       content,
       userId: session.user.id,
       articleId: articleId,
     });
+
+    // Send notification
+    try {
+      await notifyCommentCreated(
+        comment.user.name || comment.user.username || 'Anonymous',
+        comment.content,
+        comment.article.slug
+      );
+    } catch (notifyError) {
+      console.error('Failed to send comment notification:', notifyError);
+    }
 
     return { success: true, message: 'Comment added successfully.' };
   } catch (error) {
