@@ -70,7 +70,12 @@
         "post": "Post",
         "end_screen": "Huling Screen",
         "posts": "Mga Post",
-        "hearts": "Mga Puso"
+        "hearts": "Mga Puso",
+        "members": "Mga Miyembro",
+        "users_online": "Mga Online na User",
+        "last_seen": "Huling Nakita",
+        "online": "Online",
+        "show_more_posts": "Ipakita ang mga post"
     },
     "menu": {
         "sign_in_to_see_more": "Mag-login upang makakita pa",

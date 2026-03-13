@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { createPost, deletePost, togglePostLike, updatePost } from '@/server/services/post';
+import { createPost, deletePost, getPosts, getPostsByUserId, togglePostLike, updatePost } from '@/server/services/post';
 import { revalidatePath } from 'next/cache';
 import { Visibility } from '@/lib/generated/prisma/client';
 import prisma from '@/lib/prisma';
@@ -125,4 +125,34 @@ export async function updatePostAction(postId: string, data: {
         console.error('Failed to update post:', error);
         return { success: false, error: error.message || 'Failed to update post' };
     }
+}
+
+export async function getMorePostsAction(limit: number, offset: number, userId?: string) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    const currentUserId = session?.user?.id;
+
+    if (userId) {
+        return await getPostsByUserId(userId, currentUserId, limit, offset);
+    }
+
+    const posts = await getPosts(limit, offset);
+    
+    let likedPostIds = new Set<string>();
+    if (currentUserId) {
+        const likes = await prisma.postLike.findMany({
+            where: {
+                userId: currentUserId,
+                postId: { in: posts.map(p => p.id) }
+            },
+            select: { postId: true }
+        });
+        likedPostIds = new Set(likes.map(l => l.postId));
+    }
+
+    return posts.map((post) => ({
+        ...post,
+        isLiked: likedPostIds.has(post.id)
+    }));
 }

@@ -187,9 +187,9 @@ export default function FeedPostCard({
                     <button onClick={handleLike} className={`p-2 rounded-full transition-colors cursor-pointer ${isLiked ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/20' : 'text-zinc-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20'}`}>
                         <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                     </button>
-                    <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors cursor-pointer">
+                    {/* <button className="p-2 rounded-full hover:bg-green-50 dark:hover:bg-green-950/20 text-zinc-500 hover:text-green-500 transition-colors cursor-pointer">
                         <Share2 className="w-5 h-5" />
-                    </button>
+                    </button> */}
                 </div>
             </article>
         );
@@ -299,11 +299,11 @@ export default function FeedPostCard({
                             </div>
                             <span className={isLiked ? 'font-bold' : ''}>{likesCount}</span>
                         </button>
-                        <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px] cursor-pointer">
+                        {/* <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px] cursor-pointer">
                             <div className="p-2 rounded-full group-hover:bg-green-50 dark:group-hover:bg-green-950/20 transition-colors">
                                 <Share2 className="w-4 h-4" />
                             </div>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>

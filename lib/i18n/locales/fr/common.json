@@ -74,7 +74,8 @@
         "members": "Membres",
         "users_online": "Utilisateurs en ligne",
         "last_seen": "Dernière connexion",
-        "online": "En ligne"
+        "online": "En ligne",
+        "show_more_posts": "Afficher plus de publications"
     },
     "menu": {
         "sign_in_to_see_more": "Connectez-vous pour voir plus",

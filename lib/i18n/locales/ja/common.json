@@ -70,7 +70,12 @@
         "post": "投稿",
         "end_screen": "終了画面",
         "posts": "投稿数",
-        "hearts": "いいね数"
+        "hearts": "いいね数",
+        "members": "メンバー",
+        "users_online": "オンラインユーザー",
+        "last_seen": "最終アクセス",
+        "online": "オンライン",
+        "show_more_posts": "もっと見る"
     },
     "menu": {
         "sign_in_to_see_more": "さらに見るにはログインしてください",

@@ -69,12 +69,14 @@
         "post_your_reply": "Post your reply",
         "post": "Post",
         "end_screen": "End screen",
+        "show_more": "Show more posts",
         "posts": "Posts",
         "hearts": "Hearts",
         "members": "Members",
         "users_online": "Users Online",
         "last_seen": "Last seen",
-        "online": "Online"
+        "online": "Online",
+        "show_more_posts": "Show more posts"
     },
     "menu": {
         "sign_in_to_see_more": "Sign in to see more",

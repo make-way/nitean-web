@@ -70,7 +70,12 @@
         "post": "게시물",
         "end_screen": "종료 화면",
         "posts": "게시물",
-        "hearts": "좋아요 수"
+        "hearts": "좋아요 수",
+        "members": "회원",
+        "users_online": "온라인 사용자",
+        "last_seen": "마지막 접속",
+        "online": "온라인",
+        "show_more_posts": "더 많은 게시물 보기"
     },
     "menu": {
         "sign_in_to_see_more": "더 보려면 로그인하세요",

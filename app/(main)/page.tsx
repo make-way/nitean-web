@@ -5,6 +5,7 @@ import FeedPostCard from "@/components/feed/FeedPostCard";
 import prisma from "@/lib/prisma";
 import TranslatedText from "@/components/i18n/TranslatedText";
 import FeedComposer from "@/components/feed/FeedComposer";
+import LoadMorePosts from "@/components/feed/LoadMorePosts";
 
 export default async function Page() {
     // 1. Get the session
@@ -14,8 +15,8 @@ export default async function Page() {
 
     const currentUserId = session?.user?.id;
 
-    // 2. Get the posts
-    const posts = await getPosts(20, 0);
+    // 2. Get the posts (10 initially)
+    const posts = await getPosts(10, 0);
 
     // 3. Map through posts to see if the current user liked them
     let likedPostIds = new Set<string>();
@@ -50,12 +51,11 @@ export default async function Page() {
             {/* Posts Feed */}
             <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {postsWithLikeStatus.map((post) => (
-                    <FeedPostCard key={post.id} post={post} />
+                    <FeedPostCard key={post.id} post={post} currentUserId={currentUserId} />
                 ))}
             </div>
-            <div className="border-t border-zinc-100 dark:border-zinc-800 py-12 flex items-center justify-center">
-                <TranslatedText translationKey="label.end_screen" />
-            </div>
+            
+            <LoadMorePosts initialOffset={10} currentUserId={currentUserId} />
         </main>
     );
 }
