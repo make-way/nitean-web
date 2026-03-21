@@ -68,6 +68,7 @@ export default async function RightSidebar() {
                             alt={session.user.name}
                             width={100}
                             height={100}
+                            loading="lazy"
                             className="w-25 h-25 rounded-full border-4 border-white dark:border-zinc-800 shadow-xl"
                         />
                         <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white dark:border-zinc-800 rounded-full"></div>

@@ -27,6 +27,7 @@ export function UserSection({ user }: UserSectionProps) {
           width={40} 
           height={40} 
           className="rounded-full bg-zinc-100 w-10 h-10"
+          loading="lazy"
       />
       <Link href={`/${user.username}/profile`}>
         <div className="flex-1 min-w-0">

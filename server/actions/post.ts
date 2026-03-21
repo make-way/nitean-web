@@ -134,10 +134,10 @@ export async function getMorePostsAction(limit: number, offset: number, userId?:
     const currentUserId = session?.user?.id;
 
     if (userId) {
-        return await getPostsByUserId(userId, currentUserId, limit, offset);
+        return await getPostsByUserId(userId, currentUserId, offset);
     }
 
-    const posts = await getPosts(limit, offset);
+    const posts = await getPosts(offset);
     
     let likedPostIds = new Set<string>();
     if (currentUserId) {

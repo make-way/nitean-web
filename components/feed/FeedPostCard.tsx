@@ -152,6 +152,7 @@ export default function FeedPostCard({
                                     width={48}
                                     height={48}
                                     className="rounded-full object-cover w-10 h-10"
+                                    loading="lazy"
                                 />
                             </Link>
                         </div>
@@ -257,6 +258,7 @@ export default function FeedPostCard({
                                 width={48}
                                 height={48}
                                 className="rounded-full object-cover w-10 h-10"
+                                loading="lazy"
                             />
                         </Link>
                         {isThreadParent && <div className="flex-1 w-0.5 h-full min-h-6 bg-zinc-200 dark:bg-zinc-700 mt-2" />}

@@ -155,6 +155,7 @@ export default function MediaGallery({ media, isOwner }: MediaGalleryProps) {
                   fill
                   className="object-contain"
                   priority
+                  loading="lazy"
                 />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-secondary/10 text-white">

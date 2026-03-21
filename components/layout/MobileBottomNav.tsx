@@ -46,7 +46,7 @@ export function MobileBottomNav() {
                         >
                             {tab.isAvatar && session?.user ? (
                                 <div className={`p-0.5 rounded-full flex items-center justify-center ${isActive ? 'bg-indigo-600' : 'bg-transparent'}`}>
-                                    <Image src={session.user.image || '/avatar.png'} alt="Profile" width={26} height={26} className={`rounded-full w-8 h-8 ${isActive ? 'border-2 border-white dark:border-black' : ''}`} />
+                                    <Image src={session.user.image || '/avatar.png'} alt="Profile" loading="lazy" width={26} height={26} className={`rounded-full w-8 h-8 ${isActive ? 'border-2 border-white dark:border-black' : ''}`} />
                                 </div>
                             ) : (
                                 <tab.icon className={`w-7 h-7 ${isActive ? 'text-zinc-900 dark:text-white fill-zinc-900 dark:fill-white' : ''}`} />

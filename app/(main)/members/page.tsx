@@ -66,6 +66,7 @@ export default async function MembersPage({
                                         src={member.avatar}
                                         alt={member.name}
                                         fill
+                                        loading="lazy"
                                         className="rounded-full object-cover shadow-sm bg-gray-100 dark:bg-zinc-800 border-2 border-transparent group-hover:border-blue-500"
                                     />
                                     {member.isOnline && (

@@ -32,7 +32,7 @@ export default async function LeftSidebar() {
     <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 ">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 px-2">
-        <Image src='/logo.svg' alt='Logo' width={48} height={48} />
+        <Image src='/logo.svg' alt='Logo' width={48} height={48} loading="lazy"/>
         <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">nitean</span>
       </Link>
 

@@ -202,6 +202,7 @@ export default function AccountPage() {
               width={96} 
               height={96} 
               className="object-cover h-full w-full"
+              loading="lazy"
             />
             {!previewUrl && (
                 <label className='absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover/avatar:opacity-100'>

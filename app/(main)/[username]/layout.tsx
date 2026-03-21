@@ -75,6 +75,7 @@ export default async function UserLayout({
                         alt="Profile"
                         fill
                         className="object-cover"
+                        loading="lazy"
                     />
                 </div>
 

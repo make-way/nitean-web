@@ -7,7 +7,7 @@ export default function PostAuthor({ user, createdAt }: any) {
     <div className="flex items-center justify-between mb-10 border-b-3 pb-6">
       <div className="flex items-center gap-4">
         <Link href={`/${user.username}`} className="relative w-12 h-12 rounded-full overflow-hidden">
-          <Image src={user.image || ""} alt={user.name} fill className="object-cover" />
+          <Image src={user.image || ""} alt={user.name} fill className="object-cover" loading="lazy" />
         </Link>
 
         <div>
