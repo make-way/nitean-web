@@ -41,7 +41,7 @@ export default function LoadMorePosts({ initialOffset, currentUserId, userId }: 
                 ))}
             </div>
             {hasMore ? (
-                <div className="bg-zinc-900 text-white p-2 text-center cursor-pointer border-t border-zinc-100 dark:border-zinc-800 py-6" onClick={loadMore}>
+                <div className="bg-zinc-100 dark:bg-zinc-900 text-zinc-600 p-2 text-center cursor-pointer border-t border-zinc-100 dark:border-zinc-800 py-6" onClick={loadMore}>
                     {loading ? (
                         <Loader2 className="w-5 h-5 animate-spin inline-block" />
                     ) : (
