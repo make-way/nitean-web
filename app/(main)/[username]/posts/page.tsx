@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 import { getPostsByUserId } from '@/server/services/post';
 import FeedPostCard from '@/components/feed/FeedPostCard';
+import LoadMorePosts from '@/components/feed/LoadMorePosts';
 
 export default async function PostsPage({ params }: { params: Promise<{ username: string }> }) {
     const { username } = await params;
@@ -42,6 +43,9 @@ export default async function PostsPage({ params }: { params: Promise<{ username
                     />
                 ))}
             </div>
+            {posts.length == 15 && (
+                <LoadMorePosts initialOffset={15} currentUserId={user.id} />
+            )}
         </div>
     );
 }

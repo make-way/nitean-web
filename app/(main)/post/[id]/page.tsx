@@ -118,7 +118,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
 
             {/* Replies Feed */}
-            <div className="divide-y divide-zinc-100 dark:divide-zinc-800 bg-white dark:bg-black min-h-screen">
+            <div className="divide-y divide-zinc-100 dark:divide-zinc-800 bg-white dark:bg-black min-h-screen pb-12">
                 {repliesWithLikeStatus.length > 0 ? (
                     repliesWithLikeStatus.map((reply) => (
                         <FeedPostCard key={reply.id} post={reply} />
