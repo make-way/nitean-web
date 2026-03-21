@@ -20,8 +20,8 @@ export default async function PostsPage({ params }: { params: Promise<{ username
 
     const isOwner = session?.user?.id === user.id;
 
-    // Fetch Posts
-    const posts = await getPostsByUserId(user.id, session?.user?.id, 0);
+    // Fetch Posts (10 initially)
+    const posts = await getPostsByUserId(user.id, session?.user?.id, 15, 0);
 
     if (posts.length === 0) {
         return (

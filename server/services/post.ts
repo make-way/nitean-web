@@ -280,13 +280,13 @@ export async function getReplies(postId: string) {
     });
 }
 
-export async function getPostsByUserId(userId: string, currentUserId?: string, offset: number = 0) {
+export async function getPostsByUserId(userId: string, currentUserId?: string, limit: number = 20, offset: number = 0) {
     const posts = await prisma.post.findMany({
         where: {
             userId: userId,
             replyToPostId: null, // Only top-level posts
         },
-        // take: limit,
+        take: limit,
         skip: offset,
         orderBy: { createdAt: 'desc' },
         include: {
