@@ -67,7 +67,7 @@ export default async function UserLayout({
     const isOnline = (user as any).lastSeen ? (Date.now() - new Date((user as any).lastSeen).getTime() < 5 * 60 * 1000) : false;
 
     return (
-        <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+        <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-300 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
             <div className="flex items-center gap-6 px-3 pt-8">
                 <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-blue-500">
                     <Image

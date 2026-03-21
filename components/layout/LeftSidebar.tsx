@@ -37,10 +37,10 @@ export default async function LeftSidebar() {
       </Link>
 
       {/* Search */}
-      <div className="relative mb-8 px-2">
+      {/* <div className="relative mb-8 px-2">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
         <SidebarSearch />
-      </div>
+      </div> */}
 
       {/* Navigation */}
       <NavLinks session={session} />

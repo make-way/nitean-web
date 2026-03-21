@@ -16,7 +16,7 @@ export default function ProfileTabs({ username }: { username: string }) {
     ];
 
     return (
-        <div className="sticky top-0 z-30 mt-8 border-b overflow-x-auto no-scrollbar scrollbar-hide border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        <div className="sticky top-0 z-30 mt-8 border-b overflow-x-auto no-scrollbar scrollbar-hide border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <div className="flex min-w-max gap-8 font-medium py-1 px-3">
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
