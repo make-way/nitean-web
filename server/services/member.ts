@@ -19,7 +19,6 @@ export async function getAllMembers() {
       lastSeen: true,
       _count: {
         select: {
-          articles: true,
           posts: true,
         },
       },
@@ -47,7 +46,6 @@ export async function getOnlineMembers() {
       lastSeen: true,
       _count: {
         select: {
-            articles: true,
             posts: true,
         },
       },
@@ -66,12 +64,5 @@ export async function updateLastSeen(userId: string) {
 export async function getMemberByUsername(username: string) {
   return await prisma.user.findUnique({
     where: { username },
-    include: {
-      _count: {
-        select: {
-          articles: true,
-        },
-      },
-    },
   });
 }

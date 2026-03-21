@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, Heart, Share2, MoreHorizontal, Trash2, Edit2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { togglePostLikeAction, deletePostAction } from "@/server/actions/post";
 import { useSession } from "@/lib/auth-client";
 import { formatDistanceToNow } from "date-fns";
@@ -20,6 +20,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useTranslation } from 'react-i18next';
+import { toast } from "sonner"
 
 type FeedPostCardProps = {
     post: any;
@@ -42,10 +43,57 @@ export default function FeedPostCard({
     const [likesCount, setLikesCount] = useState(post._count?.likes || 0);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
+    const [showCopyOptions, setShowCopyOptions] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<"top" | "bottom">("bottom");
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+    const handleToggle = (e: React.MouseEvent) => {
+        e.preventDefault();
 
+        if (buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const spaceAbove = rect.top;
+
+            // Dropdown height ≈ 150px (adjust if needed)
+            if (spaceBelow < 160 && spaceAbove > spaceBelow) {
+                setDropdownPosition("top");
+            } else {
+                setDropdownPosition("bottom");
+            }
+        }
+
+        setShowCopyOptions((prev) => !prev);
+    };
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setShowCopyOptions(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    const handleCopyLink = async () => {
+        try {
+            const url = `${window.location.origin}/post/${post.id}`;
+            await navigator.clipboard.writeText(url);
+            setShowCopyOptions(false);
+            toast.success("Copied to clipboard")
+        } catch (err) {
+            console.error("Failed to copy:", err);
+        }
+    };
     const handleLike = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -76,7 +124,7 @@ export default function FeedPostCard({
 
     if (isEditing) {
         return (
-            <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
+            <div className="p-4 border-b border-zinc-300 dark:border-zinc-800">
                 <FeedComposer
                     editPostId={post.id}
                     initialContent={post.content}
@@ -91,7 +139,7 @@ export default function FeedPostCard({
 
     if (isDetailsView) {
         return (
-            <article className="flex flex-col p-4 border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-black">
+            <article className="flex flex-col p-4 border-b border-zinc-300 dark:border-zinc-800 bg-white dark:bg-black">
                 {/* Header Profile */}
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex gap-3">
@@ -119,7 +167,7 @@ export default function FeedPostCard({
                             <button onClick={(e) => { e.preventDefault(); setShowOptions(!showOptions); }} className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors">
                                 <MoreHorizontal className="w-5 h-5" />
                             </button>
-                            <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                            <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
                                 <button
                                     onClick={() => { setIsEditing(true); setShowOptions(false); }}
                                     className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
@@ -157,7 +205,7 @@ export default function FeedPostCard({
 
                 {/* Media */}
                 {post.media && post.media.length > 0 && (
-                    <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                    <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-300 dark:border-zinc-800 mb-4 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {post.media.map((m: any) => (
                             // <div key={m.id} className="relative aspect-video bg-zinc-100 dark:bg-zinc-800">
                             //     <img src={m.url} alt={post.content} className="w-full h-full object-cover" />
@@ -168,19 +216,19 @@ export default function FeedPostCard({
                 )}
 
                 {/* Time & Stats */}
-                <div className="flex items-center gap-2 py-4 border-b border-zinc-100 dark:border-zinc-800 text-zinc-500 text-[15px]">
+                <div className="flex items-center gap-2 py-4 border-b border-zinc-300 dark:border-zinc-800 text-zinc-500 text-[15px]">
                     <span>{new Date(post.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     <span>·</span>
                     <span>{new Date(post.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </div>
 
-                <div className="flex items-center gap-6 py-4 border-b border-zinc-100 dark:border-zinc-800 font-bold text-[14px]">
+                <div className="flex items-center gap-6 py-4 border-b border-zinc-300 dark:border-zinc-800 font-bold text-[14px]">
                     <span className="dark:text-zinc-100">{post._count?.replies || 0} <span className="text-zinc-500 font-normal">{t("label.replies")}</span></span>
                     <span className="dark:text-zinc-100">{likesCount} <span className="text-zinc-500 font-normal">{t("label.likes")}</span></span>
                 </div>
 
                 {/* Main Actions */}
-                <div className="flex items-center justify-around py-2 border-b border-zinc-100 dark:border-zinc-800">
+                <div className="flex items-center justify-start py-2 border-b border-zinc-300 dark:border-zinc-800">
                     <button onClick={() => setIsReplying(!isReplying)} className="p-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 hover:text-sky-500 transition-colors cursor-pointer">
                         <MessageCircle className="w-5 h-5" />
                     </button>
@@ -196,7 +244,7 @@ export default function FeedPostCard({
     }
 
     return (
-        <article className={`flex flex-col hover:bg-zinc-50/20 dark:hover:bg-zinc-900/20 transition-colors ${!isThreadParent ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}`}>
+        <article className={`flex flex-col hover:bg-zinc-50/20 dark:hover:bg-zinc-900/20 transition-colors ${!isThreadParent ? 'border-b border-zinc-300 dark:border-zinc-800' : ''}`}>
             <div className="flex gap-3 px-4 pt-4 pb-2">
                 {/* Left side with Avatar and Lines */}
                 <div className="flex flex-col items-center">
@@ -236,16 +284,16 @@ export default function FeedPostCard({
                             )}
 
                             {showOptions && isOwner && (
-                                <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl shadow-lg w-36 z-50 py-1 overflow-hidden">
+                                <div className="absolute right-0 top-full mt-1 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xs shadow-lg w-36 z-50 py-1 overflow-hidden">
                                     <button
                                         onClick={() => { setIsEditing(true); setShowOptions(false); }}
-                                        className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors"
+                                        className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors cursor-pointer"
                                     >
                                         <Edit2 className="w-4 h-4" /> {t("buttons.edit")}
                                     </button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors">
+                                            <button className="w-full text-left px-4 py-2 text-[15px] font-medium text-red-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors cursor-pointer">
                                                 <Trash2 className="w-4 h-4" /> {t("buttons.delete")}
                                             </button>
                                         </AlertDialogTrigger>
@@ -275,7 +323,7 @@ export default function FeedPostCard({
 
                     {post.media && post.media.length > 0 && (
                         <Link href={`/post/${post.id}`} className="block">
-                            <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                            <div className={`grid gap-2 rounded-xl overflow-hidden border border-zinc-300 dark:border-zinc-800 mt-3 ${post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                                 {post.media.map((m: any) => (
                                     // <div key={m.id} className="relative aspect-video bg-zinc-100 dark:bg-zinc-800">
                                     //     <img src={m.url} alt={post.content} className="w-full h-full object-cover" />
@@ -286,7 +334,7 @@ export default function FeedPostCard({
                         </Link>
                     )}
 
-                    <div className="flex items-center justify-between max-w-md pt-2">
+                    <div className="flex items-center justify-start gap-6 max-w-md pt-2">
                         <button onClick={() => setIsReplying(!isReplying)} className="flex items-center gap-2 group text-zinc-500 hover:text-sky-500 transition-colors text-[13px]">
                             <div className="p-2 rounded-full group-hover:bg-sky-50 dark:group-hover:bg-sky-950/20 transition-colors cursor-pointer">
                                 <MessageCircle className="w-4 h-4" />
@@ -299,11 +347,37 @@ export default function FeedPostCard({
                             </div>
                             <span className={isLiked ? 'font-bold' : ''}>{likesCount}</span>
                         </button>
-                        {/* <button className="flex items-center gap-2 group text-zinc-500 hover:text-green-500 transition-colors text-[13px] cursor-pointer">
-                            <div className="p-2 rounded-full group-hover:bg-green-50 dark:group-hover:bg-green-950/20 transition-colors">
-                                <Share2 className="w-4 h-4" />
-                            </div>
-                        </button> */}
+
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                ref={buttonRef}
+                                onClick={handleToggle}
+                                className="p-2 -mr-2 rounded-full hover:bg-sky-50 dark:hover:bg-sky-950/20 text-zinc-500 transition-colors cursor-pointer"
+                            >
+                                <MoreHorizontal className="w-5 h-5" />
+                            </button>
+
+                            {showCopyOptions && (
+                                <div
+                                    className={`absolute right-0 ${dropdownPosition === "bottom"
+                                            ? "top-full mt-1"
+                                            : "bottom-full mb-1"
+                                        } bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xs shadow-lg w-40 z-50 py-1 overflow-hidden`}
+                                >
+                                    {/* Copy Link */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCopyLink();
+                                        }}
+                                        className="w-full text-left px-4 py-2 text-[15px] font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition-colors cursor-pointer"
+                                    >
+                                        <Share2 className="w-4 h-4" />
+                                        Copy Link
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

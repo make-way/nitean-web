@@ -29,7 +29,7 @@ export default async function LeftSidebar() {
   }
 
   return (
-    <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 bg-white dark:bg-zinc-900 border-r border-zinc-100 dark:border-zinc-800">
+    <aside className="sticky top-0 h-screen w-72 flex flex-col p-6 ">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 px-2">
         <Image src='/logo.svg' alt='Logo' width={48} height={48} />

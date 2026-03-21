@@ -21,9 +21,9 @@ export function NavLinks({ session: initialSession }: { session: any }) {
     { icon: Home, label: t('nav.home'), href: '/' },
     // { icon: Book, label: 'Articles Sharing', href: `/articles` },
     { icon: Users, label: t('nav.members', { defaultValue: 'Members' }), href: '/members' },
-    { icon: HelpCircle, label: t('nav.help_support', { defaultValue: 'Help & Support' }), href: '/help-and-support' },
+    // { icon: HelpCircle, label: t('nav.help_support', { defaultValue: 'Help & Support' }), href: '/help-and-support' },
     { icon: Settings, label: t('nav.settings'), href: '/profile/settings', requiresAuth: true },
-    { icon: Newspaper, label: t('nav.posts'), href: `/${username}/posts`, requiresAuth: true },
+    // { icon: Newspaper, label: t('nav.posts'), href: `/${username}/posts`, requiresAuth: true },
     // { icon: Plus, label: 'Create Article', href: `/article/create` , requiresAuth: true },
   ], [username, t]);
 

@@ -16,7 +16,7 @@ export async function getAllMembersAction() {
         name: member.name,
         username: member.username,
         avatar: member.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${member.username}`,
-        posts: member._count.articles,
+        posts: 0,
         followers: 0, // Placeholder for now as it's not in schema
         createdAt: member.createdAt,
       })) 

@@ -87,9 +87,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     }));
 
     return (
-        <main className="flex-1 max-w-175 py-0 border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+        <main className="flex-1 max-w-175 py-0 border-x border-zinc-300 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
             {/* Header */}
-            <div className="flex items-center bg-white dark:bg-black backdrop-blur-xl gap-6 px-3 sm:px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 sticky md:top-0 top-0 z-60">
+            <div className="flex items-center bg-white dark:bg-black backdrop-blur-xl gap-6 px-3 sm:px-6 py-4 border-b border-zinc-300 dark:border-zinc-800 sticky md:top-0 top-0 z-60">
                 <BackButton />
                 <h1 className="text-xl font-bold"><TranslatedText translationKey="label.post" /></h1>
             </div>
@@ -102,14 +102,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             )}
 
             {/* Main Featured Post */}
-            <div className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-black">
+            <div className="border-b border-zinc-300 dark:border-zinc-800 bg-white dark:bg-black">
                 <FeedPostCard
                     post={{ ...post, isLiked: isPostLiked }}
                     isDetailsView={true}
                     isThreadChild={!!parentPostWithStatus}
                 />
 
-                <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
+                <div className="p-4 border-b border-zinc-300 dark:border-zinc-800">
                     <FeedComposer
                         replyToPostId={post.id}
                         placeholderKey="label.post_your_reply"

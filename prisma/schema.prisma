@@ -68,9 +68,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  articles      Article[]
-  likes     Like[]
-  comments  Comment[]
   settings  UserSettings? 
   media     Media[]
   posts      Post[]
@@ -143,57 +140,6 @@ model UserSettings {
   @@map("userSetting")
 }
 
-model Article{
-  id Int @id @default(autoincrement())
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title         String
-  slug          String    @unique @default(uuid()) @db.VarChar(100)
-  summary       String
-  content       String    @db.Text
-  mediaId       Int?                   // relation to Media table
-  media         Media?    @relation(fields: [mediaId], references: [id], onDelete: SetNull)
-  status        PostStatus    @default(Draft)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  likes     Like[]
-  comments  Comment[]
-
-  @@map("article")
-}
-
-model Like {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  articleId Int
-  
-  // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  article      Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, articleId])
-  
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String   @db.Text
-  userId    String
-  articleId Int
-  
-  // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  article      Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("comment")
-}
-
 model Media {
   id        Int       @id @default(autoincrement())
   userId    String
@@ -205,8 +151,6 @@ model Media {
   size      Int                       // bytes
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  articles     Article[]
 
   @@map("media")
 }

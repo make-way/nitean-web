@@ -25,7 +25,7 @@ export default async function RightSidebar() {
 
     if (!session) return (
         <aside className="sticky top-0 h-screen w-96 p-6 hidden lg:flex flex-col gap-6">
-            <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-10 border border-zinc-100 dark:border-zinc-800 shadow-sm text-center flex flex-col items-center gap-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-10 border border-zinc-300 dark:border-zinc-800 shadow-sm text-center flex flex-col items-center gap-6">
                 <Image src='/logo.svg' alt='Logo' width={64} height={64} />
                 <div>
                     <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2"><TranslatedText translationKey="menu.sign_in_to_see_more" /></h3>
@@ -59,7 +59,7 @@ export default async function RightSidebar() {
 
     return (
         <aside className="sticky top-0 h-screen w-96 p-6 hidden lg:flex flex-col gap-6 overflow-y-auto">
-            <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
+            <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] overflow-hidden border border-zinc-300 dark:border-zinc-800 shadow-sm">
                 {/* Profile Header */}
                 <div className="p-8 pb-6 flex flex-col items-center text-center">
                     <div className="relative mb-4">
@@ -142,7 +142,7 @@ export default async function RightSidebar() {
                                         rel="noopener noreferrer"
                                         className="flex flex-col items-center gap-2 flex-shrink-0 transition-opacity hover:opacity-80"
                                     >
-                                        <div className="w-14 h-14 rounded-full border-2 border-zinc-100 dark:border-zinc-800 p-1 flex items-center justify-center">
+                                        <div className="w-14 h-14 rounded-full border-2 border-zinc-300 dark:border-zinc-800 p-1 flex items-center justify-center">
                                             <div className={`w-full h-full rounded-full flex items-center justify-center text-white ${social.color} shadow-lg`}>
                                                 {social.icon}
                                             </div>

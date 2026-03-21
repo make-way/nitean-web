@@ -59,11 +59,6 @@ export default async function UserLayout({
 
     const user = await prisma.user.findUnique({
         where: { username: username },
-        include: {
-            _count: {
-                select: { articles: true }
-            }
-        }
     });
 
     if (!user) notFound();
