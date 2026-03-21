@@ -26,9 +26,9 @@ export default async function MembersPage({
     }));
 
     return (
-        <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-100 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
+        <main className="flex-1 max-w-175 min-h-screen border-x border-zinc-300 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl">
             {/* Tabs */}
-            <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-100 dark:border-zinc-800  sticky md:top-0 top-15 z-60">
+            <div className="flex bg-white dark:bg-black gap-12 px-3 sm:px-6 py-6 border-b border-zinc-400 dark:border-zinc-800  sticky md:top-0 top-15 z-60">
                 <Link
                     href="/members?type=all"
                     className={`text-[17px] font-black pb-4 -mb-5 transition-colors ${type === "all"
@@ -55,7 +55,7 @@ export default async function MembersPage({
                         members.map((member) => (
                             <div
                                 key={member.id}
-                                className="flex items-center gap-6 p-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50/50 dark:hover:bg-zinc-800/50 transition-all duration-200 group"
+                                className="flex items-center gap-6 p-3 border-b border-gray-200 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50/50 dark:hover:bg-zinc-800/50 transition-all duration-200 group"
                             >
                                 <div className="text-lg font-semibold text-gray-400 dark:text-zinc-500 w-8 shrink-0">
                                     {member.displayId}
@@ -102,7 +102,7 @@ export default async function MembersPage({
                         </div>
                     )}
                 </div>
-                <div className="border-t border-zinc-100 dark:border-zinc-800 py-12 flex items-center justify-center">
+                <div className="border-t border-zinc-200 dark:border-zinc-800 py-12 flex items-center justify-center">
                     End Feed
                 </div>
             </div>
